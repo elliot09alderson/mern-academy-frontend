@@ -142,8 +142,8 @@
   }
 
   .glass-nav {
-    background: hsl(var(--background) / 0.8);
-    backdrop-filter: blur(20px);
+    background: hsl(var(--background) / 0.5);
+    backdrop-filter: blur(24px) saturate(180%);
     border-bottom: 1px solid var(--glass-border);
   }
 

@@ -118,7 +118,13 @@ export const Students = () => {
         <section className="py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Our <span className="gradient-text">Outstanding Students</span>
+              Our Outstanding{' '}
+              <span className="relative inline-block">
+                <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 blur-md opacity-10" />
+                <span className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  Students
+                </span>
+              </span>
             </h1>
             <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto">
               Meet our top 10 performers who have excelled in their careers. 

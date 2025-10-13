@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 export const Hero = () => {
   return (
-    <section className="min-h-screen flex items-center justify-center pt-24 md:pt-28">
+    <section className="min-h-screen flex items-center justify-center pt-28 md:pt-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Main Headline with Gradient */}
         <motion.h1

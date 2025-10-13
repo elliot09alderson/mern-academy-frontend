@@ -9,14 +9,14 @@ interface User {
   hereaboutus?: string;
   specialization?: string;
   isActive: boolean;
-  userType: 'student' | 'faculty';
+  userType: 'admin' | 'student' | 'faculty';
 }
 
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   token: string | null;
-  userType: 'student' | 'faculty' | null;
+  userType: 'admin' | 'student' | 'faculty' | null;
 }
 
 const initialState: AuthState = {
@@ -30,7 +30,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{ user: any; token: string; userType: 'student' | 'faculty' }>) => {
+    setCredentials: (state, action: PayloadAction<{ user: any; token: string; userType: 'admin' | 'student' | 'faculty' }>) => {
       const { user, token, userType } = action.payload;
       state.user = { ...user, userType };
       state.token = token;

@@ -179,7 +179,7 @@ export const OutstandingStudents = () => {
               </Button>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

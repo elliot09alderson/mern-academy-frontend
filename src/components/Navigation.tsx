@@ -10,8 +10,9 @@ export const Navigation = () => {
   const location = useLocation();
 
   return (
-    <nav className="fixed top-0 w-full z-50 glass-nav border-b border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed top-0 w-full z-50">
+      <div className="glass-nav border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 md:h-20">
           {/* Logo with glow effect */}
           <Link to="/" className="flex items-center space-x-3 group">
@@ -56,8 +57,8 @@ export const Navigation = () => {
               Gallery
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-violet-600 to-purple-600 group-hover:w-full transition-all duration-300" />
             </Link>
-            <ThemeToggle />
             <AuthButton />
+            <ThemeToggle />
           </div>
 
           {/* Mobile Menu Button */}
@@ -112,6 +113,14 @@ export const Navigation = () => {
             </div>
           </div>
         )}
+        </div>
+      </div>
+
+      {/* Diwali Discount Banner - Below Navbar */}
+      <div className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white py-2 px-4 text-center">
+        <p className="text-sm md:text-base font-semibold">
+          🎉 Diwali Special - 10% OFF + Free Placement Support!
+        </p>
       </div>
     </nav>
   );

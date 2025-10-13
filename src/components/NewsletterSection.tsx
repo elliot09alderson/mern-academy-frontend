@@ -10,15 +10,15 @@ import { motion } from 'framer-motion';
 export const NewsletterSection = () => {
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-10"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3">
             Get{' '}
             <span className="relative inline-block">
               <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 blur-md opacity-10" />
@@ -27,8 +27,8 @@ export const NewsletterSection = () => {
               </span>
             </span>
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Share your details and we'll send you personalized course recommendations and updates
+          <p className="text-muted-foreground">
+            Share your details and connect with us
           </p>
         </motion.div>
 
@@ -38,123 +38,93 @@ export const NewsletterSection = () => {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-        <Card className="glass-card border-0">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Mail className="h-5 w-5 text-primary" />
-              Connect with MERN Academy
-            </CardTitle>
-          </CardHeader>
-          
-          <CardContent>
-            <form className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Name */}
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    Full Name *
-                  </Label>
-                  <Input 
-                    id="name"
-                    placeholder="Enter your full name"
-                    className="glass-card border-0"
-                    required
-                  />
-                </div>
-
-                {/* Phone */}
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="flex items-center gap-2">
-                    <Phone className="h-4 w-4" />
-                    Phone Number *
-                  </Label>
-                  <Input 
-                    id="phone"
-                    type="tel"
-                    placeholder="+91 XXXXX XXXXX"
-                    className="glass-card border-0"
-                    required
-                  />
-                </div>
-
-                {/* Email */}
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
-                    Email Address *
-                  </Label>
-                  <Input 
-                    id="email"
-                    type="email"
-                    placeholder="your.email@example.com"
-                    className="glass-card border-0"
-                    required
-                  />
-                </div>
-
-                {/* Qualification */}
-                <div className="space-y-2">
-                  <Label htmlFor="qualification" className="flex items-center gap-2">
-                    <GraduationCap className="h-4 w-4" />
-                    Qualification *
-                  </Label>
-                  <Input 
-                    id="qualification"
-                    placeholder="e.g., B.Tech CSE, BCA, MCA"
-                    className="glass-card border-0"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* How did you hear about us */}
-              <div className="space-y-2">
-                <Label htmlFor="source">How did you hear about us? *</Label>
-                <Select required>
-                  <SelectTrigger className="glass-card border-0">
-                    <SelectValue placeholder="Select an option" />
-                  </SelectTrigger>
-                  <SelectContent className="glass-card border-0">
-                    <SelectItem value="linkedin">LinkedIn</SelectItem>
-                    <SelectItem value="friend">Friend/Referral</SelectItem>
-                    <SelectItem value="college">College/University</SelectItem>
-                    <SelectItem value="poster">Poster/Advertisement</SelectItem>
-                    <SelectItem value="website">Website/Search Engine</SelectItem>
-                    <SelectItem value="googlemap">Google Maps</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Message */}
-              <div className="space-y-2">
-                <Label htmlFor="message">Message (Optional)</Label>
-                <Textarea 
-                  id="message"
-                  placeholder="Tell us about your goals, experience, or any specific questions you have..."
-                  className="glass-card border-0 min-h-[100px]"
-                  rows={4}
+          <form className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Name */}
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+                <Input
+                  id="name"
+                  placeholder="Full Name *"
+                  className="glass-card border-0 pl-10 h-12"
+                  required
                 />
               </div>
 
-              {/* Submit Button */}
-              <Button 
-                type="submit" 
-                size="lg" 
-                className="w-full gradient-primary text-white btn-glow"
-              >
-                Get Course Information
-              </Button>
+              {/* Email */}
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Email Address *"
+                  className="glass-card border-0 pl-10 h-12"
+                  required
+                />
+              </div>
 
-              {/* Privacy Note */}
-              <p className="text-xs text-muted-foreground text-center">
-                We respect your privacy. Your information will only be used to send you course details and updates.
-                You can unsubscribe at any time.
-              </p>
-            </form>
-          </CardContent>
-        </Card>
+              {/* Phone */}
+              <div className="relative">
+                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="Phone Number *"
+                  className="glass-card border-0 pl-10 h-12"
+                  required
+                />
+              </div>
+
+              {/* Qualification */}
+              <div className="relative">
+                <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+                <Input
+                  id="qualification"
+                  placeholder="Qualification *"
+                  className="glass-card border-0 pl-10 h-12"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* How did you hear about us */}
+            <Select required>
+              <SelectTrigger className="glass-card border-0 h-12">
+                <SelectValue placeholder="How did you hear about us? *" />
+              </SelectTrigger>
+              <SelectContent className="glass-card border-0">
+                <SelectItem value="linkedin">LinkedIn</SelectItem>
+                <SelectItem value="friend">Friend/Referral</SelectItem>
+                <SelectItem value="college">College/University</SelectItem>
+                <SelectItem value="poster">Poster/Advertisement</SelectItem>
+                <SelectItem value="website">Website/Search Engine</SelectItem>
+                <SelectItem value="googlemap">Google Maps</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* Message */}
+            <Textarea
+              id="message"
+              placeholder="Your message or questions (Optional)"
+              className="glass-card border-0 min-h-[100px] resize-none"
+              rows={3}
+            />
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              size="lg"
+              className="w-full bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 text-white border-0 h-12 font-semibold"
+            >
+              Get Course Information
+            </Button>
+
+            {/* Privacy Note */}
+            <p className="text-xs text-muted-foreground text-center pt-2">
+              We respect your privacy. Unsubscribe anytime.
+            </p>
+          </form>
         </motion.div>
       </div>
     </section>

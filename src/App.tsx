@@ -33,13 +33,33 @@ const AppContent = () => {
     <BrowserRouter>
       <SmoothScroll>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Index />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/students" element={<Students />} />
           <Route path="/branches" element={<Branches />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/admin" element={<Admin />} />
+
+          {/* Admin Protected Routes */}
+          <Route element={<PrivateRoute allowedRoles={['admin']} />}>
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/students" element={<AdminStudents />} />
+            <Route path="/admin/courses" element={<AdminCourses />} />
+            <Route path="/admin/events" element={<AdminEvents />} />
+          </Route>
+
+          {/* Faculty Protected Routes */}
+          <Route element={<PrivateRoute allowedRoles={['faculty']} />}>
+            <Route path="/faculty/dashboard" element={<FacultyDashboard />} />
+          </Route>
+
+          {/* Student Protected Routes */}
+          <Route element={<PrivateRoute allowedRoles={['student']} />}>
+            <Route path="/student/dashboard" element={<StudentDashboard />} />
+          </Route>
+
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
