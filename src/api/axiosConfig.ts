@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-// Base URL for API
-const BASE_URL = 'http://localhost:5003/api/v1';
+// Base URL for API - use environment variable or default
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5003/api';
 
-// Create axios instance
+// Create centralized axios instance with cookie credentials
 const api = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
-  withCredentials: true, // Important for cookies
+  withCredentials: true, // Essential for sending/receiving cookies
   headers: {
     'Content-Type': 'application/json',
   },
@@ -16,7 +16,8 @@ const api = axios.create({
 // Request interceptor
 api.interceptors.request.use(
   (config) => {
-    // Add any auth tokens or headers here if needed
+    // Cookies are automatically sent with withCredentials: true
+    // No need to manually add Authorization header
     return config;
   },
   (error) => {
@@ -32,14 +33,16 @@ api.interceptors.response.use(
   (error) => {
     // Handle common errors
     if (error.response?.status === 401) {
-      // Unauthorized - redirect to login or clear auth state
-      console.log('Unauthorized - redirecting to login');
+      // Unauthorized - session expired or not authenticated
+      console.error('Unauthorized - session expired');
+      // Redirect to login page
+      window.location.href = '/login';
     } else if (error.response?.status === 403) {
-      // Forbidden
-      console.log('Forbidden - insufficient permissions');
+      // Forbidden - insufficient permissions
+      console.error('Forbidden - insufficient permissions');
     } else if (error.response?.status >= 500) {
       // Server errors
-      console.log('Server error - please try again later');
+      console.error('Server error - please try again later');
     }
 
     return Promise.reject(error);

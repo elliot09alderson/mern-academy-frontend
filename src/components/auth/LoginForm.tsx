@@ -26,19 +26,13 @@ const LoginForm: React.FC = () => {
 
       // Store token and user data
       localStorage.setItem('token', result.data.token);
-      dispatch(setCredentials(result.data));
+      dispatch(setCredentials({
+        user: result.data.user,
+        token: result.data.token
+      }));
 
-      // Redirect based on user role
-      const userRole = result.data.user.role;
-      if (userRole === 'admin') {
-        navigate('/admin/dashboard');
-      } else if (userRole === 'faculty') {
-        navigate('/faculty/dashboard');
-      } else if (userRole === 'student') {
-        navigate('/student/dashboard');
-      } else {
-        navigate('/');
-      }
+      // Navigate to homepage after successful login
+      navigate('/');
     } catch (err: any) {
       setError(err?.data?.message || 'Login failed. Please try again.');
     }

@@ -3,6 +3,7 @@ import { API_BASE_URL } from '../../config/api';
 
 export interface EventImage {
   url: string;
+  publicId?: string;
   caption?: string;
   uploadedAt: string;
 }
@@ -12,10 +13,15 @@ export interface Event {
   eventName: string;
   description: string;
   eventType: 'academic' | 'cultural' | 'sports' | 'technical' | 'workshop' | 'seminar' | 'other';
+  category: 'Academic' | 'Cultural' | 'Sports' | 'Technical' | 'Workshop' | 'Seminar' | 'Other';
   startDate: string;
   endDate: string;
   venue: string;
   organizer: string;
+  image: {
+    url: string;
+    publicId: string;
+  };
   images: EventImage[];
   registrationLink?: string;
   maxParticipants?: number;
@@ -31,6 +37,7 @@ export interface CreateEventRequest {
   eventName: string;
   description: string;
   eventType: Event['eventType'];
+  category: Event['category'];
   startDate: string;
   endDate: string;
   venue: string;
@@ -55,12 +62,9 @@ export const eventApi = createApi({
   reducerPath: 'eventApi',
   baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
-    credentials: 'include',
+    credentials: 'include', // Send cookies with every request
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
+      // No need to add Authorization header - using cookies only
       return headers;
     },
   }),
@@ -101,11 +105,11 @@ export const eventApi = createApi({
       }),
       providesTags: ['Event'],
     }),
-    createEvent: builder.mutation<{ success: boolean; data: Event }, CreateEventRequest>({
-      query: (event) => ({
+    createEvent: builder.mutation<{ success: boolean; data: Event }, FormData>({
+      query: (formData) => ({
         url: '/events',
         method: 'POST',
-        body: event,
+        body: formData,
       }),
       invalidatesTags: ['Event'],
     }),

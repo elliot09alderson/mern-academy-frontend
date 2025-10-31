@@ -7,13 +7,21 @@ export interface Course {
   courseCode: string;
   description: string;
   duration: string;
-  branchId: string | any;
+  icon: string;
+  level: string;
+  batchSize: string;
+  features: string[];
+  originalPrice: number;
+  discountedPrice: number;
+  discountPercentage: number;
+  isLimitedOffer: boolean;
+  branchId?: string | any;
   facultyId?: string | any;
-  credits: number;
-  semester: number;
+  credits?: number;
+  semester?: number;
   isActive: boolean;
   syllabus?: string;
-  prerequisites: string[];
+  prerequisites?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -23,10 +31,18 @@ export interface CreateCourseRequest {
   courseCode: string;
   description: string;
   duration: string;
-  branchId: string;
+  icon?: string;
+  level: string;
+  batchSize?: string;
+  features?: string[];
+  originalPrice: number;
+  discountedPrice: number;
+  discountPercentage?: number;
+  isLimitedOffer?: boolean;
+  branchId?: string;
   facultyId?: string;
-  credits: number;
-  semester: number;
+  credits?: number;
+  semester?: number;
   syllabus?: string;
   prerequisites?: string[];
 }
@@ -46,12 +62,9 @@ export const courseApi = createApi({
   reducerPath: 'courseApi',
   baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
-    credentials: 'include',
+    credentials: 'include', // Send cookies with every request
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
+      // No need to add Authorization header - using cookies only
       return headers;
     },
   }),

@@ -1,17 +1,17 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Code2, Brain, Users, MapPin } from 'lucide-react';
+import { Menu, X, Code2 } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import AuthButton from './AuthButton';
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const location = useLocation();
 
   return (
-    <nav className="fixed top-0 w-full z-50">
-      <div className="glass-nav border-b border-white/5">
+    <>
+      {/* Fixed Navbar */}
+      <nav className="fixed top-0 w-full z-50 glass-nav border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 md:h-20">
           {/* Logo with glow effect */}
@@ -40,7 +40,7 @@ export const Navigation = () => {
               to="/students"
               className="relative text-sm lg:text-base font-medium text-foreground/70 hover:text-foreground transition-all duration-300 group"
             >
-              Students
+              Outstanding Students
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-violet-600 to-purple-600 group-hover:w-full transition-all duration-300" />
             </Link>
             <Link
@@ -91,7 +91,7 @@ export const Navigation = () => {
                 className="px-4 py-3 rounded-xl text-foreground/80 hover:text-foreground hover:bg-violet-500/10 transition-all duration-300 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Students
+                Outstanding Students
               </Link>
               <Link
                 to="/branches"
@@ -114,14 +114,14 @@ export const Navigation = () => {
           </div>
         )}
         </div>
-      </div>
+      </nav>
 
-      {/* Diwali Discount Banner - Below Navbar */}
-      <div className="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white py-2 px-4 text-center">
+      {/* Diwali Discount Banner - Scrollable, positioned below fixed navbar */}
+      <div className="mt-[64px] md:mt-[80px] bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white py-2 px-4 text-center">
         <p className="text-sm md:text-base font-semibold">
           🎉 Diwali Special - 10% OFF + Free Placement Support!
         </p>
       </div>
-    </nav>
+    </>
   );
 };

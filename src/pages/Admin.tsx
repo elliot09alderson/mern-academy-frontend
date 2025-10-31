@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -8,12 +9,12 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { 
-  Users, 
-  BookOpen, 
-  GraduationCap, 
-  MapPin, 
-  MessageSquare, 
+import {
+  Users,
+  BookOpen,
+  GraduationCap,
+  MapPin,
+  MessageSquare,
   Calendar,
   Trophy,
   BarChart3,
@@ -23,21 +24,27 @@ import {
   Plus,
   Save,
   X,
-  Eye
+  Eye,
+  EyeOff,
+  Upload,
+  Image as ImageIcon,
+  Award,
+  Building2
 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useGetBranchesQuery, useCreateBranchMutation, useDeleteBranchMutation } from '@/store/api/branchApi';
+import { useGetOutstandingStudentsQuery, useDeleteOutstandingStudentMutation, useToggleStudentStatusMutation } from '@/store/api/outstandingStudentApi';
+import { useGetEventsQuery, useDeleteEventMutation } from '@/store/api/eventApi';
+import { useGetFacultiesQuery, useDeleteFacultyMutation, useToggleFacultyStatusMutation } from '@/store/api/facultyApi';
+import { useGetCoursesQuery, useDeleteCourseMutation } from '@/store/api/courseApi';
+import { useToast } from '@/hooks/use-toast';
+import { Navigation } from '@/components/Navigation';
 
 // Mock data
 const mockRegistrations = [
   { id: 1, name: 'Rahul Kumar', email: 'rahul@example.com', type: 'Student', course: 'MERN Stack', date: '2024-01-15', status: 'Active' },
   { id: 2, name: 'Priya Singh', email: 'priya@example.com', type: 'Student', course: 'AI Development', date: '2024-01-14', status: 'Pending' },
   { id: 3, name: 'Dr. Amit Sharma', email: 'amit@mernacademy.com', type: 'Faculty', course: 'System Design', date: '2024-01-13', status: 'Active' },
-];
-
-const mockCourses = [
-  { id: 1, title: 'MERN Stack Development', description: 'Complete full-stack development with MongoDB, Express, React, and Node.js', duration: '6 months', students: 45, price: '25,000', category: 'Development', status: 'Active' },
-  { id: 2, title: 'AI-Powered Web Development', description: 'Learn modern web development with AI tools and frameworks', duration: '6 months', students: 32, price: '30,000', category: 'AI', status: 'Active' },
-  { id: 3, title: 'Data Structures & Algorithms', description: 'Master DSA concepts for technical interviews', duration: '4 months', students: 28, price: '20,000', category: 'Development', status: 'Active' },
 ];
 
 const mockFaculty = [
@@ -64,10 +71,9 @@ const mockEvents = [
 ];
 
 const Admin = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [isAddCourseOpen, setIsAddCourseOpen] = useState(false);
-  const [isAddFacultyOpen, setIsAddFacultyOpen] = useState(false);
-  const [isAddEventOpen, setIsAddEventOpen] = useState(false);
   const [isAddBranchOpen, setIsAddBranchOpen] = useState(false);
 
   // Form states for adding new items
@@ -81,45 +87,248 @@ const Admin = () => {
     technologies: ''
   });
 
-  const [newFaculty, setNewFaculty] = useState({
-    name: '',
-    email: '',
-    expertise: '',
-    experience: '',
-    qualification: '',
-    bio: ''
-  });
-
-  const [newEvent, setNewEvent] = useState({
-    title: '',
-    description: '',
-    date: '',
-    time: '',
-    venue: '',
-    category: '',
-    capacity: ''
-  });
-
   const [newBranch, setNewBranch] = useState({
-    name: '',
-    address: '',
-    city: '',
-    phone: '',
-    email: '',
-    manager: '',
-    capacity: ''
+    branchName: '',
+    branchCode: '',
+    description: '',
+    totalSeats: '',
+    establishedYear: ''
   });
+
+  const [branchImages, setBranchImages] = useState<File[]>([]);
+  const [imagePreview, setImagePreview] = useState<string[]>([]);
+
+  // API hooks
+  const { data: branchesData, isLoading: branchesLoading } = useGetBranchesQuery({ page: 1, limit: 50 });
+  const [createBranch, { isLoading: isCreating }] = useCreateBranchMutation();
+  const [deleteBranch] = useDeleteBranchMutation();
+  const { data: outstandingStudentsData, isLoading: studentsLoading } = useGetOutstandingStudentsQuery({});
+  const [deleteOutstandingStudent] = useDeleteOutstandingStudentMutation();
+  const [toggleStudentStatus] = useToggleStudentStatusMutation();
+  const { data: eventsData, isLoading: eventsLoading } = useGetEventsQuery({ page: 1, limit: 50 });
+  const [deleteEvent] = useDeleteEventMutation();
+  const { data: facultiesData, isLoading: facultiesLoading } = useGetFacultiesQuery({ page: 1, limit: 50 });
+  const [deleteFaculty] = useDeleteFacultyMutation();
+  const [toggleFacultyStatus] = useToggleFacultyStatusMutation();
+  const { data: coursesData, isLoading: coursesLoading } = useGetCoursesQuery({ page: 1, limit: 50 });
+  const [deleteCourse] = useDeleteCourseMutation();
+  const { toast } = useToast();
+
+  // Handle image file selection
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const fileArray = Array.from(files);
+      setBranchImages(prev => [...prev, ...fileArray]);
+
+      // Create preview URLs
+      fileArray.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(prev => [...prev, reader.result as string]);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  // Remove image from selection
+  const removeImage = (index: number) => {
+    setBranchImages(prev => prev.filter((_, i) => i !== index));
+    setImagePreview(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // Handle branch creation
+  const handleCreateBranch = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('branchName', newBranch.branchName);
+      formData.append('branchCode', newBranch.branchCode);
+      formData.append('description', newBranch.description);
+      formData.append('totalSeats', newBranch.totalSeats);
+      if (newBranch.establishedYear) {
+        formData.append('establishedYear', newBranch.establishedYear);
+      }
+
+      // Append images
+      branchImages.forEach((image) => {
+        formData.append('images', image);
+      });
+
+      await createBranch(formData).unwrap();
+
+      toast({
+        title: "Success!",
+        description: "Branch created successfully",
+      });
+
+      // Reset form
+      setNewBranch({
+        branchName: '',
+        branchCode: '',
+        description: '',
+        totalSeats: '',
+        establishedYear: ''
+      });
+      setBranchImages([]);
+      setImagePreview([]);
+      setIsAddBranchOpen(false);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to create branch",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle branch deletion
+  const handleDeleteBranch = async (id: string) => {
+    try {
+      await deleteBranch(id).unwrap();
+      toast({
+        title: "Success!",
+        description: "Branch deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to delete branch",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle outstanding student deletion
+  const handleDeleteStudent = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this outstanding student?')) {
+      return;
+    }
+
+    try {
+      await deleteOutstandingStudent(id).unwrap();
+      toast({
+        title: "Success!",
+        description: "Outstanding student deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to delete student",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle toggle student status
+  const handleToggleStudentStatus = async (id: string) => {
+    try {
+      await toggleStudentStatus(id).unwrap();
+      toast({
+        title: "Success!",
+        description: "Student status updated successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to update status",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle event deletion
+  const handleDeleteEvent = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this event?')) {
+      return;
+    }
+
+    try {
+      await deleteEvent(id).unwrap();
+      toast({
+        title: "Success!",
+        description: "Event deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to delete event",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle faculty deletion
+  const handleDeleteFaculty = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this faculty member?')) {
+      return;
+    }
+
+    try {
+      await deleteFaculty(id).unwrap();
+      toast({
+        title: "Success!",
+        description: "Faculty member deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to delete faculty member",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle toggle faculty status
+  const handleToggleFacultyStatus = async (id: string) => {
+    try {
+      await toggleFacultyStatus(id).unwrap();
+      toast({
+        title: "Success!",
+        description: "Faculty status updated successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to update faculty status",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle course deletion
+  const handleDeleteCourse = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this course?')) {
+      return;
+    }
+
+    try {
+      await deleteCourse(id).unwrap();
+      toast({
+        title: "Success!",
+        description: "Course deleted successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to delete course",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">Admin Dashboard</h1>
-          <p className="text-muted-foreground mt-2 text-lg">Manage your MERN Academy efficiently with modern tools</p>
-        </div>
+    <>
+      <Navigation />
+      <div className="min-h-screen bg-background pt-[64px] md:pt-[80px] p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">Admin Dashboard</h1>
+            <p className="text-muted-foreground mt-2 text-lg">Manage your MERN Academy efficiently with modern tools</p>
+          </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 mb-8 glass-card">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-9 mb-8 glass-card">
             <TabsTrigger value="overview" className="hover:scale-105 transition-transform">Overview</TabsTrigger>
             <TabsTrigger value="registrations" className="hover:scale-105 transition-transform">Registrations</TabsTrigger>
             <TabsTrigger value="courses" className="hover:scale-105 transition-transform">Courses</TabsTrigger>
@@ -128,6 +337,7 @@ const Admin = () => {
             <TabsTrigger value="feedbacks" className="hover:scale-105 transition-transform">Feedbacks</TabsTrigger>
             <TabsTrigger value="events" className="hover:scale-105 transition-transform">Events</TabsTrigger>
             <TabsTrigger value="branches" className="hover:scale-105 transition-transform">Branches</TabsTrigger>
+            <TabsTrigger value="outstanding" className="hover:scale-105 transition-transform">Outstanding</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -230,11 +440,21 @@ const Admin = () => {
           <TabsContent value="courses" className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-3xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Course Management</h2>
+              <Button
+                onClick={() => navigate('/admin/courses/add')}
+                className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 hover:scale-105 transition-all"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Course
+              </Button>
+            </div>
+
+            <div className="hidden">
               <Dialog open={isAddCourseOpen} onOpenChange={setIsAddCourseOpen}>
                 <DialogTrigger asChild>
                   <Button className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 hover:scale-105 transition-all">
                     <Plus className="mr-2 h-4 w-4" />
-                    Add Course
+                    Add Course (Old)
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="glass-card border-0 max-w-2xl">
@@ -340,166 +560,189 @@ const Admin = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockCourses.map((course) => (
-                <Card key={course.id} className="glass-card border-0 hover:scale-105 transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-lg bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">{course.title}</CardTitle>
-                        <Badge className="mt-2 bg-gradient-to-r from-violet-500 to-purple-500 text-white">{course.category}</Badge>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="outline" className="glass-card hover:scale-110 transition-transform">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm" variant="outline" className="glass-card hover:scale-110 transition-transform">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm" variant="outline" className="glass-card text-red-500 hover:scale-110 transition-transform">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">{course.description}</p>
-                    <div className="flex justify-between items-center text-sm">
-                      <span>Duration: {course.duration}</span>
-                      <span className="font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">₹{course.price}</span>
-                    </div>
+              {coursesLoading ? (
+                <Card className="glass-card border-0 col-span-full">
+                  <CardContent className="p-6 text-center">
+                    <p className="text-muted-foreground">Loading courses...</p>
                   </CardContent>
                 </Card>
-              ))}
+              ) : coursesData && coursesData.data.length > 0 ? (
+                coursesData.data.map((course) => (
+                  <Card key={course._id} className="glass-card border-0 hover:scale-105 transition-all duration-300">
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-lg bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">{course.courseName}</CardTitle>
+                          <Badge className="mt-2 bg-gradient-to-r from-violet-500 to-purple-500 text-white">{course.courseCode}</Badge>
+                          {course.isLimitedOffer && (
+                            <Badge className="mt-2 ml-2 bg-gradient-to-r from-red-500 to-orange-500 text-white animate-pulse">
+                              Limited Offer
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="glass-card text-red-500 hover:scale-110 transition-transform"
+                            onClick={() => handleDeleteCourse(course._id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{course.description}</p>
+                      <div className="space-y-2 text-sm mb-4">
+                        <div className="flex justify-between items-center">
+                          <span>Duration: {course.duration}</span>
+                          <Badge variant={course.isActive ? 'default' : 'secondary'} className={course.isActive ? 'bg-green-500' : 'bg-gray-500'}>
+                            {course.isActive ? 'Active' : 'Inactive'}
+                          </Badge>
+                        </div>
+                        {course.level && (
+                          <div className="flex justify-between items-center">
+                            <span>Level: {course.level}</span>
+                            <span>Batch Size: {course.batchSize || 'N/A'}</span>
+                          </div>
+                        )}
+                      </div>
+                      {course.features && course.features.length > 0 && (
+                        <div className="mb-4">
+                          <p className="text-xs font-semibold mb-1">Features:</p>
+                          <div className="flex flex-wrap gap-1">
+                            {course.features.slice(0, 3).map((feature, idx) => (
+                              <Badge key={idx} variant="outline" className="text-xs">
+                                {feature}
+                              </Badge>
+                            ))}
+                            {course.features.length > 3 && (
+                              <Badge variant="outline" className="text-xs">
+                                +{course.features.length - 3} more
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      <div className="flex justify-between items-center pt-2 border-t">
+                        {course.discountedPrice ? (
+                          <div className="flex items-center gap-2">
+                            <span className="line-through text-sm text-muted-foreground">₹{course.originalPrice}</span>
+                            <span className="font-bold text-lg bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">₹{course.discountedPrice}</span>
+                            {course.discountPercentage && (
+                              <Badge className="bg-gradient-to-r from-red-500 to-orange-500 text-white">
+                                {course.discountPercentage}% OFF
+                              </Badge>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="font-bold text-lg bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">₹{course.originalPrice}</span>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <Card className="glass-card border-0 col-span-full">
+                  <CardContent className="p-6 text-center">
+                    <p className="text-muted-foreground">No courses available. Add your first course!</p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </TabsContent>
 
           <TabsContent value="faculty" className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Faculty Management</h2>
-              <Dialog open={isAddFacultyOpen} onOpenChange={setIsAddFacultyOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 hover:scale-105 transition-all">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Faculty
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="glass-card border-0 max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle className="text-2xl bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Add New Faculty</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 mt-6">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="facultyName">Full Name</Label>
-                        <Input 
-                          id="facultyName" 
-                          className="glass-card border-blue-200 focus:border-blue-400"
-                          placeholder="e.g., Dr. Rahul Sharma"
-                          value={newFaculty.name}
-                          onChange={(e) => setNewFaculty({...newFaculty, name: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="facultyEmail">Email</Label>
-                        <Input 
-                          id="facultyEmail" 
-                          type="email"
-                          className="glass-card border-blue-200 focus:border-blue-400"
-                          placeholder="rahul@academy.com"
-                          value={newFaculty.email}
-                          onChange={(e) => setNewFaculty({...newFaculty, email: e.target.value})}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="facultyExpertise">Expertise</Label>
-                        <Input 
-                          id="facultyExpertise" 
-                          className="glass-card border-blue-200 focus:border-blue-400"
-                          placeholder="e.g., Full Stack Development"
-                          value={newFaculty.expertise}
-                          onChange={(e) => setNewFaculty({...newFaculty, expertise: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="facultyExperience">Experience</Label>
-                        <Input 
-                          id="facultyExperience" 
-                          className="glass-card border-blue-200 focus:border-blue-400"
-                          placeholder="e.g., 8 years"
-                          value={newFaculty.experience}
-                          onChange={(e) => setNewFaculty({...newFaculty, experience: e.target.value})}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="facultyQualification">Qualification</Label>
-                      <Input 
-                        id="facultyQualification" 
-                        className="glass-card border-blue-200 focus:border-blue-400"
-                        placeholder="e.g., M.Tech in Computer Science, IIT Delhi"
-                        value={newFaculty.qualification}
-                        onChange={(e) => setNewFaculty({...newFaculty, qualification: e.target.value})}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="facultyBio">Bio</Label>
-                      <Textarea 
-                        id="facultyBio" 
-                        className="glass-card border-blue-200 focus:border-blue-400"
-                        placeholder="Brief biography and achievements..."
-                        value={newFaculty.bio}
-                        onChange={(e) => setNewFaculty({...newFaculty, bio: e.target.value})}
-                      />
-                    </div>
-                    <div className="flex gap-4 pt-4">
-                      <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex-1 hover:scale-105 transition-transform">
-                        <Save className="mr-2 h-4 w-4" />
-                        Save Faculty
-                      </Button>
-                      <Button variant="outline" className="glass-card hover:scale-105 transition-transform" onClick={() => setIsAddFacultyOpen(false)}>
-                        <X className="mr-2 h-4 w-4" />
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <Button
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 hover:scale-105 transition-all"
+                onClick={() => navigate('/admin/faculty/add')}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Faculty
+              </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockFaculty.map((member) => (
-                <Card key={member.id} className="glass-card border-0 hover:scale-105 transition-all duration-300">
-                  <CardHeader className="text-center">
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto mb-4 flex items-center justify-center">
-                      <GraduationCap className="h-8 w-8 text-white" />
-                    </div>
-                    <CardTitle className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">{member.name}</CardTitle>
-                    <Badge className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white">{member.expertise}</Badge>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 text-sm">
-                      <p><strong>Experience:</strong> {member.experience}</p>
-                      <p><strong>Email:</strong> {member.email}</p>
-                      <p><strong>Students:</strong> {member.students}</p>
-                    </div>
-                    <div className="flex gap-2 mt-4">
-                      <Button size="sm" variant="outline" className="glass-card flex-1 hover:scale-110 transition-transform">
-                        <Eye className="h-4 w-4 mr-1" />
-                        View
-                      </Button>
-                      <Button size="sm" variant="outline" className="glass-card flex-1 hover:scale-110 transition-transform">
-                        <Edit className="h-4 w-4 mr-1" />
-                        Edit
-                      </Button>
-                      <Button size="sm" variant="outline" className="glass-card text-red-500 hover:scale-110 transition-transform">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+              {facultiesLoading ? (
+                <Card className="glass-card border-0 col-span-full">
+                  <CardContent className="p-6 text-center">
+                    <p className="text-muted-foreground">Loading faculty members...</p>
                   </CardContent>
                 </Card>
-              ))}
+              ) : facultiesData && facultiesData.data.length > 0 ? (
+                facultiesData.data.map((member) => (
+                  <Card key={member._id} className="glass-card border-0 hover:scale-105 transition-all duration-300">
+                    <CardHeader className="text-center">
+                      <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-blue-200">
+                        <img
+                          src={member.image.url}
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <CardTitle className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        {member.name}
+                      </CardTitle>
+                      <Badge className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
+                        {member.specialization}
+                      </Badge>
+                      <Badge
+                        variant={member.isActive ? 'default' : 'secondary'}
+                        className={member.isActive ? 'bg-green-500' : 'bg-gray-500'}
+                      >
+                        {member.isActive ? 'Active' : 'Inactive'}
+                      </Badge>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2 text-sm">
+                        <p><strong>Experience:</strong> {member.experience} years</p>
+                        <p><strong>Email:</strong> {member.email}</p>
+                        <p><strong>Qualification:</strong> {member.qualification}</p>
+                        {member.expertise && member.expertise.length > 0 && (
+                          <div>
+                            <strong>Expertise:</strong>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {member.expertise.map((skill, idx) => (
+                                <Badge key={idx} variant="outline" className="text-xs">
+                                  {skill}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex gap-2 mt-4">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className={`glass-card flex-1 ${member.isActive ? 'text-orange-500' : 'text-green-500'}`}
+                          onClick={() => handleToggleFacultyStatus(member._id)}
+                        >
+                          {member.isActive ? <EyeOff className="h-4 w-4 mr-1" /> : <Eye className="h-4 w-4 mr-1" />}
+                          {member.isActive ? 'Deactivate' : 'Activate'}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="glass-card text-red-500 hover:scale-110 transition-transform"
+                          onClick={() => handleDeleteFaculty(member._id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              ) : (
+                <Card className="glass-card border-0 col-span-full">
+                  <CardContent className="p-6 text-center">
+                    <p className="text-muted-foreground">No faculty members found. Add your first faculty member!</p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </TabsContent>
 
@@ -582,319 +825,514 @@ const Admin = () => {
           <TabsContent value="events" className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Event Management</h2>
-              <Dialog open={isAddEventOpen} onOpenChange={setIsAddEventOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-orange-500 to-red-500 text-white hover:from-orange-600 hover:to-red-600 hover:scale-105 transition-all">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Create Event
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="glass-card border-0 max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle className="text-2xl bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Create New Event</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 mt-6">
-                    <div>
-                      <Label htmlFor="eventTitle">Event Title</Label>
-                      <Input 
-                        id="eventTitle" 
-                        className="glass-card border-orange-200 focus:border-orange-400"
-                        placeholder="e.g., AI Workshop 2024"
-                        value={newEvent.title}
-                        onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="eventDescription">Description</Label>
-                      <Textarea 
-                        id="eventDescription" 
-                        className="glass-card border-orange-200 focus:border-orange-400"
-                        placeholder="Event details and agenda..."
-                        value={newEvent.description}
-                        onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="eventDate">Date</Label>
-                        <Input 
-                          id="eventDate" 
-                          type="date"
-                          className="glass-card border-orange-200 focus:border-orange-400"
-                          value={newEvent.date}
-                          onChange={(e) => setNewEvent({...newEvent, date: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="eventTime">Time</Label>
-                        <Input 
-                          id="eventTime" 
-                          type="time"
-                          className="glass-card border-orange-200 focus:border-orange-400"
-                          value={newEvent.time}
-                          onChange={(e) => setNewEvent({...newEvent, time: e.target.value})}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="eventVenue">Venue</Label>
-                        <Input 
-                          id="eventVenue" 
-                          className="glass-card border-orange-200 focus:border-orange-400"
-                          placeholder="e.g., Main Auditorium"
-                          value={newEvent.venue}
-                          onChange={(e) => setNewEvent({...newEvent, venue: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="eventCapacity">Capacity</Label>
-                        <Input 
-                          id="eventCapacity" 
-                          type="number"
-                          className="glass-card border-orange-200 focus:border-orange-400"
-                          placeholder="100"
-                          value={newEvent.capacity}
-                          onChange={(e) => setNewEvent({...newEvent, capacity: e.target.value})}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <Label>Category</Label>
-                      <Select value={newEvent.category} onValueChange={(value) => setNewEvent({...newEvent, category: value})}>
-                        <SelectTrigger className="glass-card border-orange-200">
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="workshop">Workshop</SelectItem>
-                          <SelectItem value="webinar">Webinar</SelectItem>
-                          <SelectItem value="hackathon">Hackathon</SelectItem>
-                          <SelectItem value="seminar">Seminar</SelectItem>
-                          <SelectItem value="networking">Networking</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="flex gap-4 pt-4">
-                      <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex-1 hover:scale-105 transition-transform">
-                        <Save className="mr-2 h-4 w-4" />
-                        Create Event
-                      </Button>
-                      <Button variant="outline" className="glass-card hover:scale-105 transition-transform" onClick={() => setIsAddEventOpen(false)}>
-                        <X className="mr-2 h-4 w-4" />
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <Button
+                className="bg-gradient-to-r from-orange-500 to-red-500 text-white hover:from-orange-600 hover:to-red-600 hover:scale-105 transition-all"
+                onClick={() => navigate('/admin/events/add')}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Create Event
+              </Button>
             </div>
 
             <div className="space-y-4">
-              {mockEvents.map((event) => (
-                <Card key={event.id} className="glass-card border-0 hover:scale-[1.02] transition-all duration-300">
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-4 mb-2">
-                          <h3 className="text-lg font-semibold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">{event.title}</h3>
-                          <Badge variant={event.status === 'upcoming' ? 'default' : 'secondary'}
-                                 className={event.status === 'upcoming' ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white' : ''}>
-                            {event.status}
-                          </Badge>
-                        </div>
-                        <p className="text-muted-foreground mb-2">{event.description}</p>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4 text-orange-500" />
-                            {event.date}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4 text-red-500" />
-                            {event.venue}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Users className="h-4 w-4 text-blue-500" />
-                            {event.attendees} attendees
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="outline" className="glass-card hover:scale-110 transition-transform">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm" variant="outline" className="glass-card hover:scale-110 transition-transform">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm" variant="outline" className="glass-card text-red-500 hover:scale-110 transition-transform">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
+              {eventsLoading ? (
+                <Card className="glass-card border-0">
+                  <CardContent className="p-6 text-center">
+                    <p className="text-muted-foreground">Loading events...</p>
                   </CardContent>
                 </Card>
-              ))}
+              ) : eventsData && eventsData.data.length > 0 ? (
+                eventsData.data.map((event) => {
+                  const isUpcoming = new Date(event.startDate) > new Date();
+                  const isPast = new Date(event.endDate) < new Date();
+                  const isActive = !isPast && !isUpcoming;
+
+                  return (
+                    <Card key={event._id} className="glass-card border-0 hover:scale-[1.02] transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex gap-6">
+                          {/* Event Image */}
+                          <div className="flex-shrink-0">
+                            <img
+                              src={event.image.url}
+                              alt={event.eventName}
+                              className="w-32 h-32 object-cover rounded-lg"
+                            />
+                          </div>
+
+                          <div className="flex-1">
+                            <div className="flex items-center gap-4 mb-2">
+                              <h3 className="text-lg font-semibold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                                {event.eventName}
+                              </h3>
+                              <Badge
+                                variant={isUpcoming ? 'default' : isPast ? 'secondary' : 'default'}
+                                className={isUpcoming ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white' : isPast ? 'bg-gray-500 text-white' : 'bg-blue-500 text-white'}
+                              >
+                                {isUpcoming ? 'Upcoming' : isPast ? 'Past' : 'Active'}
+                              </Badge>
+                              <Badge variant="outline">{event.category}</Badge>
+                              {event.isFeatured && (
+                                <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+                                  Featured
+                                </Badge>
+                              )}
+                            </div>
+                            <p className="text-muted-foreground mb-3 line-clamp-2">{event.description}</p>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-1">
+                                <Calendar className="h-4 w-4 text-orange-500" />
+                                {new Date(event.startDate).toLocaleDateString()}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <MapPin className="h-4 w-4 text-red-500" />
+                                {event.venue}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Users className="h-4 w-4 text-blue-500" />
+                                {event.registeredParticipants.length}
+                                {event.maxParticipants ? `/${event.maxParticipants}` : ''} participants
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex gap-2 items-start">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="glass-card text-red-500 hover:scale-110 transition-transform"
+                              onClick={() => handleDeleteEvent(event._id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })
+              ) : (
+                <Card className="glass-card border-0">
+                  <CardContent className="p-6 text-center">
+                    <p className="text-muted-foreground">No events found. Create your first event!</p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </TabsContent>
 
           <TabsContent value="branches" className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Branch Management</h2>
-              <Dialog open={isAddBranchOpen} onOpenChange={setIsAddBranchOpen}>
+              <Button
+                onClick={() => window.location.href = '/admin/branches/add'}
+                className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 hover:scale-105 transition-all"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Branch
+              </Button>
+            </div>
+
+            {/* Removed Dialog Content - Now using separate page */}
+            <div className="hidden">
+              <Dialog open={isAddBranchOpen} onOpenChange={setIsAddBranchOpen} modal>
                 <DialogTrigger asChild>
                   <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 hover:scale-105 transition-all">
                     <Plus className="mr-2 h-4 w-4" />
-                    Add Branch
+                    Add Branch (Old)
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="glass-card border-0 max-w-2xl">
-                  <DialogHeader>
+                <DialogContent
+                  className="glass-card border-0 max-w-3xl max-h-[90vh] overflow-hidden flex flex-col p-0"
+                  onPointerDownOutside={(e) => e.preventDefault()}
+                >
+                  <DialogHeader className="flex-shrink-0 px-6 pt-6">
                     <DialogTitle className="text-2xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Add New Branch</DialogTitle>
                   </DialogHeader>
-                  <div className="space-y-4 mt-6">
-                    <div>
-                      <Label htmlFor="branchName">Branch Name</Label>
-                      <Input 
-                        id="branchName" 
-                        className="glass-card border-emerald-200 focus:border-emerald-400"
-                        placeholder="e.g., Chennai Campus"
-                        value={newBranch.name}
-                        onChange={(e) => setNewBranch({...newBranch, name: e.target.value})}
-                      />
+                  <div
+                    className="space-y-6 mt-6 overflow-y-auto px-6 flex-1 scrollbar-thin scrollbar-thumb-emerald-500 scrollbar-track-gray-200"
+                    style={{maxHeight: 'calc(90vh - 180px)'}}
+                    onWheel={(e) => e.stopPropagation()}
+                  >
+
+                    {/* Branch Images Upload */}
+                    <div className="space-y-3">
+                      <Label className="text-base font-semibold">Branch Images</Label>
+                      <div className="border-2 border-dashed border-emerald-300 rounded-lg p-6 glass-card hover:border-emerald-400 transition-colors">
+                        <input
+                          type="file"
+                          id="branchImages"
+                          multiple
+                          accept="image/*"
+                          onChange={handleImageChange}
+                          className="hidden"
+                        />
+                        <label
+                          htmlFor="branchImages"
+                          className="flex flex-col items-center justify-center cursor-pointer"
+                        >
+                          <Upload className="h-12 w-12 text-emerald-500 mb-3" />
+                          <p className="text-sm font-medium text-foreground mb-1">
+                            Click to upload branch images
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            PNG, JPG, WEBP up to 5MB (Max 10 images)
+                          </p>
+                        </label>
+                      </div>
+
+                      {/* Image Preview */}
+                      {imagePreview.length > 0 && (
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                          {imagePreview.map((preview, index) => (
+                            <div key={index} className="relative group">
+                              <img
+                                src={preview}
+                                alt={`Preview ${index + 1}`}
+                                className="w-full h-32 object-cover rounded-lg border-2 border-emerald-200"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeImage(index)}
+                                className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <div>
-                      <Label htmlFor="branchAddress">Address</Label>
-                      <Textarea 
-                        id="branchAddress" 
-                        className="glass-card border-emerald-200 focus:border-emerald-400"
-                        placeholder="Complete address with landmark..."
-                        value={newBranch.address}
-                        onChange={(e) => setNewBranch({...newBranch, address: e.target.value})}
-                      />
-                    </div>
+
+                    {/* Branch Details */}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="branchCity">City</Label>
-                        <Input 
-                          id="branchCity" 
+                        <Label htmlFor="branchName">Branch Name *</Label>
+                        <Input
+                          id="branchName"
                           className="glass-card border-emerald-200 focus:border-emerald-400"
-                          placeholder="e.g., Chennai"
-                          value={newBranch.city}
-                          onChange={(e) => setNewBranch({...newBranch, city: e.target.value})}
+                          placeholder="e.g., Chennai Campus"
+                          value={newBranch.branchName}
+                          onChange={(e) => setNewBranch({...newBranch, branchName: e.target.value})}
                         />
                       </div>
                       <div>
-                        <Label htmlFor="branchPhone">Phone</Label>
-                        <Input 
-                          id="branchPhone" 
+                        <Label htmlFor="branchCode">Branch Code *</Label>
+                        <Input
+                          id="branchCode"
                           className="glass-card border-emerald-200 focus:border-emerald-400"
-                          placeholder="+91-9876543214"
-                          value={newBranch.phone}
-                          onChange={(e) => setNewBranch({...newBranch, phone: e.target.value})}
+                          placeholder="e.g., CHN001"
+                          value={newBranch.branchCode}
+                          onChange={(e) => setNewBranch({...newBranch, branchCode: e.target.value.toUpperCase()})}
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="branchEmail">Email</Label>
-                        <Input 
-                          id="branchEmail" 
-                          type="email"
-                          className="glass-card border-emerald-200 focus:border-emerald-400"
-                          placeholder="chennai@academy.com"
-                          value={newBranch.email}
-                          onChange={(e) => setNewBranch({...newBranch, email: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="branchManager">Branch Manager</Label>
-                        <Input 
-                          id="branchManager" 
-                          className="glass-card border-emerald-200 focus:border-emerald-400"
-                          placeholder="Manager Name"
-                          value={newBranch.manager}
-                          onChange={(e) => setNewBranch({...newBranch, manager: e.target.value})}
-                        />
-                      </div>
-                    </div>
+
                     <div>
-                      <Label htmlFor="branchCapacity">Student Capacity</Label>
-                      <Input 
-                        id="branchCapacity" 
-                        type="number"
-                        className="glass-card border-emerald-200 focus:border-emerald-400"
-                        placeholder="200"
-                        value={newBranch.capacity}
-                        onChange={(e) => setNewBranch({...newBranch, capacity: e.target.value})}
+                      <Label htmlFor="description">Description *</Label>
+                      <Textarea
+                        id="description"
+                        className="glass-card border-emerald-200 focus:border-emerald-400 min-h-[100px]"
+                        placeholder="Describe the branch location, facilities, and key features..."
+                        value={newBranch.description}
+                        onChange={(e) => setNewBranch({...newBranch, description: e.target.value})}
                       />
                     </div>
-                    <div className="flex gap-4 pt-4">
-                      <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex-1 hover:scale-105 transition-transform">
-                        <Save className="mr-2 h-4 w-4" />
-                        Save Branch
-                      </Button>
-                      <Button variant="outline" className="glass-card hover:scale-105 transition-transform" onClick={() => setIsAddBranchOpen(false)}>
-                        <X className="mr-2 h-4 w-4" />
-                        Cancel
-                      </Button>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="totalSeats">Total Seats *</Label>
+                        <Input
+                          id="totalSeats"
+                          type="number"
+                          min="1"
+                          className="glass-card border-emerald-200 focus:border-emerald-400"
+                          placeholder="e.g., 200"
+                          value={newBranch.totalSeats}
+                          onChange={(e) => setNewBranch({...newBranch, totalSeats: e.target.value})}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="establishedYear">Established Year</Label>
+                        <Input
+                          id="establishedYear"
+                          type="number"
+                          min="1900"
+                          max={new Date().getFullYear()}
+                          className="glass-card border-emerald-200 focus:border-emerald-400"
+                          placeholder="e.g., 2020"
+                          value={newBranch.establishedYear}
+                          onChange={(e) => setNewBranch({...newBranch, establishedYear: e.target.value})}
+                        />
+                      </div>
                     </div>
+                  </div>
+
+                  {/* Fixed Footer Buttons */}
+                  <div className="flex gap-4 pt-4 px-6 pb-6 border-t flex-shrink-0">
+                    <Button
+                      onClick={handleCreateBranch}
+                      disabled={isCreating || !newBranch.branchName || !newBranch.branchCode || !newBranch.description || !newBranch.totalSeats}
+                      className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex-1 hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Save className="mr-2 h-4 w-4" />
+                      {isCreating ? 'Creating...' : 'Save Branch'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="glass-card hover:scale-105 transition-transform"
+                      onClick={() => {
+                        setIsAddBranchOpen(false);
+                        setNewBranch({
+                          branchName: '',
+                          branchCode: '',
+                          description: '',
+                          totalSeats: '',
+                          establishedYear: ''
+                        });
+                        setBranchImages([]);
+                        setImagePreview([]);
+                      }}
+                    >
+                      <X className="mr-2 h-4 w-4" />
+                      Cancel
+                    </Button>
                   </div>
                 </DialogContent>
               </Dialog>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                { id: 1, name: "Delhi Campus", address: "Connaught Place, New Delhi", students: 120, faculty: 8, phone: "+91-9876543210" },
-                { id: 2, name: "Mumbai Campus", address: "Bandra West, Mumbai", students: 95, faculty: 6, phone: "+91-9876543211" },
-                { id: 3, name: "Bangalore Campus", address: "Koramangala, Bangalore", students: 150, faculty: 10, phone: "+91-9876543212" },
-                { id: 4, name: "Pune Campus", address: "Hinjewadi, Pune", students: 80, faculty: 5, phone: "+91-9876543213" }
-              ].map((branch) => (
-                <Card key={branch.id} className="glass-card border-0 hover:scale-105 transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{branch.name}</CardTitle>
-                        <p className="text-muted-foreground flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          {branch.address}
-                        </p>
+            {/* Branch Cards */}
+            {branchesLoading ? (
+              <div className="flex justify-center items-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+              </div>
+            ) : branchesData && branchesData.data.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {branchesData.data.map((branch) => (
+                  <Card key={branch._id} className="glass-card border-0 hover:scale-105 transition-all duration-300 overflow-hidden">
+                    {/* Branch Image */}
+                    {branch.images && branch.images.length > 0 ? (
+                      <div className="h-48 overflow-hidden">
+                        <img
+                          src={branch.images[0].url}
+                          alt={branch.branchName}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="outline" className="glass-card hover:scale-110 transition-transform">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm" variant="outline" className="glass-card hover:scale-110 transition-transform">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm" variant="outline" className="glass-card text-red-500 hover:scale-110 transition-transform">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                    ) : (
+                      <div className="h-48 bg-gradient-to-br from-emerald-400 to-teal-400 flex items-center justify-center">
+                        <ImageIcon className="h-16 w-16 text-white opacity-50" />
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-3 gap-4 text-center">
-                      <div>
-                        <div className="text-2xl font-bold bg-gradient-to-r from-violet-500 to-purple-500 bg-clip-text text-transparent">{branch.students}</div>
-                        <div className="text-sm text-muted-foreground">Students</div>
+                    )}
+
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <CardTitle className="text-xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                            {branch.branchName}
+                          </CardTitle>
+                          <Badge className="mt-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white">
+                            {branch.branchCode}
+                          </Badge>
+                          {branch.establishedYear && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Est. {branch.establishedYear}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="glass-card text-red-500 hover:scale-110 transition-transform"
+                            onClick={() => handleDeleteBranch(branch._id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </div>
-                      <div>
-                        <div className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">{branch.faculty}</div>
-                        <div className="text-sm text-muted-foreground">Faculty</div>
+                    </CardHeader>
+
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                        {branch.description}
+                      </p>
+                      <div className="grid grid-cols-2 gap-4 text-center pt-4 border-t">
+                        <div>
+                          <div className="text-2xl font-bold bg-gradient-to-r from-violet-500 to-purple-500 bg-clip-text text-transparent">
+                            {branch.totalSeats - branch.availableSeats}
+                          </div>
+                          <div className="text-xs text-muted-foreground">Enrolled</div>
+                        </div>
+                        <div>
+                          <div className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
+                            {branch.availableSeats}
+                          </div>
+                          <div className="text-xs text-muted-foreground">Available</div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="text-sm font-medium">{branch.phone}</div>
-                        <div className="text-sm text-muted-foreground">Contact</div>
+                      <div className="mt-4 pt-4 border-t text-center">
+                        <div className="text-sm font-medium">
+                          Total Capacity: {branch.totalSeats}
+                        </div>
+                        <Badge
+                          variant={branch.isActive ? "default" : "secondary"}
+                          className={branch.isActive ? "mt-2 bg-gradient-to-r from-emerald-500 to-teal-500" : "mt-2"}
+                        >
+                          {branch.isActive ? "Active" : "Inactive"}
+                        </Badge>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card className="glass-card border-0">
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <MapPin className="h-16 w-16 text-muted-foreground mb-4" />
+                  <p className="text-lg font-medium text-muted-foreground">No branches found</p>
+                  <p className="text-sm text-muted-foreground mt-2">Click "Add Branch" to create your first branch</p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="outstanding" className="space-y-6">
+            <Card className="glass-card border-0">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="text-2xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Outstanding Students</CardTitle>
+                  <CardDescription>Manage outstanding student profiles for the homepage</CardDescription>
+                </div>
+                <Button
+                  onClick={() => navigate('/admin/outstanding-students/add')}
+                  className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Student
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {studentsLoading ? (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">Loading students...</p>
+                  </div>
+                ) : outstandingStudentsData && outstandingStudentsData.data.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {outstandingStudentsData.data.map((student) => (
+                      <Card key={student._id} className="glass-card border-0 hover:shadow-2xl transition-all duration-300 overflow-hidden group">
+                        {/* Header with Gradient */}
+                        <div className="relative h-24 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 overflow-hidden">
+                          <div className="absolute inset-0 bg-black/20" />
+                          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
+                            <Trophy className="h-3 w-3 text-violet-600" />
+                            <span className="text-xs font-bold text-violet-600">#{student.rank}</span>
+                          </div>
+                        </div>
+
+                        <CardContent className="p-6 -mt-12">
+                          {/* Profile Image */}
+                          <div className="flex justify-center mb-4">
+                            <div className="relative">
+                              <img
+                                src={student.image.url}
+                                alt={student.name}
+                                className="w-24 h-24 rounded-full object-cover ring-4 ring-white shadow-lg"
+                              />
+                              <div className={`absolute bottom-0 right-0 w-6 h-6 rounded-full border-2 border-white ${student.isActive ? 'bg-green-500' : 'bg-gray-400'}`} />
+                            </div>
+                          </div>
+
+                          {/* Student Info */}
+                          <div className="text-center mb-4">
+                            <h3 className="font-bold text-xl mb-1 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                              {student.name}
+                            </h3>
+                            <p className="text-sm text-muted-foreground flex items-center justify-center gap-1 mb-2">
+                              <Building2 className="h-3 w-3" />
+                              {student.college}
+                            </p>
+                          </div>
+
+                          {/* Company Card */}
+                          <div className="p-4 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 rounded-xl mb-4 border border-violet-100 dark:border-violet-900">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-xs text-muted-foreground">Current Position</span>
+                              <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-xs">
+                                {student.package}
+                              </Badge>
+                            </div>
+                            <p className="font-bold text-base gradient-text">{student.company}</p>
+                            <p className="text-sm text-muted-foreground">{student.role}</p>
+                          </div>
+
+                          {/* Skills */}
+                          <div className="mb-4">
+                            <p className="text-xs font-semibold mb-2 text-muted-foreground">SKILLS</p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {student.skills.slice(0, 4).map((skill, index) => (
+                                <Badge key={index} variant="secondary" className="text-xs glass-card hover:scale-105 transition-transform">
+                                  {skill}
+                                </Badge>
+                              ))}
+                              {student.skills.length > 4 && (
+                                <Badge variant="secondary" className="text-xs glass-card">
+                                  +{student.skills.length - 4} more
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Achievement */}
+                          <div className="p-3 glass-card rounded-lg mb-4">
+                            <div className="flex items-start gap-2">
+                              <Award className="h-4 w-4 text-violet-600 mt-0.5 flex-shrink-0" />
+                              <div>
+                                <p className="text-xs font-semibold text-muted-foreground mb-1">ACHIEVEMENT</p>
+                                <p className="text-sm line-clamp-2">{student.achievement}</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleToggleStudentStatus(student._id)}
+                              className={`flex-1 glass-card ${student.isActive ? 'text-green-600 hover:bg-green-50' : 'text-gray-400'}`}
+                            >
+                              {student.isActive ? <Eye className="h-4 w-4 mr-1" /> : <EyeOff className="h-4 w-4 mr-1" />}
+                              {student.isActive ? 'Active' : 'Inactive'}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleDeleteStudent(student._id)}
+                              className="glass-card text-red-500 hover:bg-red-50 hover:text-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Trophy className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-lg font-medium text-muted-foreground">No outstanding students found</p>
+                    <p className="text-sm text-muted-foreground mt-2">Click "Add Student" to create your first outstanding student profile</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

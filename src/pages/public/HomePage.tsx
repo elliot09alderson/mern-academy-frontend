@@ -1,9 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useGetActiveCoursesQuery } from '../../store/api/courseApi';
 import { useGetActiveBranchesQuery } from '../../store/api/branchApi';
 import { useGetUpcomingEventsQuery, useGetFeaturedEventsQuery } from '../../store/api/eventApi';
 import { useGetOutstandingStudentsQuery } from '../../store/api/studentApi';
+import { useLogoutMutation } from '../../store/api/authApi';
+import { useAuthPolling } from '../../hooks/useAuthPolling';
+import { useAppSelector, useAppDispatch } from '../../store/store';
+import { selectIsAuthenticated, selectCurrentUser, logout } from '../../store/slices/authSlice';
+import { toast } from 'sonner';
 import {
   BookOpen,
   Building,
@@ -14,15 +19,59 @@ import {
   ArrowRight,
   MapPin,
   Clock,
-  Star
+  Star,
+  LogOut,
+  User as UserIcon
 } from 'lucide-react';
 
 const HomePage: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  // Use auth polling to check token validity every 15 seconds
+  const { isPolling, isFetching, refreshAuth } = useAuthPolling();
+
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const currentUser = useAppSelector(selectCurrentUser);
+  const [logoutMutation] = useLogoutMutation();
+
+  // Log authentication state for debugging
+  React.useEffect(() => {
+    console.log('HomePage - Auth State:', {
+      isAuthenticated,
+      isPolling,
+      hasUser: !!currentUser,
+      userName: currentUser?.name
+    });
+  }, [isAuthenticated, isPolling, currentUser]);
+
   const { data: coursesData } = useGetActiveCoursesQuery({ limit: 6 });
   const { data: branchesData } = useGetActiveBranchesQuery({ limit: 4 });
   const { data: upcomingEvents } = useGetUpcomingEventsQuery({ limit: 4 });
   const { data: featuredEvents } = useGetFeaturedEventsQuery({ limit: 3 });
   const { data: outstandingStudents } = useGetOutstandingStudentsQuery({ limit: 6 });
+
+  const handleLogout = async () => {
+    try {
+      // Call logout API to clear server cookies
+      await logoutMutation().unwrap();
+
+      // Clear localStorage token
+      localStorage.removeItem('token');
+
+      // Clear Redux state
+      dispatch(logout());
+
+      toast.success('Logged out successfully');
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if API fails, clear local state
+      localStorage.removeItem('token');
+      dispatch(logout());
+      navigate('/login');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -34,19 +83,37 @@ const HomePage: React.FC = () => {
               <GraduationCap className="h-8 w-8 text-blue-600 mr-3" />
               <h1 className="text-2xl font-bold text-gray-900">MERN Academy</h1>
             </div>
-            <div className="flex space-x-4">
-              <Link
-                to="/auth/login"
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-              >
-                Login
-              </Link>
-              <Link
-                to="/auth/register"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-              >
-                Register
-              </Link>
+            <div className="flex items-center space-x-4">
+              {isAuthenticated ? (
+                <>
+                  <div className="flex items-center text-gray-700 px-3 py-2">
+                    <UserIcon className="h-5 w-5 mr-2" />
+                    <span className="text-sm font-medium">{currentUser?.name || 'User'}</span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  >
+                    <LogOut className="h-4 w-4 mr-1" />
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

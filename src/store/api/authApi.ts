@@ -2,13 +2,30 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '../../config/api';
 
 export interface User {
-  id: string;
+  _id: string;
+  id?: string;
   name: string;
   email: string;
   role: 'admin' | 'student' | 'faculty';
+  phone?: string;
+  address?: string;
   branchId?: string;
   isActive: boolean;
-  profilePicture?: string;
+  profilePicture?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  adminDetails?: {
+    _id: string;
+    adminId: string;
+    department: string;
+    permissions: string[];
+    isSuperAdmin: boolean;
+    lastLogin?: string | null;
+    loginAttempts?: number;
+    accountLocked?: boolean;
+  };
+  studentDetails?: any;
+  facultyDetails?: any;
 }
 
 export interface LoginRequest {
@@ -36,8 +53,7 @@ export interface AuthResponse {
   message: string;
   data: {
     user: User;
-    token: string;
-    refreshToken: string;
+    token?: string; // Token is in cookie, but might be in response
   };
 }
 
@@ -50,12 +66,9 @@ export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
-    credentials: 'include',
-    prepareHeaders: (headers, { getState }) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
+    credentials: 'include', // Send cookies with every request
+    prepareHeaders: (headers) => {
+      // No need to add Authorization header - using cookies only
       return headers;
     },
   }),

@@ -1,28 +1,36 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface User {
-  _id: string;
-  fullname: string;
+  _id?: string;
+  id?: string;
+  name: string;
   email: string;
-  phonenumber?: string;
-  qualification?: string;
-  hereaboutus?: string;
-  specialization?: string;
+  role: 'admin' | 'student' | 'faculty';
+  phone?: string;
+  address?: string;
+  profilePicture?: string;
   isActive: boolean;
-  userType: 'admin' | 'student' | 'faculty';
+  branchId?: string;
+  adminDetails?: {
+    _id: string;
+    adminId: string;
+    department: string;
+    permissions: string[];
+    isSuperAdmin: boolean;
+  };
+  studentDetails?: any;
+  facultyDetails?: any;
 }
 
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  token: string | null;
   userType: 'admin' | 'student' | 'faculty' | null;
 }
 
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
-  token: null,
   userType: null,
 };
 
@@ -30,16 +38,21 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<{ user: any; token: string; userType: 'admin' | 'student' | 'faculty' }>) => {
-      const { user, token, userType } = action.payload;
-      state.user = { ...user, userType };
-      state.token = token;
-      state.userType = userType;
+    setCredentials: (state, action: PayloadAction<{ user: any; userType?: 'admin' | 'student' | 'faculty' }>) => {
+      const { user, userType } = action.payload;
+      console.log('🔐 Redux - setCredentials called', { user, userType });
+      state.user = user;
+      state.userType = userType || user.role;
       state.isAuthenticated = true;
+      console.log('🔐 Redux - State updated', {
+        isAuthenticated: state.isAuthenticated,
+        userType: state.userType,
+        userName: state.user?.name
+      });
     },
     logout: (state) => {
+      console.log('🚪 Redux - logout called');
       state.user = null;
-      state.token = null;
       state.userType = null;
       state.isAuthenticated = false;
     },
@@ -58,4 +71,3 @@ export default authSlice.reducer;
 export const selectCurrentUser = (state: { auth: AuthState }) => state.auth.user;
 export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
 export const selectUserType = (state: { auth: AuthState }) => state.auth.userType;
-export const selectToken = (state: { auth: AuthState }) => state.auth.token;

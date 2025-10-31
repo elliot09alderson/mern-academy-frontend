@@ -3,80 +3,24 @@ import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useGetEventsQuery } from '@/store/api/eventApi';
+import { Loader2, Calendar, MapPin, Users } from 'lucide-react';
 
 export const Gallery = () => {
-  const galleryItems = [
-    {
-      id: 1,
-      title: "Full Stack Development Workshop",
-      category: "Workshop",
-      image: "/api/placeholder/400/300",
-      description: "Students working on MERN stack projects"
-    },
-    {
-      id: 2,
-      title: "AI Tools Training Session",
-      category: "Training",
-      image: "/api/placeholder/400/300",
-      description: "Learning modern AI development tools"
-    },
-    {
-      id: 3,
-      title: "System Design Bootcamp",
-      category: "Bootcamp",
-      image: "/api/placeholder/400/300",
-      description: "Advanced system design concepts"
-    },
-    {
-      id: 4,
-      title: "Placement Success Celebration",
-      category: "Event",
-      image: "/api/placeholder/400/300",
-      description: "Celebrating student achievements"
-    },
-    {
-      id: 5,
-      title: "DSA Problem Solving",
-      category: "Training",
-      image: "/api/placeholder/400/300",
-      description: "Data structures and algorithms practice"
-    },
-    {
-      id: 6,
-      title: "Industry Expert Session",
-      category: "Workshop",
-      image: "/api/placeholder/400/300",
-      description: "Guest lecture from industry professionals"
-    },
-    {
-      id: 7,
-      title: "Project Presentation Day",
-      category: "Event",
-      image: "/api/placeholder/400/300",
-      description: "Students showcasing their final projects"
-    },
-    {
-      id: 8,
-      title: "Hackathon 2024",
-      category: "Event",
-      image: "/api/placeholder/400/300",
-      description: "48-hour coding challenge"
-    },
-    {
-      id: 9,
-      title: "Web Development Masterclass",
-      category: "Training",
-      image: "/api/placeholder/400/300",
-      description: "Advanced web development techniques"
-    }
-  ];
+  const { data: eventsData, isLoading } = useGetEventsQuery({ page: 1, limit: 100 });
 
-  const categories = ["All", "Workshop", "Training", "Event", "Bootcamp"];
+  const categories = ["All", "Academic", "Cultural", "Sports", "Technical", "Workshop", "Seminar", "Other"];
   const [selectedCategory, setSelectedCategory] = React.useState("All");
 
-  const filteredItems = selectedCategory === "All" 
-    ? galleryItems 
-    : galleryItems.filter(item => item.category === selectedCategory);
+  const filteredEvents = React.useMemo(() => {
+    if (!eventsData?.data) return [];
+
+    if (selectedCategory === "All") {
+      return eventsData.data;
+    }
+
+    return eventsData.data.filter(event => event.category === selectedCategory);
+  }, [eventsData, selectedCategory]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -123,32 +67,86 @@ export const Gallery = () => {
         {/* Gallery Grid */}
         <section className="pb-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredItems.map((item) => (
-                <Card key={item.id} className="glass-card border-0 group hover-lift cursor-pointer">
-                  <div className="relative overflow-hidden rounded-t-lg">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-64 object-cover group-hover:scale-105 transition-smooth"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-smooth" />
-                    <Badge className="absolute top-4 left-4 gradient-primary text-white">
-                      {item.category}
-                    </Badge>
-                  </div>
-                  
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-3 group-hover:gradient-text transition-smooth">
-                      {item.title}
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {item.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="flex justify-center items-center py-20">
+                <Loader2 className="h-12 w-12 animate-spin text-violet-500" />
+              </div>
+            ) : filteredEvents.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredEvents.map((event) => (
+                  <Card key={event._id} className="glass-card border-0 group hover-lift cursor-pointer overflow-hidden">
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={event.image.url}
+                        alt={event.eventName}
+                        className="w-full h-64 object-cover group-hover:scale-105 transition-smooth"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent opacity-0 group-hover:opacity-100 transition-smooth" />
+                      <Badge className="absolute top-4 left-4 gradient-primary text-white">
+                        {event.category}
+                      </Badge>
+                      {event.isFeatured && (
+                        <Badge className="absolute top-4 right-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+                          Featured
+                        </Badge>
+                      )}
+                    </div>
+
+                    <CardContent className="p-6">
+                      <h3 className="text-xl font-semibold mb-3 group-hover:bg-gradient-to-r group-hover:from-violet-600 group-hover:via-purple-600 group-hover:to-pink-600 group-hover:bg-clip-text group-hover:text-transparent transition-smooth">
+                        {event.eventName}
+                      </h3>
+                      <p className="text-muted-foreground mb-4 line-clamp-2">
+                        {event.description}
+                      </p>
+
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Calendar className="h-4 w-4 text-violet-500" />
+                          <span>{new Date(event.startDate).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <MapPin className="h-4 w-4 text-purple-500" />
+                          <span>{event.venue}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Users className="h-4 w-4 text-pink-500" />
+                          <span>
+                            {event.registeredParticipants.length}
+                            {event.maxParticipants ? ` / ${event.maxParticipants}` : ''} participants
+                          </span>
+                        </div>
+                      </div>
+
+                      {event.registrationLink && (
+                        <div className="mt-4">
+                          <a
+                            href={event.registrationLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-violet-600 hover:text-violet-700 font-medium"
+                          >
+                            Register Now →
+                          </a>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20">
+                <p className="text-xl text-muted-foreground">
+                  {selectedCategory === "All"
+                    ? "No events available at the moment. Check back soon!"
+                    : `No ${selectedCategory} events found.`}
+                </p>
+              </div>
+            )}
           </div>
         </section>
       </main>

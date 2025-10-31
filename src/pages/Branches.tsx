@@ -4,111 +4,72 @@ import { Footer } from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Clock, 
-  Wifi, 
-  Car, 
-  Coffee, 
-  Users, 
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  Wifi,
+  Car,
+  Coffee,
+  Users,
   Monitor,
   BookOpen,
   Shield,
-  Navigation as NavigationIcon
+  Navigation as NavigationIcon,
+  Image as ImageIcon,
+  Loader2,
+  Snowflake,
+  Presentation,
+  Trophy,
+  Bed,
+  Heart,
+  Projector
 } from 'lucide-react';
+import { useGetBranchesQuery } from '@/store/api/branchApi';
 
 export const Branches = () => {
-  const branches = [
-    {
-      id: 1,
-      name: "MERN Academy - Delhi Main Campus",
-      address: "Plot No. 45, Sector 18, Noida, Uttar Pradesh 201301",
-      phone: "+91 98765 43210",
-      email: "delhi@mernacademy.com",
-      timing: "Mon-Fri: 9:00 AM - 8:00 PM, Sat: 9:00 AM - 6:00 PM",
-      image: "/api/placeholder/600/400",
-      facilities: [
-        "50+ Lab Computers",
-        "High-Speed Wi-Fi",
-        "Air Conditioned Rooms",
-        "Parking Facility",
-        "Cafeteria",
-        "Library",
-        "24/7 Security",
-        "Career Counseling"
-      ],
-      capacity: "120 Students",
-      established: "2020",
-      isHeadquarters: true
-    },
-    {
-      id: 2,
-      name: "MERN Academy - Bangalore Tech Hub",
-      address: "3rd Floor, Tech Park Building, Electronic City, Bangalore 560100",
-      phone: "+91 98765 43211",
-      email: "bangalore@mernacademy.com",
-      timing: "Mon-Fri: 8:30 AM - 8:30 PM, Sat: 9:00 AM - 5:00 PM",
-      image: "/api/placeholder/600/400",
-      facilities: [
-        "40+ Lab Computers",
-        "High-Speed Wi-Fi",
-        "Modern Workstations",
-        "Parking Facility",
-        "Break Room",
-        "Project Rooms",
-        "24/7 Security",
-        "Industry Mentorship"
-      ],
-      capacity: "80 Students",
-      established: "2022",
-      isHeadquarters: false
-    },
-    {
-      id: 3,
-      name: "MERN Academy - Pune Innovation Center",
-      address: "Floor 2, IT Tower, Hinjewadi Phase 2, Pune, Maharashtra 411057",
-      phone: "+91 98765 43212",
-      email: "pune@mernacademy.com",
-      timing: "Mon-Fri: 9:00 AM - 7:30 PM, Sat: 10:00 AM - 4:00 PM",
-      image: "/api/placeholder/600/400",
-      facilities: [
-        "35+ Lab Computers",
-        "High-Speed Wi-Fi",
-        "Smart Classrooms",
-        "Metro Connectivity",
-        "Food Court Nearby",
-        "Study Areas",
-        "Security Systems",
-        "Placement Cell"
-      ],
-      capacity: "60 Students",
-      established: "2023",
-      isHeadquarters: false
-    }
-  ];
+  const { data: branchesData, isLoading, error } = useGetBranchesQuery({ page: 1, limit: 50 });
 
-  const facilityIcons = {
+  const facilityIcons: Record<string, any> = {
+    "50+ Lab Computers": Monitor,
     "High-Speed Wi-Fi": Wifi,
+    "Air Conditioned Rooms": Snowflake,
     "Parking Facility": Car,
     "Cafeteria": Coffee,
+    "Library": BookOpen,
+    "24/7 Security": Shield,
+    "Career Counseling": Users,
+    "Projector Rooms": Projector,
+    "Conference Hall": Presentation,
+    "Sports Facility": Trophy,
+    "Hostel": Bed,
+    "Medical Room": Heart,
+    // Additional common facilities
     "Food Court Nearby": Coffee,
     "Break Room": Coffee,
-    "Library": BookOpen,
     "Study Areas": BookOpen,
     "Project Rooms": Users,
-    "24/7 Security": Shield,
     "Security Systems": Shield,
-    "Career Counseling": Users,
     "Industry Mentorship": Users,
     "Placement Cell": Users
   };
 
+  const branches = branchesData?.data || [];
+  const totalCapacity = branches.reduce((sum, branch) => sum + branch.totalSeats, 0);
+  const totalComputers = branches.reduce((sum, branch) => {
+    const computerFacility = branch.facilities?.find(f => f.includes('Lab Computers'));
+    if (computerFacility) {
+      const match = computerFacility.match(/(\d+)/);
+      return sum + (match ? parseInt(match[1]) : 0);
+    }
+    return sum;
+  }, 0);
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
-      
+
       <main className="pt-20">
         {/* Header Section */}
         <section className="py-20 px-4 sm:px-6 lg:px-8">
@@ -123,134 +84,187 @@ export const Branches = () => {
               </span>
             </h1>
             <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto">
-              Learn from the best at our state-of-the-art facilities across India. 
+              Learn from the best at our state-of-the-art facilities across India.
               Each branch is equipped with modern infrastructure and experienced faculty.
             </p>
-            
+
             {/* Quick Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">{branches.length}</div>
-                <div className="text-muted-foreground">Active Branches</div>
+            {!isLoading && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div className="text-center">
+                  <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">{branches.length}</div>
+                  <div className="text-muted-foreground">Active Branches</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">{totalCapacity}+</div>
+                  <div className="text-muted-foreground">Total Capacity</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">{totalComputers}+</div>
+                  <div className="text-muted-foreground">Lab Computers</div>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">260+</div>
-                <div className="text-muted-foreground">Total Capacity</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">125+</div>
-                <div className="text-muted-foreground">Lab Computers</div>
-              </div>
-            </div>
+            )}
           </div>
         </section>
 
         {/* Branches Section */}
         <section className="pb-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="space-y-12">
-              {branches.map((branch) => (
-                <Card key={branch.id} className="glass-card border-0 hover-lift overflow-hidden">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-                    {/* Image Section */}
-                    <div className="relative">
-                      <img
-                        src={branch.image}
-                        alt={branch.name}
-                        className="w-full h-64 lg:h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent lg:bg-gradient-to-r" />
-                      
-                      {/* Headquarters Badge */}
-                      {branch.isHeadquarters && (
-                        <Badge className="absolute top-4 left-4 gradient-primary text-white">
-                          Headquarters
-                        </Badge>
-                      )}
-                      
-                      {/* Established Badge */}
-                      <Badge className="absolute top-4 right-4 glass-card">
-                        Est. {branch.established}
-                      </Badge>
-                    </div>
+            {/* Loading State */}
+            {isLoading && (
+              <div className="flex justify-center items-center py-20">
+                <Loader2 className="h-12 w-12 animate-spin text-primary" />
+              </div>
+            )}
 
-                    {/* Content Section */}
-                    <div className="p-8">
-                      <CardHeader className="p-0 mb-6">
-                        <CardTitle className="text-2xl font-bold mb-4">
-                          {branch.name}
-                        </CardTitle>
-                        
-                        {/* Contact Info */}
-                        <div className="space-y-3">
-                          <div className="flex items-start gap-3">
-                            <MapPin className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                            <span className="text-muted-foreground">{branch.address}</span>
-                          </div>
-                          
-                          <div className="flex items-center gap-3">
-                            <Phone className="h-5 w-5 text-primary" />
-                            <span className="text-muted-foreground">{branch.phone}</span>
-                          </div>
-                          
-                          <div className="flex items-center gap-3">
-                            <Mail className="h-5 w-5 text-primary" />
-                            <span className="text-muted-foreground">{branch.email}</span>
-                          </div>
-                          
-                          <div className="flex items-start gap-3">
-                            <Clock className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                            <span className="text-muted-foreground">{branch.timing}</span>
-                          </div>
-                        </div>
-                      </CardHeader>
+            {/* Error State */}
+            {error && (
+              <Card className="glass-card border-0 p-12 text-center">
+                <p className="text-lg text-muted-foreground">Failed to load branches. Please try again later.</p>
+              </Card>
+            )}
 
-                      <CardContent className="p-0">
-                        {/* Capacity Info */}
-                        <div className="flex items-center gap-6 mb-6">
-                          <div className="flex items-center gap-2">
-                            <Users className="h-5 w-5 text-primary" />
-                            <span className="font-medium">{branch.capacity}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Monitor className="h-5 w-5 text-primary" />
-                            <span className="font-medium">Modern Labs</span>
-                          </div>
-                        </div>
+            {/* No Branches State */}
+            {!isLoading && !error && branches.length === 0 && (
+              <Card className="glass-card border-0 p-12 text-center">
+                <MapPin className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                <p className="text-lg font-medium">No branches available yet</p>
+                <p className="text-muted-foreground mt-2">Check back soon for new locations</p>
+              </Card>
+            )}
 
-                        {/* Facilities */}
-                        <div className="mb-6">
-                          <h4 className="font-semibold mb-3">Facilities & Amenities</h4>
-                          <div className="grid grid-cols-2 gap-3">
-                            {branch.facilities.map((facility) => {
-                              const IconComponent = facilityIcons[facility] || Monitor;
-                              return (
-                                <div key={facility} className="flex items-center gap-2">
-                                  <IconComponent className="h-4 w-4 text-primary" />
-                                  <span className="text-sm text-muted-foreground">{facility}</span>
+            {/* Branches List */}
+            {!isLoading && !error && branches.length > 0 && (
+              <div className="space-y-12">
+                {branches.map((branch) => (
+                  <Card key={branch._id} className="glass-card border-0 hover-lift overflow-hidden">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                      {/* Image Section */}
+                      <div className="relative">
+                        {branch.images && branch.images.length > 0 ? (
+                          <img
+                            src={branch.images[0].url}
+                            alt={branch.branchName}
+                            className="w-full h-64 lg:h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-64 lg:h-full bg-gradient-to-br from-emerald-400 to-teal-400 flex items-center justify-center">
+                            <ImageIcon className="h-24 w-24 text-white opacity-50" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent lg:bg-gradient-to-r" />
+
+                        {/* Headquarters Badge */}
+                        {branch.isHeadquarters && (
+                          <Badge className="absolute top-4 left-4 gradient-primary text-white">
+                            Headquarters
+                          </Badge>
+                        )}
+
+                        {/* Established Badge */}
+                        {branch.establishedYear && (
+                          <Badge className="absolute top-4 right-4 glass-card">
+                            Est. {branch.establishedYear}
+                          </Badge>
+                        )}
+                      </div>
+
+                      {/* Content Section */}
+                      <div className="p-8">
+                        <CardHeader className="p-0 mb-6">
+                          <CardTitle className="text-2xl font-bold mb-4">
+                            {branch.branchName}
+                          </CardTitle>
+
+                          {/* Contact Info */}
+                          <div className="space-y-3">
+                            {branch.address?.fullAddress && (
+                              <div className="flex items-start gap-3">
+                                <MapPin className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                <span className="text-muted-foreground">{branch.address.fullAddress}</span>
+                              </div>
+                            )}
+
+                            {branch.contactInfo?.phone && (
+                              <div className="flex items-center gap-3">
+                                <Phone className="h-5 w-5 text-primary" />
+                                <span className="text-muted-foreground">{branch.contactInfo.phone}</span>
+                              </div>
+                            )}
+
+                            {branch.contactInfo?.email && (
+                              <div className="flex items-center gap-3">
+                                <Mail className="h-5 w-5 text-primary" />
+                                <span className="text-muted-foreground">{branch.contactInfo.email}</span>
+                              </div>
+                            )}
+
+                            {branch.operatingHours && (
+                              <div className="flex items-start gap-3">
+                                <Clock className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                                <div className="text-muted-foreground">
+                                  <div>{branch.operatingHours.weekdays}</div>
+                                  {branch.operatingHours.weekends && (
+                                    <div>{branch.operatingHours.weekends}</div>
+                                  )}
                                 </div>
-                              );
-                            })}
+                              </div>
+                            )}
                           </div>
-                        </div>
+                        </CardHeader>
 
-                        {/* Action Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-3">
-                          <Button className="gradient-primary text-white">
-                            <NavigationIcon className="h-4 w-4 mr-2" />
-                            Get Directions
-                          </Button>
-                          <Button variant="outline" className="glass-card">
-                            <Phone className="h-4 w-4 mr-2" />
-                            Contact Branch
-                          </Button>
-                        </div>
-                      </CardContent>
+                        <CardContent className="p-0">
+                          {/* Capacity Info */}
+                          <div className="flex items-center gap-6 mb-6">
+                            <div className="flex items-center gap-2">
+                              <Users className="h-5 w-5 text-primary" />
+                              <span className="font-medium">{branch.totalSeats} Students</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Monitor className="h-5 w-5 text-primary" />
+                              <span className="font-medium">Modern Labs</span>
+                            </div>
+                          </div>
+
+                          {/* Facilities */}
+                          {branch.facilities && branch.facilities.length > 0 && (
+                            <div className="mb-6">
+                              <h4 className="font-semibold mb-3">Facilities & Amenities</h4>
+                              <div className="grid grid-cols-2 gap-3">
+                                {branch.facilities.map((facility, index) => {
+                                  const IconComponent = facilityIcons[facility] || Monitor;
+                                  return (
+                                    <div key={index} className="flex items-center gap-2">
+                                      <IconComponent className="h-4 w-4 text-primary" />
+                                      <span className="text-sm text-muted-foreground">{facility}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Action Buttons */}
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <Button className="gradient-primary text-white">
+                              <NavigationIcon className="h-4 w-4 mr-2" />
+                              Get Directions
+                            </Button>
+                            {branch.contactInfo?.phone && (
+                              <Button variant="outline" className="glass-card">
+                                <Phone className="h-4 w-4 mr-2" />
+                                Contact Branch
+                              </Button>
+                            )}
+                          </div>
+                        </CardContent>
+                      </div>
                     </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 

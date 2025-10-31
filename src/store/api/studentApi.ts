@@ -69,12 +69,9 @@ export const studentApi = createApi({
   reducerPath: 'studentApi',
   baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
-    credentials: 'include',
+    credentials: 'include', // Send cookies with every request
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
+      // No need to add Authorization header - using cookies only
       return headers;
     },
   }),

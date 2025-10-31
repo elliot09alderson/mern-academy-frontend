@@ -6,10 +6,34 @@ export interface Branch {
   branchName: string;
   branchCode: string;
   description: string;
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    country?: string;
+    fullAddress?: string;
+  };
+  contactInfo?: {
+    phone?: string;
+    email?: string;
+    alternatePhone?: string;
+  };
+  operatingHours?: {
+    weekdays?: string;
+    weekends?: string;
+  };
+  facilities?: string[];
+  isHeadquarters?: boolean;
   departmentHead?: string | any;
   totalSeats: number;
   availableSeats: number;
   establishedYear?: number;
+  images?: {
+    url: string;
+    publicId: string;
+    uploadedAt: string;
+  }[];
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -23,6 +47,7 @@ export interface CreateBranchRequest {
   totalSeats: number;
   availableSeats?: number;
   establishedYear?: number;
+  images?: File[];
 }
 
 export interface BranchStatistics extends Branch {
@@ -45,12 +70,9 @@ export const branchApi = createApi({
   reducerPath: 'branchApi',
   baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
-    credentials: 'include',
+    credentials: 'include', // Send cookies with every request
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
+      // No need to add Authorization header - using cookies only
       return headers;
     },
   }),
@@ -81,19 +103,19 @@ export const branchApi = createApi({
       query: (id) => `/branches/${id}/statistics`,
       providesTags: (result, error, id) => [{ type: 'Branch', id }],
     }),
-    createBranch: builder.mutation<{ success: boolean; data: Branch }, CreateBranchRequest>({
-      query: (branch) => ({
+    createBranch: builder.mutation<{ success: boolean; data: Branch }, FormData>({
+      query: (formData) => ({
         url: '/branches',
         method: 'POST',
-        body: branch,
+        body: formData,
       }),
       invalidatesTags: ['Branch'],
     }),
-    updateBranch: builder.mutation<{ success: boolean; data: Branch }, { id: string; updates: Partial<CreateBranchRequest> }>({
-      query: ({ id, updates }) => ({
+    updateBranch: builder.mutation<{ success: boolean; data: Branch }, { id: string; formData: FormData }>({
+      query: ({ id, formData }) => ({
         url: `/branches/${id}`,
         method: 'PUT',
-        body: updates,
+        body: formData,
       }),
       invalidatesTags: (result, error, { id }) => [{ type: 'Branch', id }, 'Branch'],
     }),

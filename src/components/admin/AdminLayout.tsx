@@ -13,6 +13,7 @@ import {
   Menu,
   X
 } from 'lucide-react';
+import { Navigation } from '../Navigation';
 
 const AdminLayout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -37,15 +38,17 @@ const AdminLayout: React.FC = () => {
     { path: '/admin/courses', label: 'Courses', icon: BookOpen },
     { path: '/admin/branches', label: 'Branches', icon: Building },
     { path: '/admin/events', label: 'Events', icon: Calendar },
-    { path: '/admin/outstanding', label: 'Outstanding Students', icon: Trophy },
+    { path: '/admin/outstanding-students', label: 'Outstanding Students', icon: Trophy },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform ${
-        isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-      } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
+    <>
+      <Navigation />
+      <div className="min-h-screen bg-gray-50 flex pt-[64px] md:pt-[80px]">
+        {/* Sidebar */}
+        <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform ${
+          isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 mt-[64px] md:mt-[80px]`}>
         <div className="flex items-center justify-between h-16 px-6 border-b">
           <h1 className="text-xl font-bold text-gray-800">Admin Panel</h1>
           <button
@@ -120,14 +123,15 @@ const AdminLayout: React.FC = () => {
         </main>
       </div>
 
-      {/* Overlay for mobile */}
-      {isMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setIsMenuOpen(false)}
-        />
-      )}
-    </div>
+        {/* Overlay for mobile */}
+        {isMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden mt-[64px] md:mt-[80px]"
+            onClick={() => setIsMenuOpen(false)}
+          />
+        )}
+      </div>
+    </>
   );
 };
 

@@ -3,24 +3,32 @@ import { API_BASE_URL } from '../../config/api';
 
 export interface Faculty {
   _id: string;
-  userId: string | any;
+  userId?: string | any;
   employeeId: string;
+  name: string;
+  email: string;
+  image: {
+    url: string;
+    publicId: string;
+  };
   specialization: string;
   qualification: string;
   experience: number;
-  courses: string[] | any[];
-  research: Array<{
+  expertise: string[];
+  courses?: string[] | any[];
+  research?: Array<{
     title: string;
     description: string;
     publishedDate: string;
     journal: string;
   }>;
-  achievements: Array<{
+  achievements?: Array<{
     title: string;
     description: string;
     date: string;
   }>;
   officeHours?: string;
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -51,12 +59,9 @@ export const facultyApi = createApi({
   reducerPath: 'facultyApi',
   baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
-    credentials: 'include',
+    credentials: 'include', // Send cookies with every request
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
+      // No need to add Authorization header - using cookies only
       return headers;
     },
   }),
@@ -92,6 +97,35 @@ export const facultyApi = createApi({
       }),
       invalidatesTags: (result, error, { id }) => [{ type: 'Faculty', id }, 'Faculty'],
     }),
+    getActiveFaculties: builder.query<PaginatedResponse<Faculty>, { page?: number; limit?: number }>({
+      query: ({ page = 1, limit = 10 }) => ({
+        url: '/faculty/active',
+        params: { page, limit },
+      }),
+      providesTags: ['Faculty'],
+    }),
+    createFaculty: builder.mutation<{ success: boolean; data: Faculty }, FormData>({
+      query: (formData) => ({
+        url: '/faculty',
+        method: 'POST',
+        body: formData,
+      }),
+      invalidatesTags: ['Faculty'],
+    }),
+    deleteFaculty: builder.mutation<{ success: boolean; message: string }, string>({
+      query: (id) => ({
+        url: `/faculty/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Faculty'],
+    }),
+    toggleFacultyStatus: builder.mutation<{ success: boolean; data: Faculty }, string>({
+      query: (id) => ({
+        url: `/faculty/${id}/toggle-status`,
+        method: 'PATCH',
+      }),
+      invalidatesTags: (result, error, id) => [{ type: 'Faculty', id }, 'Faculty'],
+    }),
   }),
 });
 
@@ -100,5 +134,9 @@ export const {
   useGetFacultyQuery,
   useGetFacultyByUserIdQuery,
   useGetFacultyCoursesQuery,
+  useGetActiveFacultiesQuery,
+  useCreateFacultyMutation,
   useUpdateFacultyMutation,
+  useDeleteFacultyMutation,
+  useToggleFacultyStatusMutation,
 } = facultyApi;

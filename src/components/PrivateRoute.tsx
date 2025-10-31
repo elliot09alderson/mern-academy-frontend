@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAppSelector } from '@/store/store';
 import { selectIsAuthenticated, selectUserType } from '@/store/slices/authSlice';
 import { Loader2 } from 'lucide-react';
@@ -11,10 +11,23 @@ interface PrivateRouteProps {
 export const PrivateRoute = ({ allowedRoles }: PrivateRouteProps) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const userType = useAppSelector(selectUserType);
+  const currentUser = useAppSelector((state) => state.auth.user);
   const { isCheckingAuth } = useAuthPersistence();
+  const location = useLocation();
+
+  // Debug logging
+  console.log('🛡️ PrivateRoute Check:', {
+    isAuthenticated,
+    userType,
+    currentUser: currentUser?.email,
+    isCheckingAuth,
+    path: location.pathname,
+    allowedRoles
+  });
 
   // Show loading while checking authentication
   if (isCheckingAuth) {
+    console.log('⏳ Showing loading screen - checking auth...');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -25,10 +38,16 @@ export const PrivateRoute = ({ allowedRoles }: PrivateRouteProps) => {
     );
   }
 
-  // If not authenticated, redirect to login
+  // If not authenticated, redirect to appropriate login page
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    console.log('❌ Not authenticated - redirecting to login');
+    // Check if trying to access admin routes
+    const isAdminRoute = location.pathname.startsWith('/admin');
+    const redirectPath = isAdminRoute ? '/admin/login' : '/login';
+    return <Navigate to={redirectPath} replace />;
   }
+
+  console.log('✅ User is authenticated, checking roles...');
 
   // If authenticated but role doesn't match, redirect to unauthorized page
   if (userType && !allowedRoles.includes(userType)) {

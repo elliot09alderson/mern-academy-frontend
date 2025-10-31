@@ -1,45 +1,22 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Users, Award, Code2, Brain, Database, Zap, ArrowRight } from 'lucide-react';
+import { Clock, Users, Award, Code2, Brain, Database, Zap, ArrowRight, Loader2, Rocket, Star, Trophy, Target } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useGetActiveCoursesQuery } from '@/store/api/courseApi';
+
+const ICON_MAP: Record<string, any> = {
+  code: Code2,
+  brain: Brain,
+  rocket: Rocket,
+  star: Star,
+  trophy: Trophy,
+  target: Target,
+  database: Database,
+};
 
 export const CourseSection = () => {
-  const courses = [
-    {
-      id: 1,
-      title: 'Full Stack MERN Development',
-      description: 'Complete MERN stack development with React, Node.js, MongoDB, and Express',
-      duration: '6 months',
-      level: 'Beginner Friendly',
-      icon: Code2,
-      features: ['Live Projects', '1-on-1 Sessions', 'Placement Support', 'Industry Mentorship'],
-      price: '₹49,999',
-      discountPrice: '₹44,999'
-    },
-    {
-      id: 2,
-      title: 'AI-Powered Web Development',
-      description: 'Learn to build modern web applications using cutting-edge AI tools and frameworks',
-      duration: '4 months',
-      level: 'Intermediate',
-      icon: Brain,
-      features: ['AI Integration', 'Modern Tools', 'Real Projects', 'Career Guidance'],
-      price: '₹39,999',
-      discountPrice: '₹35,999'
-    },
-    {
-      id: 3,
-      title: 'Data Structures & Algorithms',
-      description: 'Master DSA with System Design to crack top tech company interviews',
-      duration: '3 months',
-      level: 'All Levels',
-      icon: Database,
-      features: ['Interview Prep', 'System Design', 'Mock Interviews', 'Problem Solving'],
-      price: '₹29,999',
-      discountPrice: '₹26,999'
-    }
-  ];
+  const { data: coursesData, isLoading } = useGetActiveCoursesQuery({ limit: 10 });
 
   return (
     <section id="courses" className="py-24 px-4 sm:px-6 lg:px-8">
@@ -72,94 +49,110 @@ export const CourseSection = () => {
         </motion.div>
 
         {/* Courses Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {courses.map((course, index) => (
-            <motion.div
-              key={course.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Card className="glass-card border-0 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
-                <CardHeader className="space-y-4 pb-4">
-                  <div className="flex items-center justify-between">
-                    {/* Icon with gradient background */}
-                    <div className="w-14 h-14 bg-gradient-to-br from-violet-600 to-purple-600 rounded-xl flex items-center justify-center">
-                      <course.icon className="h-7 w-7 text-white" />
-                    </div>
-                    {/* Level Badge */}
-                    <Badge variant="secondary" className="glass-card font-semibold">
-                      {course.level}
-                    </Badge>
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl md:text-2xl mb-3 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-                      {course.title}
-                    </CardTitle>
-                    <CardDescription className="text-base leading-relaxed">
-                      {course.description}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="h-12 w-12 animate-spin text-violet-500" />
+          </div>
+        ) : coursesData && coursesData.data.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {coursesData.data.map((course, index) => {
+              const IconComponent = ICON_MAP[course.icon] || Code2;
 
-                <CardContent className="space-y-6">
-                  {/* Course Info */}
-                  <div className="flex items-center gap-6 text-sm">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Clock className="h-4 w-4 text-violet-500" />
-                      <span className="font-medium">{course.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Users className="h-4 w-4 text-violet-500" />
-                      <span className="font-medium">Small Batch</span>
-                    </div>
-                  </div>
+              return (
+                <motion.div
+                  key={course._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <Card className="glass-card border-0 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
+                    <CardHeader className="space-y-4 pb-4">
+                      <div className="flex items-center justify-between">
+                        {/* Icon with gradient background */}
+                        <div className="w-14 h-14 bg-gradient-to-br from-violet-600 to-purple-600 rounded-xl flex items-center justify-center">
+                          <IconComponent className="h-7 w-7 text-white" />
+                        </div>
+                        {/* Level Badge */}
+                        <Badge variant="secondary" className="glass-card font-semibold">
+                          {course.level}
+                        </Badge>
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl md:text-2xl mb-3 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
+                          {course.courseName}
+                        </CardTitle>
+                        <CardDescription className="text-base leading-relaxed">
+                          {course.description}
+                        </CardDescription>
+                      </div>
+                    </CardHeader>
 
-                  {/* Features */}
-                  <div>
-                    <h4 className="font-bold mb-3 flex items-center gap-2 text-base">
-                      <Zap className="h-5 w-5 text-violet-500" />
-                      What You'll Get
-                    </h4>
-                    <ul className="space-y-2.5">
-                      {course.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="text-sm text-muted-foreground flex items-center gap-2.5">
-                          <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-gradient-to-r from-violet-500 to-purple-500" />
-                          <span className="font-medium">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                    <CardContent className="space-y-6">
+                      {/* Course Info */}
+                      <div className="flex items-center gap-6 text-sm">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Clock className="h-4 w-4 text-violet-500" />
+                          <span className="font-medium">{course.duration}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Users className="h-4 w-4 text-violet-500" />
+                          <span className="font-medium">{course.batchSize}</span>
+                        </div>
+                      </div>
 
-                  {/* Pricing */}
-                  <div className="pt-4 border-t border-white/10">
-                    <div className="flex items-baseline gap-3 mb-2">
-                      <span className="text-3xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                        {course.discountPrice}
-                      </span>
-                      <span className="text-lg text-muted-foreground line-through">
-                        {course.price}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge className="bg-gradient-to-r from-orange-500 to-pink-500 text-white border-0 font-semibold">
-                        Save 10%
-                      </Badge>
-                      <span className="text-xs text-muted-foreground">Limited Time</span>
-                    </div>
-                  </div>
+                      {/* Features */}
+                      <div>
+                        <h4 className="font-bold mb-3 flex items-center gap-2 text-base">
+                          <Zap className="h-5 w-5 text-violet-500" />
+                          What You'll Get
+                        </h4>
+                        <ul className="space-y-2.5">
+                          {course.features.map((feature, featureIndex) => (
+                            <li key={featureIndex} className="text-sm text-muted-foreground flex items-center gap-2.5">
+                              <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-gradient-to-r from-violet-500 to-purple-500" />
+                              <span className="font-medium">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
 
-                  {/* CTA */}
-                  <Button className="w-full bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 text-white border-0 py-6 text-base font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                    Enroll Now
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+                      {/* Pricing */}
+                      <div className="pt-4 border-t border-white/10">
+                        <div className="flex items-baseline gap-3 mb-2">
+                          <span className="text-3xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                            ₹{course.discountedPrice.toLocaleString('en-IN')}
+                          </span>
+                          <span className="text-lg text-muted-foreground line-through">
+                            ₹{course.originalPrice.toLocaleString('en-IN')}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge className="bg-gradient-to-r from-orange-500 to-pink-500 text-white border-0 font-semibold">
+                            Save {course.discountPercentage}%
+                          </Badge>
+                          {course.isLimitedOffer && (
+                            <span className="text-xs text-muted-foreground">Limited Time</span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* CTA */}
+                      <Button className="w-full bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 text-white border-0 py-6 text-base font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                        Enroll Now
+                        <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-20">
+            <p className="text-xl text-muted-foreground">No courses available at the moment</p>
+          </div>
+        )}
 
         {/* Additional Info */}
         <motion.div

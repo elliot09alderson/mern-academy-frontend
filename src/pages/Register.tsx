@@ -72,6 +72,8 @@ const Register = () => {
         password: values.password,
         role: 'student' as const,
         phone: values.phonenumber,
+        qualification: values.qualification,
+        hereaboutus: values.hereaboutus,
         guardianName: 'Parent Name', // These would need to be added to the form
         guardianContact: values.phonenumber,
       };
@@ -122,10 +124,46 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-gradient-mesh opacity-30"></div>
-      
-      <Card className="w-full max-w-md glass-card relative z-10">
+    <div className="min-h-screen flex items-center justify-center p-4 py-12 bg-gradient-to-br from-black via-slate-950 to-black relative overflow-hidden">
+      {/* Animated background orbs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl animate-orb-float"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl animate-orb-float-delayed"></div>
+        <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-indigo-600/15 rounded-full blur-3xl animate-orb-pulse"></div>
+      </div>
+
+      {/* Floating code snippets */}
+      <div className="absolute inset-0 opacity-10 text-indigo-400 text-xs font-mono overflow-hidden pointer-events-none">
+        <div className="absolute top-32 left-20 animate-float-slow">
+          <pre>{`const newUser = {
+  name, email,
+  role: 'student'
+}`}</pre>
+        </div>
+        <div className="absolute top-2/3 right-24 animate-float-delay-1">
+          <pre>{`await User.create({
+  ...userData,
+  password: hash
+})`}</pre>
+        </div>
+        <div className="absolute bottom-32 left-1/4 animate-float-delay-2">
+          <pre>{`// Registration API
+POST /api/auth/register`}</pre>
+        </div>
+        <div className="absolute top-1/2 right-1/4 animate-float-slow">
+          <pre>{`validate(email, password)
+sendVerification()`}</pre>
+        </div>
+        <div className="absolute bottom-1/4 right-1/3 animate-float-delay-1">
+          <pre>{`// MERN Academy
+JWT.sign(payload)`}</pre>
+        </div>
+      </div>
+
+      {/* Grid pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.07)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+
+      <Card className="w-full max-w-md relative z-10 bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl shadow-indigo-500/20">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center">

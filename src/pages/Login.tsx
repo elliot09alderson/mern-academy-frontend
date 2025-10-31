@@ -35,34 +35,59 @@ const Login = () => {
       const result = await login(values).unwrap();
 
       if (result.success) {
-        // Store token and user data
-        localStorage.setItem('token', result.data.token);
-        dispatch(setCredentials(result.data));
+        console.log('Login success - result:', result);
+        // Cookie is automatically set by backend
+        // Update Redux store with user data only
+        dispatch(setCredentials({
+          user: result.data.user
+        }));
 
         toast.success(`${userType} login successful!`);
 
-        // Navigate based on user role
-        const userRole = result.data.user.role;
-        if (userRole === 'admin') {
-          navigate('/admin/dashboard');
-        } else if (userRole === 'faculty') {
-          navigate('/faculty/dashboard');
-        } else if (userRole === 'student') {
-          navigate('/student/dashboard');
-        } else {
-          navigate('/');
-        }
+        // Navigate to homepage after successful login
+        navigate('/');
       }
     } catch (err: any) {
+      console.error('Login error:', err);
       toast.error(err?.data?.message || 'Login failed');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-gradient-mesh opacity-30"></div>
-      
-      <Card className="w-full max-w-md glass-card relative z-10">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-black via-slate-950 to-black relative overflow-hidden">
+      {/* Animated orbs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 -left-20 w-72 h-72 bg-violet-600/15 rounded-full blur-3xl animate-orb-float"></div>
+        <div className="absolute bottom-1/3 -right-20 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl animate-orb-float-delayed"></div>
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-purple-600/15 rounded-full blur-3xl animate-orb-pulse"></div>
+      </div>
+
+      {/* Code elements floating in background */}
+      <div className="absolute inset-0 opacity-10 text-violet-400 text-xs font-mono overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-1/4 animate-float-slow">
+          <pre>{`const user = await login({
+  email, password
+})`}</pre>
+        </div>
+        <div className="absolute top-1/3 right-1/4 animate-float-delay-1">
+          <pre>{`if (authenticated) {
+  redirect('/dashboard')
+}`}</pre>
+        </div>
+        <div className="absolute bottom-1/4 left-1/3 animate-float-delay-2">
+          <pre>{`// MERN Stack Auth
+JWT.verify(token)`}</pre>
+        </div>
+        <div className="absolute bottom-1/3 right-1/3 animate-float-slow">
+          <pre>{`POST /api/auth/login
+Status: 200 OK`}</pre>
+        </div>
+      </div>
+
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.07)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+
+      <Card className="w-full max-w-md relative z-10 bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl shadow-violet-500/20">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center">
