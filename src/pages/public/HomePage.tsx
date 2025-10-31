@@ -1,14 +1,21 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useGetActiveCoursesQuery } from '../../store/api/courseApi';
-import { useGetActiveBranchesQuery } from '../../store/api/branchApi';
-import { useGetUpcomingEventsQuery, useGetFeaturedEventsQuery } from '../../store/api/eventApi';
-import { useGetOutstandingStudentsQuery } from '../../store/api/studentApi';
-import { useLogoutMutation } from '../../store/api/authApi';
-import { useAuthPolling } from '../../hooks/useAuthPolling';
-import { useAppSelector, useAppDispatch } from '../../store/store';
-import { selectIsAuthenticated, selectCurrentUser, logout } from '../../store/slices/authSlice';
-import { toast } from 'sonner';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useGetActiveCoursesQuery } from "../../store/api/courseApi";
+import { useGetActiveBranchesQuery } from "../../store/api/branchApi";
+import {
+  useGetUpcomingEventsQuery,
+  useGetFeaturedEventsQuery,
+} from "../../store/api/eventApi";
+import { useGetOutstandingStudentsQuery } from "../../store/api/studentApi";
+import { useLogoutMutation } from "../../store/api/authApi";
+import { useAuthPolling } from "../../hooks/useAuthPolling";
+import { useAppSelector, useAppDispatch } from "../../store/store";
+import {
+  selectIsAuthenticated,
+  selectCurrentUser,
+  logout,
+} from "../../store/slices/authSlice";
+import { toast } from "sonner";
 import {
   BookOpen,
   Building,
@@ -21,8 +28,8 @@ import {
   Clock,
   Star,
   LogOut,
-  User as UserIcon
-} from 'lucide-react';
+  User as UserIcon,
+} from "lucide-react";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -37,11 +44,11 @@ const HomePage: React.FC = () => {
 
   // Log authentication state for debugging
   React.useEffect(() => {
-    console.log('HomePage - Auth State:', {
+    console.log("HomePage - Auth State:", {
       isAuthenticated,
       isPolling,
       hasUser: !!currentUser,
-      userName: currentUser?.name
+      userName: currentUser?.name,
     });
   }, [isAuthenticated, isPolling, currentUser]);
 
@@ -49,7 +56,9 @@ const HomePage: React.FC = () => {
   const { data: branchesData } = useGetActiveBranchesQuery({ limit: 4 });
   const { data: upcomingEvents } = useGetUpcomingEventsQuery({ limit: 4 });
   const { data: featuredEvents } = useGetFeaturedEventsQuery({ limit: 3 });
-  const { data: outstandingStudents } = useGetOutstandingStudentsQuery({ limit: 6 });
+  const { data: outstandingStudents } = useGetOutstandingStudentsQuery({
+    limit: 6,
+  });
 
   const handleLogout = async () => {
     try {
@@ -57,19 +66,19 @@ const HomePage: React.FC = () => {
       await logoutMutation().unwrap();
 
       // Clear localStorage token
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
 
       // Clear Redux state
       dispatch(logout());
 
-      toast.success('Logged out successfully');
-      navigate('/login');
+      toast.success("Logged out successfully");
+      navigate("/login");
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
       // Even if API fails, clear local state
-      localStorage.removeItem('token');
+      localStorage.removeItem("token");
       dispatch(logout());
-      navigate('/login');
+      navigate("/login");
     }
   };
 
@@ -88,7 +97,9 @@ const HomePage: React.FC = () => {
                 <>
                   <div className="flex items-center text-gray-700 px-3 py-2">
                     <UserIcon className="h-5 w-5 mr-2" />
-                    <span className="text-sm font-medium">{currentUser?.name || 'User'}</span>
+                    <span className="text-sm font-medium">
+                      {currentUser?.name || "User"}
+                    </span>
                   </div>
                   <button
                     onClick={handleLogout}
@@ -127,7 +138,8 @@ const HomePage: React.FC = () => {
               Welcome to MERN Academy
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-              Empowering students with cutting-edge education in technology, engineering, and sciences
+              Empowering students with cutting-edge education in technology,
+              engineering, and sciences
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -155,28 +167,36 @@ const HomePage: React.FC = () => {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <BookOpen className="w-8 h-8 text-blue-600" />
               </div>
-              <div className="text-3xl font-bold text-gray-900">{coursesData?.pagination?.total || 0}</div>
+              <div className="text-3xl font-bold text-gray-900">
+                {coursesData?.pagination?.total || 0}
+              </div>
               <div className="text-gray-600">Active Courses</div>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Building className="w-8 h-8 text-green-600" />
               </div>
-              <div className="text-3xl font-bold text-gray-900">{branchesData?.pagination?.total || 0}</div>
+              <div className="text-3xl font-bold text-gray-900">
+                {branchesData?.pagination?.total || 0}
+              </div>
               <div className="text-gray-600">Departments</div>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-purple-600" />
               </div>
-              <div className="text-3xl font-bold text-gray-900">{outstandingStudents?.pagination?.total || 0}</div>
+              <div className="text-3xl font-bold text-gray-900">
+                {outstandingStudents?.pagination?.total || 0}
+              </div>
               <div className="text-gray-600">Outstanding Students</div>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Calendar className="w-8 h-8 text-orange-600" />
               </div>
-              <div className="text-3xl font-bold text-gray-900">{upcomingEvents?.pagination?.total || 0}</div>
+              <div className="text-3xl font-bold text-gray-900">
+                {upcomingEvents?.pagination?.total || 0}
+              </div>
               <div className="text-gray-600">Upcoming Events</div>
             </div>
           </div>
@@ -188,18 +208,25 @@ const HomePage: React.FC = () => {
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Featured Events</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Featured Events
+              </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
                 Don't miss out on these exciting upcoming events and activities
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredEvents.data.map((event) => (
-                <div key={event._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                <div
+                  key={event._id}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                >
                   <div className="h-48 bg-gradient-to-r from-blue-500 to-purple-600 relative">
                     {event.images && event.images.length > 0 ? (
                       <img
-                        src={`http://localhost:5003${event.images[0].url}`}
+                        src={`${import.meta.env.VITE_API_BASE_URL}${
+                          event.images[0].url
+                        }`}
                         alt={event.eventName}
                         className="w-full h-full object-cover"
                       />
@@ -217,17 +244,26 @@ const HomePage: React.FC = () => {
                   </div>
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-2">
-                      <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                        event.eventType === 'academic' ? 'bg-blue-100 text-blue-800' :
-                        event.eventType === 'cultural' ? 'bg-purple-100 text-purple-800' :
-                        event.eventType === 'sports' ? 'bg-green-100 text-green-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 text-xs rounded-full font-medium ${
+                          event.eventType === "academic"
+                            ? "bg-blue-100 text-blue-800"
+                            : event.eventType === "cultural"
+                            ? "bg-purple-100 text-purple-800"
+                            : event.eventType === "sports"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
                         {event.eventType}
                       </span>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{event.eventName}</h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{event.description}</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      {event.eventName}
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                      {event.description}
+                    </p>
                     <div className="space-y-2 text-sm text-gray-500">
                       <div className="flex items-center">
                         <MapPin className="w-4 h-4 mr-2" />
@@ -250,19 +286,29 @@ const HomePage: React.FC = () => {
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Courses</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Our Courses
+            </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Explore our comprehensive range of courses designed to prepare you for the future
+              Explore our comprehensive range of courses designed to prepare you
+              for the future
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {coursesData?.data?.map((course) => (
-              <div key={course._id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <div
+                key={course._id}
+                className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
+              >
                 <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mb-4">
                   <BookOpen className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{course.courseName}</h3>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3">{course.description}</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {course.courseName}
+                </h3>
+                <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                  {course.description}
+                </p>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-500">Code:</span>
@@ -278,7 +324,9 @@ const HomePage: React.FC = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">Branch:</span>
-                    <span className="font-medium">{course.branchId?.branchName || 'N/A'}</span>
+                    <span className="font-medium">
+                      {course.branchId?.branchName || "N/A"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -300,23 +348,35 @@ const HomePage: React.FC = () => {
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Departments</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Our Departments
+            </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Choose from our diverse range of academic departments and specializations
+              Choose from our diverse range of academic departments and
+              specializations
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {branchesData?.data?.map((branch) => (
-              <div key={branch._id} className="bg-white rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+              <div
+                key={branch._id}
+                className="bg-white rounded-lg p-6 text-center hover:shadow-md transition-shadow"
+              >
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Building className="w-8 h-8 text-green-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{branch.branchName}</h3>
-                <p className="text-gray-600 text-sm mb-4">{branch.description}</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {branch.branchName}
+                </h3>
+                <p className="text-gray-600 text-sm mb-4">
+                  {branch.description}
+                </p>
                 <div className="text-sm text-gray-500">
                   <div>Code: {branch.branchCode}</div>
                   <div>Seats: {branch.totalSeats}</div>
-                  {branch.establishedYear && <div>Est: {branch.establishedYear}</div>}
+                  {branch.establishedYear && (
+                    <div>Est: {branch.establishedYear}</div>
+                  )}
                 </div>
               </div>
             ))}
@@ -329,18 +389,26 @@ const HomePage: React.FC = () => {
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Outstanding Students</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Outstanding Students
+              </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Celebrating academic excellence and achievements of our top performers
+                Celebrating academic excellence and achievements of our top
+                performers
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {outstandingStudents.data.map((student) => (
-                <div key={student._id} className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+                <div
+                  key={student._id}
+                  className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-md transition-shadow"
+                >
                   <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Trophy className="w-8 h-8 text-yellow-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{student.userId.name}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {student.userId.name}
+                  </h3>
                   <div className="space-y-1 text-sm text-gray-600">
                     <div>Student ID: {student.studentId}</div>
                     <div>GPA: {student.gpa.toFixed(1)}</div>
@@ -350,7 +418,8 @@ const HomePage: React.FC = () => {
                   {student.achievements.length > 0 && (
                     <div className="mt-4 pt-4 border-t">
                       <div className="text-xs text-gray-500">
-                        {student.achievements.length} Achievement{student.achievements.length !== 1 ? 's' : ''}
+                        {student.achievements.length} Achievement
+                        {student.achievements.length !== 1 ? "s" : ""}
                       </div>
                     </div>
                   )}
@@ -366,19 +435,27 @@ const HomePage: React.FC = () => {
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">Upcoming Events</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                Upcoming Events
+              </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Stay updated with the latest events and activities happening at our academy
+                Stay updated with the latest events and activities happening at
+                our academy
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {upcomingEvents.data.map((event) => (
-                <div key={event._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                <div
+                  key={event._id}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                >
                   <div className="flex">
                     <div className="w-1/3 h-32 bg-gradient-to-r from-orange-500 to-red-500 relative">
                       {event.images && event.images.length > 0 ? (
                         <img
-                          src={`http://localhost:5003${event.images[0].url}`}
+                          src={`${import.meta.env.VITE_API_BASE_URL}${
+                            event.images[0].url
+                          }`}
                           alt={event.eventName}
                           className="w-full h-full object-cover"
                         />
@@ -390,16 +467,23 @@ const HomePage: React.FC = () => {
                     </div>
                     <div className="w-2/3 p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                          event.eventType === 'academic' ? 'bg-blue-100 text-blue-800' :
-                          event.eventType === 'cultural' ? 'bg-purple-100 text-purple-800' :
-                          event.eventType === 'sports' ? 'bg-green-100 text-green-800' :
-                          'bg-gray-100 text-gray-800'
-                        }`}>
+                        <span
+                          className={`px-2 py-1 text-xs rounded-full font-medium ${
+                            event.eventType === "academic"
+                              ? "bg-blue-100 text-blue-800"
+                              : event.eventType === "cultural"
+                              ? "bg-purple-100 text-purple-800"
+                              : event.eventType === "sports"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
                           {event.eventType}
                         </span>
                       </div>
-                      <h3 className="font-semibold text-gray-900 mb-2">{event.eventName}</h3>
+                      <h3 className="font-semibold text-gray-900 mb-2">
+                        {event.eventName}
+                      </h3>
                       <div className="space-y-1 text-sm text-gray-500">
                         <div className="flex items-center">
                           <MapPin className="w-3 h-3 mr-1" />
@@ -439,24 +523,53 @@ const HomePage: React.FC = () => {
                 <h3 className="text-xl font-bold">MERN Academy</h3>
               </div>
               <p className="text-gray-400">
-                Empowering minds, shaping futures through quality education and innovation.
+                Empowering minds, shaping futures through quality education and
+                innovation.
               </p>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link to="/courses" className="hover:text-white">Courses</Link></li>
-                <li><Link to="/branches" className="hover:text-white">Departments</Link></li>
-                <li><Link to="/events" className="hover:text-white">Events</Link></li>
-                <li><Link to="/about" className="hover:text-white">About Us</Link></li>
+                <li>
+                  <Link to="/courses" className="hover:text-white">
+                    Courses
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/branches" className="hover:text-white">
+                    Departments
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/events" className="hover:text-white">
+                    Events
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="hover:text-white">
+                    About Us
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4">Students</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link to="/auth/register" className="hover:text-white">Apply Now</Link></li>
-                <li><Link to="/auth/login" className="hover:text-white">Student Portal</Link></li>
-                <li><Link to="/outstanding" className="hover:text-white">Outstanding Students</Link></li>
+                <li>
+                  <Link to="/auth/register" className="hover:text-white">
+                    Apply Now
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/auth/login" className="hover:text-white">
+                    Student Portal
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/outstanding" className="hover:text-white">
+                    Outstanding Students
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>

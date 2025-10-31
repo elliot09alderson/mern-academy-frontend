@@ -142,7 +142,9 @@ const Events: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Events Management</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Events Management
+          </h1>
           <p className="text-gray-600">Manage academy events and activities</p>
         </div>
         <button
@@ -173,7 +175,7 @@ const Events: React.FC = () => {
             className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">All Event Types</option>
-            {eventTypes.map(type => (
+            {eventTypes.map((type) => (
               <option key={type} value={type}>
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </option>
@@ -188,12 +190,17 @@ const Events: React.FC = () => {
       {/* Events Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredEvents.map((event) => (
-          <div key={event._id} className="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
+          <div
+            key={event._id}
+            className="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition-shadow"
+          >
             {/* Event Image */}
             <div className="h-48 bg-gray-200 relative">
               {event.images && event.images.length > 0 ? (
                 <img
-                  src={`http://localhost:5003${event.images[0].url}`}
+                  src={`${import.meta.env.VITE_API_BASE_URL}${
+                    event.images[0].url
+                  }`}
                   alt={event.eventName}
                   className="w-full h-full object-cover"
                 />
@@ -228,19 +235,29 @@ const Events: React.FC = () => {
             {/* Event Content */}
             <div className="p-6">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">{event.eventName}</h3>
-                <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                  event.eventType === 'academic' ? 'bg-blue-100 text-blue-800' :
-                  event.eventType === 'cultural' ? 'bg-purple-100 text-purple-800' :
-                  event.eventType === 'sports' ? 'bg-green-100 text-green-800' :
-                  event.eventType === 'technical' ? 'bg-indigo-100 text-indigo-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
+                <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">
+                  {event.eventName}
+                </h3>
+                <span
+                  className={`px-2 py-1 text-xs rounded-full font-medium ${
+                    event.eventType === "academic"
+                      ? "bg-blue-100 text-blue-800"
+                      : event.eventType === "cultural"
+                      ? "bg-purple-100 text-purple-800"
+                      : event.eventType === "sports"
+                      ? "bg-green-100 text-green-800"
+                      : event.eventType === "technical"
+                      ? "bg-indigo-100 text-indigo-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
                   {event.eventType}
                 </span>
               </div>
 
-              <p className="text-gray-600 text-sm mb-4 line-clamp-3">{event.description}</p>
+              <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                {event.description}
+              </p>
 
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -267,7 +284,8 @@ const Events: React.FC = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-500">Capacity:</span>
                     <span className="font-medium">
-                      {event.registeredParticipants?.length || 0} / {event.maxParticipants}
+                      {event.registeredParticipants?.length || 0} /{" "}
+                      {event.maxParticipants}
                     </span>
                   </div>
                 )}
@@ -290,7 +308,9 @@ const Events: React.FC = () => {
       {eventsData?.pagination && eventsData.pagination.totalPages > 1 && (
         <div className="flex items-center justify-between bg-white rounded-lg shadow-sm border p-4">
           <div className="text-sm text-gray-700">
-            Showing {((page - 1) * 10) + 1} to {Math.min(page * 10, eventsData.pagination.total)} of {eventsData.pagination.total} results
+            Showing {(page - 1) * 10 + 1} to{" "}
+            {Math.min(page * 10, eventsData.pagination.total)} of{" "}
+            {eventsData.pagination.total} results
           </div>
           <div className="flex space-x-2">
             <button
@@ -320,7 +340,7 @@ const Events: React.FC = () => {
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b">
               <h2 className="text-xl font-semibold text-gray-900">
-                {editingEvent ? 'Edit Event' : 'Add New Event'}
+                {editingEvent ? "Edit Event" : "Add New Event"}
               </h2>
               <button
                 onClick={handleCloseModal}
@@ -340,7 +360,9 @@ const Events: React.FC = () => {
                     type="text"
                     required
                     value={formData.eventName}
-                    onChange={(e) => setFormData({ ...formData, eventName: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, eventName: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -352,10 +374,15 @@ const Events: React.FC = () => {
                   <select
                     required
                     value={formData.eventType}
-                    onChange={(e) => setFormData({ ...formData, eventType: e.target.value as any })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        eventType: e.target.value as any,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    {eventTypes.map(type => (
+                    {eventTypes.map((type) => (
                       <option key={type} value={type}>
                         {type.charAt(0).toUpperCase() + type.slice(1)}
                       </option>
@@ -371,7 +398,9 @@ const Events: React.FC = () => {
                     type="datetime-local"
                     required
                     value={formData.startDate}
-                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, startDate: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -384,7 +413,9 @@ const Events: React.FC = () => {
                     type="datetime-local"
                     required
                     value={formData.endDate}
-                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, endDate: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -397,7 +428,9 @@ const Events: React.FC = () => {
                     type="text"
                     required
                     value={formData.venue}
-                    onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, venue: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -410,7 +443,9 @@ const Events: React.FC = () => {
                     type="text"
                     required
                     value={formData.organizer}
-                    onChange={(e) => setFormData({ ...formData, organizer: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, organizer: e.target.value })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -422,7 +457,12 @@ const Events: React.FC = () => {
                   <input
                     type="url"
                     value={formData.registrationLink}
-                    onChange={(e) => setFormData({ ...formData, registrationLink: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        registrationLink: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -434,8 +474,15 @@ const Events: React.FC = () => {
                   <input
                     type="number"
                     min="1"
-                    value={formData.maxParticipants || ''}
-                    onChange={(e) => setFormData({ ...formData, maxParticipants: e.target.value ? parseInt(e.target.value) : undefined })}
+                    value={formData.maxParticipants || ""}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        maxParticipants: e.target.value
+                          ? parseInt(e.target.value)
+                          : undefined,
+                      })
+                    }
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -449,7 +496,9 @@ const Events: React.FC = () => {
                   required
                   rows={4}
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -493,10 +542,15 @@ const Events: React.FC = () => {
                   type="checkbox"
                   id="featured"
                   checked={formData.isFeatured}
-                  onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, isFeatured: e.target.checked })
+                  }
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label htmlFor="featured" className="ml-2 block text-sm text-gray-900">
+                <label
+                  htmlFor="featured"
+                  className="ml-2 block text-sm text-gray-900"
+                >
                   Mark as featured event
                 </label>
               </div>
@@ -513,7 +567,7 @@ const Events: React.FC = () => {
                   type="submit"
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  {editingEvent ? 'Update Event' : 'Create Event'}
+                  {editingEvent ? "Update Event" : "Create Event"}
                 </button>
               </div>
             </form>

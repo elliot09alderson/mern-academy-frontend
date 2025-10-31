@@ -1,19 +1,19 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // Define base query with credentials for cookies
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:5003/api/v1',
-  credentials: 'include', // Important for cookies
+  baseUrl: `${import.meta.env.VITE_API_BASE_URL}/v1`,
+  credentials: "include", // Important for cookies
   prepareHeaders: (headers) => {
-    headers.set('Content-Type', 'application/json');
+    headers.set("Content-Type", "application/json");
     return headers;
   },
 });
 
 // Create base API slice
 export const baseApi = createApi({
-  reducerPath: 'baseApi',
+  reducerPath: "baseApi",
   baseQuery,
-  tagTypes: ['Faculty', 'Student'],
+  tagTypes: ["Faculty", "Student"],
   endpoints: () => ({}),
 });
