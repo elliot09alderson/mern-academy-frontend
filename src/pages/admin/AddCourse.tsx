@@ -17,7 +17,9 @@ import {
   Rocket,
   Star,
   Trophy,
-  Target
+  Target,
+  Upload,
+  Image as ImageIcon
 } from 'lucide-react';
 import { useCreateCourseMutation } from '@/store/api/courseApi';
 import { useToast } from '@/hooks/use-toast';
@@ -55,6 +57,9 @@ const AddCourse = () => {
     isLimitedOffer: false,
   });
 
+  const [bannerImage, setBannerImage] = useState<File | null>(null);
+  const [bannerPreview, setBannerPreview] = useState<string>('');
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -62,6 +67,23 @@ const AddCourse = () => {
 
   const handleSelectChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleBannerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setBannerImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setBannerPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeBanner = () => {
+    setBannerImage(null);
+    setBannerPreview('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,22 +101,27 @@ const AddCourse = () => {
         discountPercentage = Math.round(((original - discounted) / original) * 100);
       }
 
-      const courseData = {
-        courseName: formData.courseName,
-        courseCode: formData.courseCode.toUpperCase(),
-        description: formData.description,
-        duration: formData.duration,
-        icon: formData.icon,
-        level: formData.level,
-        batchSize: formData.batchSize,
-        features: featuresArray,
-        originalPrice: parseFloat(formData.originalPrice),
-        discountedPrice: parseFloat(formData.discountedPrice),
-        discountPercentage,
-        isLimitedOffer: formData.isLimitedOffer,
-      };
+      // Create FormData for file upload
+      const submitFormData = new FormData();
+      submitFormData.append('courseName', formData.courseName);
+      submitFormData.append('courseCode', formData.courseCode.toUpperCase());
+      submitFormData.append('description', formData.description);
+      submitFormData.append('duration', formData.duration);
+      submitFormData.append('icon', formData.icon);
+      submitFormData.append('level', formData.level);
+      submitFormData.append('batchSize', formData.batchSize);
+      submitFormData.append('features', JSON.stringify(featuresArray));
+      submitFormData.append('originalPrice', formData.originalPrice);
+      submitFormData.append('discountedPrice', formData.discountedPrice);
+      submitFormData.append('discountPercentage', discountPercentage.toString());
+      submitFormData.append('isLimitedOffer', formData.isLimitedOffer.toString());
 
-      await createCourse(courseData).unwrap();
+      // Add banner image if uploaded
+      if (bannerImage) {
+        submitFormData.append('bannerImage', bannerImage);
+      }
+
+      await createCourse(submitFormData).unwrap();
 
       toast({
         title: "Success!",
@@ -136,6 +163,58 @@ const AddCourse = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Course Banner Image */}
+            <Card className="glass-card border-0">
+              <CardHeader>
+                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                  Course Banner Image
+                </CardTitle>
+                <CardDescription>Upload a banner image for the course (Recommended: 1200x600px)</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="border-2 border-dashed border-violet-300 rounded-lg p-8 glass-card hover:border-violet-400 transition-colors">
+                  {bannerPreview ? (
+                    <div className="relative">
+                      <img
+                        src={bannerPreview}
+                        alt="Banner Preview"
+                        className="w-full h-64 object-cover rounded-lg"
+                      />
+                      <button
+                        type="button"
+                        onClick={removeBanner}
+                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <input
+                        type="file"
+                        id="bannerImage"
+                        accept="image/*"
+                        onChange={handleBannerChange}
+                        className="hidden"
+                      />
+                      <label
+                        htmlFor="bannerImage"
+                        className="flex flex-col items-center justify-center cursor-pointer"
+                      >
+                        <ImageIcon className="h-16 w-16 text-violet-500 mb-4" />
+                        <p className="text-lg font-medium text-foreground mb-2">
+                          Click to upload course banner
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          PNG, JPG, WEBP up to 5MB (Optional)
+                        </p>
+                      </label>
+                    </>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Basic Information */}
             <Card className="glass-card border-0">
               <CardHeader>

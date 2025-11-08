@@ -328,7 +328,7 @@ const Admin = () => {
           </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-9 mb-8 glass-card">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-10 mb-8 glass-card">
             <TabsTrigger value="overview" className="hover:scale-105 transition-transform">Overview</TabsTrigger>
             <TabsTrigger value="registrations" className="hover:scale-105 transition-transform">Registrations</TabsTrigger>
             <TabsTrigger value="courses" className="hover:scale-105 transition-transform">Courses</TabsTrigger>
@@ -338,6 +338,7 @@ const Admin = () => {
             <TabsTrigger value="events" className="hover:scale-105 transition-transform">Events</TabsTrigger>
             <TabsTrigger value="branches" className="hover:scale-105 transition-transform">Branches</TabsTrigger>
             <TabsTrigger value="outstanding" className="hover:scale-105 transition-transform">Outstanding</TabsTrigger>
+            <TabsTrigger value="testimonials" className="hover:scale-105 transition-transform">Testimonials</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -674,63 +675,104 @@ const Admin = () => {
                 </Card>
               ) : facultiesData && facultiesData.data.length > 0 ? (
                 facultiesData.data.map((member) => (
-                  <Card key={member._id} className="glass-card border-0 hover:scale-105 transition-all duration-300">
-                    <CardHeader className="text-center">
-                      <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden border-4 border-blue-200">
-                        <img
-                          src={member.image.url}
-                          alt={member.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <CardTitle className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                        {member.name}
-                      </CardTitle>
-                      <Badge className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
-                        {member.specialization}
-                      </Badge>
-                      <Badge
-                        variant={member.isActive ? 'default' : 'secondary'}
-                        className={member.isActive ? 'bg-green-500' : 'bg-gray-500'}
-                      >
-                        {member.isActive ? 'Active' : 'Inactive'}
-                      </Badge>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2 text-sm">
-                        <p><strong>Experience:</strong> {member.experience} years</p>
-                        <p><strong>Email:</strong> {member.email}</p>
-                        <p><strong>Qualification:</strong> {member.qualification}</p>
-                        {member.expertise && member.expertise.length > 0 && (
-                          <div>
-                            <strong>Expertise:</strong>
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {member.expertise.map((skill, idx) => (
-                                <Badge key={idx} variant="outline" className="text-xs">
-                                  {skill}
-                                </Badge>
-                              ))}
-                            </div>
+                  <Card key={member._id} className="glass-card border border-border/40 hover:shadow-2xl transition-all duration-300 overflow-hidden">
+                    <CardContent className="p-6">
+                      {/* Profile Image */}
+                      <div className="flex justify-center mb-4">
+                        <div className="relative">
+                          <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-blue-200/50 dark:ring-blue-800/50">
+                            <img
+                              src={member.image.url}
+                              alt={member.name}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
-                        )}
+                          <div className={`absolute bottom-1 right-1 w-6 h-6 rounded-full border-4 border-background ${member.isActive ? 'bg-green-500' : 'bg-gray-400'}`} />
+                        </div>
                       </div>
-                      <div className="flex gap-2 mt-4">
+
+                      {/* Name */}
+                      <h3 className="text-center text-2xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                        {member.name}
+                      </h3>
+
+                      {/* Role Badge */}
+                      <div className="flex justify-center mb-4">
+                        <div className="w-full max-w-sm px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-center font-semibold shadow-lg">
+                          {member.specialization}
+                        </div>
+                      </div>
+
+                      {/* Status Badge */}
+                      <div className="flex justify-center mb-6">
+                        <div className={`w-full max-w-sm px-6 py-3 rounded-full text-center font-semibold ${
+                          member.isActive
+                            ? 'bg-green-500 text-white'
+                            : 'bg-gray-400 text-white'
+                        }`}>
+                          {member.isActive ? 'Active' : 'Inactive'}
+                        </div>
+                      </div>
+
+                      {/* Details */}
+                      <div className="space-y-3 text-base mb-6">
+                        <div className="flex items-start">
+                          <span className="font-bold min-w-[120px]">Experience:</span>
+                          <span>{member.experience} years</span>
+                        </div>
+                        <div className="flex items-start">
+                          <span className="font-bold min-w-[120px]">Email:</span>
+                          <span className="break-all">{member.email}</span>
+                        </div>
+                        <div className="flex items-start">
+                          <span className="font-bold min-w-[120px]">Qualification:</span>
+                          <span>{member.qualification}</span>
+                        </div>
+                      </div>
+
+                      {/* Expertise */}
+                      {member.expertise && member.expertise.length > 0 && (
+                        <div className="mb-6">
+                          <p className="font-bold text-base mb-3">Expertise:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {member.expertise.map((skill, idx) => (
+                              <div key={idx} className="px-4 py-2 rounded-full bg-secondary text-secondary-foreground border border-border text-sm font-medium">
+                                {skill}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 pt-4 border-t">
                         <Button
-                          size="sm"
                           variant="outline"
-                          className={`glass-card flex-1 ${member.isActive ? 'text-orange-500' : 'text-green-500'}`}
+                          className={`flex-1 rounded-xl py-6 text-base font-semibold ${
+                            member.isActive
+                              ? 'border-orange-500 text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950'
+                              : 'border-green-500 text-green-500 hover:bg-green-50 dark:hover:bg-green-950'
+                          }`}
                           onClick={() => handleToggleFacultyStatus(member._id)}
                         >
-                          {member.isActive ? <EyeOff className="h-4 w-4 mr-1" /> : <Eye className="h-4 w-4 mr-1" />}
-                          {member.isActive ? 'Deactivate' : 'Activate'}
+                          {member.isActive ? (
+                            <>
+                              <EyeOff className="h-5 w-5 mr-2" />
+                              Deactivate
+                            </>
+                          ) : (
+                            <>
+                              <Eye className="h-5 w-5 mr-2" />
+                              Activate
+                            </>
+                          )}
                         </Button>
                         <Button
-                          size="sm"
                           variant="outline"
-                          className="glass-card text-red-500 hover:scale-110 transition-transform"
+                          className="w-16 rounded-xl py-6 border-red-500 text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
                           onClick={() => handleDeleteFaculty(member._id)}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-5 w-5" />
                         </Button>
                       </div>
                     </CardContent>
@@ -1326,6 +1368,35 @@ const Admin = () => {
                     <p className="text-sm text-muted-foreground mt-2">Click "Add Student" to create your first outstanding student profile</p>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="testimonials" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Testimonials Management</h2>
+              <Button
+                onClick={() => navigate('/admin/testimonials')}
+                className="bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700 hover:scale-105 transition-all"
+              >
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Manage Testimonials
+              </Button>
+            </div>
+
+            <Card className="glass-card border-0">
+              <CardContent className="py-12 text-center">
+                <MessageSquare className="h-16 w-16 text-pink-500 mx-auto mb-4" />
+                <p className="text-lg font-medium text-muted-foreground mb-2">Student Testimonials</p>
+                <p className="text-sm text-muted-foreground mb-6">
+                  Manage and showcase outstanding student feedback and success stories
+                </p>
+                <Button
+                  onClick={() => navigate('/admin/testimonials')}
+                  className="bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700"
+                >
+                  Go to Testimonials
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>

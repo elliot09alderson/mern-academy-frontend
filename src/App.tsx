@@ -30,6 +30,9 @@ import AddOutstandingStudent from "./pages/admin/AddOutstandingStudent";
 import AddCourse from "./pages/admin/AddCourse";
 import AddEvent from "./pages/admin/AddEvent";
 import AddFaculty from "./pages/admin/AddFaculty";
+import Testimonials from "./pages/admin/Testimonials";
+import AddTestimonial from "./pages/admin/AddTestimonial";
+import EditTestimonial from "./pages/admin/EditTestimonial";
 import AdminLayout from "./components/admin/AdminLayout";
 import FacultyDashboard from "./pages/faculty/Dashboard";
 import StudentDashboard from "./pages/student/Dashboard";
@@ -61,10 +64,16 @@ const AppContent = () => {
             {/* Admin routes without sidebar */}
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/branches/add" element={<AddBranch />} />
-            <Route path="/admin/outstanding-students/add" element={<AddOutstandingStudent />} />
+            <Route
+              path="/admin/outstanding-students/add"
+              element={<AddOutstandingStudent />}
+            />
             <Route path="/admin/courses/add" element={<AddCourse />} />
             <Route path="/admin/events/add" element={<AddEvent />} />
             <Route path="/admin/faculty/add" element={<AddFaculty />} />
+            <Route path="/admin/testimonials" element={<Testimonials />} />
+            <Route path="/admin/add-testimonial" element={<AddTestimonial />} />
+            <Route path="/admin/edit-testimonial/:id" element={<EditTestimonial />} />
 
             {/* Admin routes with sidebar layout */}
             <Route element={<AdminLayout />}>
@@ -72,7 +81,10 @@ const AppContent = () => {
               <Route path="/admin/students" element={<AdminStudents />} />
               <Route path="/admin/courses" element={<AdminCourses />} />
               <Route path="/admin/events" element={<AdminEvents />} />
-              <Route path="/admin/outstanding-students" element={<OutstandingStudents />} />
+              <Route
+                path="/admin/outstanding-students"
+                element={<OutstandingStudents />}
+              />
             </Route>
           </Route>
 

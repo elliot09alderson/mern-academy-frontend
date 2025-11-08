@@ -66,26 +66,41 @@ export const CourseSection = () => {
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <Card className="glass-card border-0 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
-                    <CardHeader className="space-y-4 pb-4">
-                      <div className="flex items-center justify-between">
-                        {/* Icon with gradient background */}
-                        <div className="w-14 h-14 bg-gradient-to-br from-violet-600 to-purple-600 rounded-xl flex items-center justify-center">
-                          <IconComponent className="h-7 w-7 text-white" />
+                  <Card className="glass-card border-0 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl overflow-hidden">
+                    {/* Banner Image */}
+                    {course.bannerImage?.url ? (
+                      <div className="relative h-40 md:h-48 overflow-hidden">
+                        <img
+                          src={course.bannerImage.url}
+                          alt={course.courseName}
+                          className="w-full h-full object-contain bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950 dark:to-purple-950"
+                        />
+                        {/* Level Badge on Image */}
+                        <div className="absolute top-4 right-4">
+                          <Badge variant="secondary" className="glass-card font-semibold backdrop-blur-md bg-white/90 dark:bg-black/90">
+                            {course.level}
+                          </Badge>
                         </div>
-                        {/* Level Badge */}
-                        <Badge variant="secondary" className="glass-card font-semibold">
-                          {course.level}
-                        </Badge>
                       </div>
-                      <div>
-                        <CardTitle className="text-xl md:text-2xl mb-3 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
-                          {course.courseName}
-                        </CardTitle>
-                        <CardDescription className="text-base leading-relaxed">
-                          {course.description}
-                        </CardDescription>
+                    ) : (
+                      // Fallback gradient header if no banner
+                      <div className="relative h-40 md:h-48 bg-gradient-to-br from-violet-600 via-purple-600 to-pink-600">
+                        <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,rgba(255,255,255,0.1))]" />
+                        <div className="absolute top-4 right-4">
+                          <Badge variant="secondary" className="glass-card font-semibold backdrop-blur-md bg-white/90 dark:bg-black/90">
+                            {course.level}
+                          </Badge>
+                        </div>
                       </div>
+                    )}
+
+                    <CardHeader className="space-y-3 pb-4">
+                      <CardTitle className="text-xl md:text-2xl bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
+                        {course.courseName}
+                      </CardTitle>
+                      <CardDescription className="text-base leading-relaxed">
+                        {course.description}
+                      </CardDescription>
                     </CardHeader>
 
                     <CardContent className="space-y-6">
@@ -99,22 +114,6 @@ export const CourseSection = () => {
                           <Users className="h-4 w-4 text-violet-500" />
                           <span className="font-medium">{course.batchSize}</span>
                         </div>
-                      </div>
-
-                      {/* Features */}
-                      <div>
-                        <h4 className="font-bold mb-3 flex items-center gap-2 text-base">
-                          <Zap className="h-5 w-5 text-violet-500" />
-                          What You'll Get
-                        </h4>
-                        <ul className="space-y-2.5">
-                          {course.features.map((feature, featureIndex) => (
-                            <li key={featureIndex} className="text-sm text-muted-foreground flex items-center gap-2.5">
-                              <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-gradient-to-r from-violet-500 to-purple-500" />
-                              <span className="font-medium">{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
                       </div>
 
                       {/* Pricing */}
@@ -138,7 +137,15 @@ export const CourseSection = () => {
                       </div>
 
                       {/* CTA */}
-                      <Button className="w-full bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 text-white border-0 py-6 text-base font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                      <Button
+                        onClick={() => {
+                          document.getElementById('course-info')?.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                          });
+                        }}
+                        className="w-full bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 text-white border-0 py-6 text-base font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                      >
                         Enroll Now
                         <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                       </Button>

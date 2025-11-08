@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -13,10 +14,21 @@ import {
   Rocket,
   Terminal,
   Cpu,
+  Download,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { CurriculumBubbleMenu } from "./CurriculumBubbleMenu";
 
 export const Hero = () => {
+  const [isCurriculumMenuOpen, setIsCurriculumMenuOpen] = useState(false);
+
+  const scrollToCourseInfo = () => {
+    const element = document.getElementById('course-info');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <section className="min-h-screen flex items-center justify-center pt-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -175,6 +187,7 @@ export const Hero = () => {
         >
           <Button
             size="lg"
+            onClick={scrollToCourseInfo}
             className="w-full sm:w-auto bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 text-white px-8 md:px-10 py-4 md:py-6 text-base md:text-lg rounded-xl shadow-lg hover:scale-105 transition-all duration-300 group border-0 font-semibold"
           >
             <Award className="mr-2 md:mr-3 h-5 w-5 group-hover:rotate-12 transition-transform" />
@@ -184,8 +197,10 @@ export const Hero = () => {
           <Button
             size="lg"
             variant="outline"
-            className="w-full sm:w-auto px-8 md:px-10 py-4 md:py-6 text-base md:text-lg rounded-xl border-2 hover:scale-105 transition-all duration-300 font-semibold"
+            onClick={() => setIsCurriculumMenuOpen(true)}
+            className="w-full sm:w-auto px-8 md:px-10 py-4 md:py-6 text-base md:text-lg rounded-xl border-2 hover:scale-105 transition-all duration-300 font-semibold group"
           >
+            <Download className="mr-2 md:mr-3 h-5 w-5 group-hover:animate-bounce" />
             Download Curriculum
           </Button>
         </motion.div>
@@ -219,6 +234,12 @@ export const Hero = () => {
             ))}
           </div>
         </motion.div>
+
+        {/* Curriculum Bubble Menu */}
+        <CurriculumBubbleMenu
+          isOpen={isCurriculumMenuOpen}
+          onClose={() => setIsCurriculumMenuOpen(false)}
+        />
       </div>
     </section>
   );

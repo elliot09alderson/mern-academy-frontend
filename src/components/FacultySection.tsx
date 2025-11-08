@@ -27,8 +27,8 @@ export const FacultySection = () => {
           <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
             Learn From{' '}
             <span className="relative inline-block">
-              <span className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 blur-md opacity-10" />
-              <span className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 blur-md opacity-10" />
+              <span className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                 Industry Experts
               </span>
             </span>
@@ -41,7 +41,7 @@ export const FacultySection = () => {
         {/* Faculty Grid */}
         {isLoading ? (
           <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
+            <Loader2 className="h-12 w-12 animate-spin text-violet-500" />
           </div>
         ) : facultiesData && facultiesData.data.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -52,91 +52,82 @@ export const FacultySection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="pt-16"
               >
-                <Card className="glass-card border-0 overflow-hidden group hover:shadow-2xl transition-all duration-300">
-                  {/* Card Header with Gradient */}
-                  <div className="relative h-32 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600">
-                    <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,rgba(255,255,255,0.1))]" />
-                  </div>
-
-                  {/* Faculty Image */}
-                  <div className="relative -mt-16 flex justify-center">
-                    <div className="relative">
-                      <div className="w-32 h-32 rounded-full ring-4 ring-white shadow-xl overflow-hidden">
-                        <img
-                          src={faculty.image.url}
-                          alt={faculty.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      <div className="absolute bottom-2 right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white" />
+                {/* Floating Profile Image */}
+                <div className="flex justify-center mb-[-3.5rem] relative z-10">
+                  <div className="relative">
+                    <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-background shadow-2xl bg-background">
+                      <img
+                        src={faculty.image.url}
+                        alt={faculty.name}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
+                    <div className="absolute bottom-2 right-2 w-7 h-7 bg-green-500 rounded-full border-4 border-background shadow-lg" />
                   </div>
+                </div>
 
-                  <CardHeader className="text-center pt-4">
-                    <CardTitle className="text-xl md:text-2xl mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <Card className="glass-card border border-border/40 hover:shadow-2xl transition-all duration-300 h-full rounded-3xl overflow-visible">
+                  <CardContent className="pt-16 pb-8 px-8">
+                    {/* Name */}
+                    <h3 className="text-center text-2xl font-bold mb-3 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                       {faculty.name}
-                    </CardTitle>
-                    <Badge className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white inline-block mx-auto mb-3">
-                      <GraduationCap className="h-3 w-3 mr-1" />
-                      {faculty.specialization}
-                    </Badge>
-                  </CardHeader>
+                    </h3>
 
-                  <CardContent className="space-y-4">
-                    {/* Qualification */}
-                    <div className="flex items-start gap-3 p-3 rounded-lg bg-blue-50/50 dark:bg-blue-950/20">
-                      <Award className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">Qualification</p>
-                        <p className="text-sm text-muted-foreground">{faculty.qualification}</p>
+                    {/* Specialization Badge */}
+                    <div className="flex justify-center mb-8">
+                      <div className="px-6 py-3 rounded-full bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 text-white text-center font-semibold shadow-lg text-sm">
+                        {faculty.specialization}
                       </div>
                     </div>
 
-                    {/* Experience */}
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-indigo-50/50 dark:bg-indigo-950/20">
-                      <Briefcase className="h-5 w-5 text-indigo-600" />
-                      <div>
-                        <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-100">Experience</p>
-                        <p className="text-sm text-muted-foreground">{faculty.experience} years</p>
+                    {/* Details */}
+                    <div className="space-y-4 mb-6">
+                      <div className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-violet-50/50 to-purple-50/50 dark:from-violet-950/20 dark:to-purple-950/20">
+                        <Award className="h-5 w-5 text-violet-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">Qualification</p>
+                          <p className="text-sm font-medium">{faculty.qualification}</p>
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Email */}
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-purple-50/50 dark:bg-purple-950/20">
-                      <Mail className="h-5 w-5 text-purple-600" />
-                      <p className="text-sm text-muted-foreground truncate">{faculty.email}</p>
+                      <div className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-purple-50/50 to-pink-50/50 dark:from-purple-950/20 dark:to-pink-950/20">
+                        <Briefcase className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">Experience</p>
+                          <p className="text-sm font-medium">{faculty.experience} years</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-pink-50/50 to-violet-50/50 dark:from-pink-950/20 dark:to-violet-950/20">
+                        <Mail className="h-5 w-5 text-pink-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">Email</p>
+                          <p className="text-sm font-medium break-all">{faculty.email}</p>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Expertise */}
                     {faculty.expertise && faculty.expertise.length > 0 && (
-                      <div>
-                        <p className="text-sm font-semibold mb-2">Areas of Expertise</p>
+                      <div className="pt-6 border-t border-border/50">
+                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-3">Expertise</p>
                         <div className="flex flex-wrap gap-2">
-                          {faculty.expertise.slice(0, 4).map((skill, idx) => (
-                            <Badge
+                          {faculty.expertise.slice(0, 5).map((skill, idx) => (
+                            <div
                               key={idx}
-                              variant="outline"
-                              className="glass-card text-xs border-blue-200"
+                              className="px-4 py-2 rounded-full bg-gradient-to-r from-violet-500/10 via-purple-500/10 to-pink-500/10 border border-violet-200/50 dark:border-violet-800/50 text-xs font-semibold hover:scale-105 transition-transform"
                             >
                               {skill}
-                            </Badge>
+                            </div>
                           ))}
-                          {faculty.expertise.length > 4 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{faculty.expertise.length - 4} more
-                            </Badge>
+                          {faculty.expertise.length > 5 && (
+                            <div className="px-4 py-2 rounded-full bg-secondary border border-border text-xs font-semibold">
+                              +{faculty.expertise.length - 5}
+                            </div>
                           )}
                         </div>
-                      </div>
-                    )}
-
-                    {/* Office Hours */}
-                    {faculty.officeHours && (
-                      <div className="pt-3 border-t border-border/50">
-                        <p className="text-xs text-muted-foreground">
-                          <span className="font-semibold">Office Hours:</span> {faculty.officeHours}
-                        </p>
                       </div>
                     )}
                   </CardContent>

@@ -8,6 +8,10 @@ export interface Course {
   description: string;
   duration: string;
   icon: string;
+  bannerImage?: {
+    url: string;
+    publicId: string;
+  };
   level: string;
   batchSize: string;
   features: string[];
@@ -105,19 +109,19 @@ export const courseApi = createApi({
       }),
       providesTags: ['Course'],
     }),
-    createCourse: builder.mutation<{ success: boolean; data: Course }, CreateCourseRequest>({
-      query: (course) => ({
+    createCourse: builder.mutation<{ success: boolean; data: Course }, FormData>({
+      query: (formData) => ({
         url: '/courses',
         method: 'POST',
-        body: course,
+        body: formData,
       }),
       invalidatesTags: ['Course'],
     }),
-    updateCourse: builder.mutation<{ success: boolean; data: Course }, { id: string; updates: Partial<CreateCourseRequest> }>({
-      query: ({ id, updates }) => ({
+    updateCourse: builder.mutation<{ success: boolean; data: Course }, { id: string; formData: FormData }>({
+      query: ({ id, formData }) => ({
         url: `/courses/${id}`,
         method: 'PUT',
-        body: updates,
+        body: formData,
       }),
       invalidatesTags: (result, error, { id }) => [{ type: 'Course', id }, 'Course'],
     }),
