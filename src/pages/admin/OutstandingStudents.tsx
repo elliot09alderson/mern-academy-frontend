@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,7 +19,14 @@ import {
   EyeOff,
   Loader2
 } from 'lucide-react';
-import { useGetOutstandingStudentsQuery, useCreateOutstandingStudentMutation, useDeleteOutstandingStudentMutation, useToggleStudentStatusMutation } from '@/store/api/outstandingStudentApi';
+import {
+  useGetOutstandingStudentsQuery,
+  useCreateOutstandingStudentMutation,
+  useUpdateOutstandingStudentMutation,
+  useDeleteOutstandingStudentMutation,
+  useToggleStudentStatusMutation,
+  OutstandingStudent
+} from '@/store/api/outstandingStudentApi';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
@@ -27,10 +34,13 @@ const OutstandingStudents = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingStudent, setEditingStudent] = useState<OutstandingStudent | null>(null);
 
   // API hooks
   const { data: studentsData, isLoading } = useGetOutstandingStudentsQuery({});
   const [createStudent, { isLoading: isCreating }] = useCreateOutstandingStudentMutation();
+  const [updateStudent, { isLoading: isUpdating }] = useUpdateOutstandingStudentMutation();
   const [deleteStudent] = useDeleteOutstandingStudentMutation();
   const [toggleStatus] = useToggleStudentStatusMutation();
 
@@ -48,6 +58,41 @@ const OutstandingStudents = () => {
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
+
+  // Reset form
+  const resetForm = () => {
+    setFormData({
+      rank: '',
+      name: '',
+      college: '',
+      company: '',
+      role: '',
+      packageAmount: '',
+      achievement: '',
+      skills: ''
+    });
+    setImageFile(null);
+    setImagePreview('');
+  };
+
+  // Load editing student data
+  useEffect(() => {
+    if (editingStudent) {
+      setFormData({
+        rank: editingStudent.rank?.toString() || '',
+        name: editingStudent.name || '',
+        college: editingStudent.college || '',
+        company: editingStudent.company || '',
+        role: editingStudent.role || '',
+        packageAmount: editingStudent.package || '',
+        achievement: editingStudent.achievement || '',
+        skills: Array.isArray(editingStudent.skills) ? editingStudent.skills.join(', ') : ''
+      });
+      if (editingStudent.image?.url) {
+        setImagePreview(editingStudent.image.url);
+      }
+    }
+  }, [editingStudent]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -68,10 +113,10 @@ const OutstandingStudents = () => {
 
   const removeImage = () => {
     setImageFile(null);
-    setImagePreview('');
+    setImagePreview(editingStudent?.image?.url || '');
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!imageFile) {
@@ -94,7 +139,6 @@ const OutstandingStudents = () => {
       submitFormData.append('achievement', formData.achievement);
       submitFormData.append('image', imageFile);
 
-      // Parse skills (comma-separated)
       const skillsArray = formData.skills.split(',').map(s => s.trim()).filter(s => s);
       submitFormData.append('skills', JSON.stringify(skillsArray));
 
@@ -105,19 +149,7 @@ const OutstandingStudents = () => {
         description: "Outstanding student added successfully",
       });
 
-      // Reset form
-      setFormData({
-        rank: '',
-        name: '',
-        college: '',
-        company: '',
-        role: '',
-        packageAmount: '',
-        achievement: '',
-        skills: ''
-      });
-      setImageFile(null);
-      setImagePreview('');
+      resetForm();
       setIsAddModalOpen(false);
     } catch (error: any) {
       toast({
@@ -126,6 +158,53 @@ const OutstandingStudents = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!editingStudent) return;
+
+    try {
+      const submitFormData = new FormData();
+      submitFormData.append('rank', formData.rank);
+      submitFormData.append('name', formData.name);
+      submitFormData.append('college', formData.college);
+      submitFormData.append('company', formData.company);
+      submitFormData.append('role', formData.role);
+      submitFormData.append('packageAmount', formData.packageAmount);
+      submitFormData.append('achievement', formData.achievement);
+
+      if (imageFile) {
+        submitFormData.append('image', imageFile);
+      }
+
+      const skillsArray = formData.skills.split(',').map(s => s.trim()).filter(s => s);
+      submitFormData.append('skills', JSON.stringify(skillsArray));
+
+      await updateStudent({ id: editingStudent._id, formData: submitFormData }).unwrap();
+
+      toast({
+        title: "Success!",
+        description: "Outstanding student updated successfully",
+      });
+
+      resetForm();
+      setEditingStudent(null);
+      setIsEditModalOpen(false);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to update outstanding student",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEdit = (student: OutstandingStudent) => {
+    setEditingStudent(student);
+    setImageFile(null);
+    setIsEditModalOpen(true);
   };
 
   const handleDelete = async (id: string) => {
@@ -164,6 +243,218 @@ const OutstandingStudents = () => {
     }
   };
 
+  const handleCloseAddModal = () => {
+    resetForm();
+    setIsAddModalOpen(false);
+  };
+
+  const handleCloseEditModal = () => {
+    resetForm();
+    setEditingStudent(null);
+    setIsEditModalOpen(false);
+  };
+
+  // Form component (reusable for both add and edit)
+  const StudentForm = ({ isEdit = false, onSubmit }: { isEdit?: boolean; onSubmit: (e: React.FormEvent) => void }) => (
+    <form onSubmit={onSubmit} className="space-y-6 mt-6">
+      {/* Image Upload */}
+      <div className="space-y-3">
+        <Label className="text-base font-semibold">Student Image {!isEdit && '*'}</Label>
+        <div className="border-2 border-dashed border-violet-300 rounded-lg p-6 glass-card hover:border-violet-400 transition-colors">
+          {imagePreview ? (
+            <div className="relative">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="w-32 h-32 rounded-full mx-auto object-cover ring-4 ring-primary/20"
+              />
+              {imageFile && (
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute top-0 right-1/2 translate-x-16 bg-red-500 text-white rounded-full p-1.5"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+              {isEdit && !imageFile && (
+                <div className="text-center mt-2">
+                  <label htmlFor={`studentImage-${isEdit ? 'edit' : 'add'}`} className="text-sm text-violet-600 cursor-pointer hover:underline">
+                    Change Image
+                  </label>
+                  <input
+                    type="file"
+                    id={`studentImage-${isEdit ? 'edit' : 'add'}`}
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <input
+                type="file"
+                id={`studentImage-${isEdit ? 'edit' : 'add'}`}
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+                required={!isEdit}
+              />
+              <label
+                htmlFor={`studentImage-${isEdit ? 'edit' : 'add'}`}
+                className="flex flex-col items-center justify-center cursor-pointer"
+              >
+                <Upload className="h-12 w-12 text-violet-500 mb-3" />
+                <p className="text-sm font-medium text-foreground mb-1">
+                  Click to upload student photo
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  PNG, JPG, WEBP up to 2MB
+                </p>
+              </label>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Basic Info */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="rank">Rank *</Label>
+          <Input
+            id="rank"
+            name="rank"
+            type="number"
+            value={formData.rank}
+            onChange={handleInputChange}
+            placeholder="e.g., 1"
+            required
+            className="glass-card border-violet-200"
+          />
+        </div>
+        <div>
+          <Label htmlFor="name">Name *</Label>
+          <Input
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            placeholder="e.g., Rahul Sharma"
+            required
+            className="glass-card border-violet-200"
+          />
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="college">College/Institution *</Label>
+        <Input
+          id="college"
+          name="college"
+          value={formData.college}
+          onChange={handleInputChange}
+          placeholder="e.g., IIT Delhi"
+          required
+          className="glass-card border-violet-200"
+        />
+      </div>
+
+      {/* Company Info */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="company">Company *</Label>
+          <Input
+            id="company"
+            name="company"
+            value={formData.company}
+            onChange={handleInputChange}
+            placeholder="e.g., Google"
+            required
+            className="glass-card border-violet-200"
+          />
+        </div>
+        <div>
+          <Label htmlFor="role">Role *</Label>
+          <Input
+            id="role"
+            name="role"
+            value={formData.role}
+            onChange={handleInputChange}
+            placeholder="e.g., Software Engineer"
+            required
+            className="glass-card border-violet-200"
+          />
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="packageAmount">Package *</Label>
+        <Input
+          id="packageAmount"
+          name="packageAmount"
+          value={formData.packageAmount}
+          onChange={handleInputChange}
+          placeholder="e.g., 45 LPA"
+          required
+          className="glass-card border-violet-200"
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="skills">Skills * (comma-separated)</Label>
+        <Input
+          id="skills"
+          name="skills"
+          value={formData.skills}
+          onChange={handleInputChange}
+          placeholder="e.g., React, Node.js, Python, System Design"
+          required
+          className="glass-card border-violet-200"
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="achievement">Achievement *</Label>
+        <Textarea
+          id="achievement"
+          name="achievement"
+          value={formData.achievement}
+          onChange={handleInputChange}
+          placeholder="e.g., All India Rank 1 in Placement"
+          required
+          rows={3}
+          className="glass-card border-violet-200"
+        />
+      </div>
+
+      {/* Submit Buttons */}
+      <div className="flex gap-4 pt-4">
+        <Button
+          type="submit"
+          disabled={isEdit ? isUpdating : isCreating}
+          className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex-1"
+        >
+          {(isEdit ? isUpdating : isCreating) ? (
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{isEdit ? 'Updating...' : 'Creating...'}</>
+          ) : (
+            <><Save className="mr-2 h-4 w-4" />{isEdit ? 'Update Student' : 'Save Student'}</>
+          )}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="glass-card"
+          onClick={isEdit ? handleCloseEditModal : handleCloseAddModal}
+        >
+          <X className="mr-2 h-4 w-4" />
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -187,191 +478,25 @@ const OutstandingStudents = () => {
                 Add Outstanding Student
               </DialogTitle>
             </DialogHeader>
-
-            <form onSubmit={handleSubmit} className="space-y-6 mt-6">
-              {/* Image Upload */}
-              <div className="space-y-3">
-                <Label className="text-base font-semibold">Student Image *</Label>
-                <div className="border-2 border-dashed border-violet-300 rounded-lg p-6 glass-card hover:border-violet-400 transition-colors">
-                  {imagePreview ? (
-                    <div className="relative">
-                      <img
-                        src={imagePreview}
-                        alt="Preview"
-                        className="w-32 h-32 rounded-full mx-auto object-cover ring-4 ring-primary/20"
-                      />
-                      <button
-                        type="button"
-                        onClick={removeImage}
-                        className="absolute top-0 right-1/2 translate-x-16 bg-red-500 text-white rounded-full p-1.5"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <input
-                        type="file"
-                        id="studentImage"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="hidden"
-                        required
-                      />
-                      <label
-                        htmlFor="studentImage"
-                        className="flex flex-col items-center justify-center cursor-pointer"
-                      >
-                        <Upload className="h-12 w-12 text-violet-500 mb-3" />
-                        <p className="text-sm font-medium text-foreground mb-1">
-                          Click to upload student photo
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          PNG, JPG, WEBP up to 2MB
-                        </p>
-                      </label>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Basic Info */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="rank">Rank *</Label>
-                  <Input
-                    id="rank"
-                    name="rank"
-                    type="number"
-                    value={formData.rank}
-                    onChange={handleInputChange}
-                    placeholder="e.g., 1"
-                    required
-                    className="glass-card border-violet-200"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="name">Name *</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    placeholder="e.g., Rahul Sharma"
-                    required
-                    className="glass-card border-violet-200"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="college">College/Institution *</Label>
-                <Input
-                  id="college"
-                  name="college"
-                  value={formData.college}
-                  onChange={handleInputChange}
-                  placeholder="e.g., IIT Delhi"
-                  required
-                  className="glass-card border-violet-200"
-                />
-              </div>
-
-              {/* Company Info */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="company">Company *</Label>
-                  <Input
-                    id="company"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleInputChange}
-                    placeholder="e.g., Google"
-                    required
-                    className="glass-card border-violet-200"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="role">Role *</Label>
-                  <Input
-                    id="role"
-                    name="role"
-                    value={formData.role}
-                    onChange={handleInputChange}
-                    placeholder="e.g., Software Engineer"
-                    required
-                    className="glass-card border-violet-200"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="packageAmount">Package *</Label>
-                <Input
-                  id="packageAmount"
-                  name="packageAmount"
-                  value={formData.packageAmount}
-                  onChange={handleInputChange}
-                  placeholder="e.g., 45 LPA"
-                  required
-                  className="glass-card border-violet-200"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="skills">Skills * (comma-separated)</Label>
-                <Input
-                  id="skills"
-                  name="skills"
-                  value={formData.skills}
-                  onChange={handleInputChange}
-                  placeholder="e.g., React, Node.js, Python, System Design"
-                  required
-                  className="glass-card border-violet-200"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="achievement">Achievement *</Label>
-                <Textarea
-                  id="achievement"
-                  name="achievement"
-                  value={formData.achievement}
-                  onChange={handleInputChange}
-                  placeholder="e.g., All India Rank 1 in Placement"
-                  required
-                  rows={3}
-                  className="glass-card border-violet-200"
-                />
-              </div>
-
-              {/* Submit Buttons */}
-              <div className="flex gap-4 pt-4">
-                <Button
-                  type="submit"
-                  disabled={isCreating}
-                  className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex-1"
-                >
-                  {isCreating ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Creating...</>
-                  ) : (
-                    <><Save className="mr-2 h-4 w-4" />Save Student</>
-                  )}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="glass-card"
-                  onClick={() => setIsAddModalOpen(false)}
-                >
-                  <X className="mr-2 h-4 w-4" />
-                  Cancel
-                </Button>
-              </div>
-            </form>
+            <StudentForm onSubmit={handleCreate} />
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Edit Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={(open) => {
+        if (!open) handleCloseEditModal();
+        else setIsEditModalOpen(open);
+      }}>
+        <DialogContent className="glass-card border-0 max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+              Edit Outstanding Student
+            </DialogTitle>
+          </DialogHeader>
+          <StudentForm isEdit onSubmit={handleUpdate} />
+        </DialogContent>
+      </Dialog>
 
       {/* Students List */}
       {isLoading ? (
@@ -388,7 +513,17 @@ const OutstandingStudents = () => {
                     size="sm"
                     variant="outline"
                     className="glass-card"
+                    onClick={() => handleEdit(student)}
+                    title="Edit"
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="glass-card"
                     onClick={() => handleToggleStatus(student._id)}
+                    title={student.isActive ? 'Deactivate' : 'Activate'}
                   >
                     {student.isActive ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
                   </Button>
@@ -397,6 +532,7 @@ const OutstandingStudents = () => {
                     variant="outline"
                     className="glass-card text-red-500"
                     onClick={() => handleDelete(student._id)}
+                    title="Delete"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_BASE_URL } from '../../config/api';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from './baseQueryWithReauth';
 
 export interface User {
   _id: string;
@@ -64,14 +64,7 @@ export interface ChangePasswordRequest {
 
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: API_BASE_URL,
-    credentials: 'include', // Send cookies with every request
-    prepareHeaders: (headers) => {
-      // No need to add Authorization header - using cookies only
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['Auth', 'User'],
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, LoginRequest>({

@@ -1,5 +1,5 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_BASE_URL } from '../../config/api';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from './baseQueryWithReauth';
 
 export interface Branch {
   _id: string;
@@ -68,14 +68,7 @@ export interface PaginatedResponse<T> {
 
 export const branchApi = createApi({
   reducerPath: 'branchApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: API_BASE_URL,
-    credentials: 'include', // Send cookies with every request
-    prepareHeaders: (headers) => {
-      // No need to add Authorization header - using cookies only
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ['Branch'],
   endpoints: (builder) => ({
     getBranches: builder.query<PaginatedResponse<Branch>, { page?: number; limit?: number }>({

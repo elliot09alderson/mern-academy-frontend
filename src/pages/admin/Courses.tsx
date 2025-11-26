@@ -1,70 +1,18 @@
 import React, { useState } from 'react';
-import { useGetCoursesQuery, useCreateCourseMutation, useUpdateCourseMutation, useDeleteCourseMutation } from '../../store/api/courseApi';
-import { useGetActiveBranchesQuery } from '../../store/api/branchApi';
-import { Plus, Edit2, Trash2, Search, BookOpen, X } from 'lucide-react';
-
-interface CourseFormData {
-  courseName: string;
-  courseCode: string;
-  description: string;
-  duration: string;
-  branchId: string;
-  credits: number;
-  semester: number;
-  syllabus?: string;
-}
+import { useNavigate } from 'react-router-dom';
+import { useGetCoursesQuery, useDeleteCourseMutation } from '../../store/api/courseApi';
+import { Plus, Edit2, Trash2, Search, BookOpen, Eye, IndianRupee, Clock, Users, Award } from 'lucide-react';
 
 const Courses: React.FC = () => {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingCourse, setEditingCourse] = useState<any>(null);
 
-  const { data: coursesData, isLoading } = useGetCoursesQuery({ page, limit: 10 });
-  const { data: branchesData } = useGetActiveBranchesQuery({ limit: 100 });
-
-  const [createCourse] = useCreateCourseMutation();
-  const [updateCourse] = useUpdateCourseMutation();
+  const { data: coursesData, isLoading } = useGetCoursesQuery({ page, limit: 12 });
   const [deleteCourse] = useDeleteCourseMutation();
 
-  const [formData, setFormData] = useState<CourseFormData>({
-    courseName: '',
-    courseCode: '',
-    description: '',
-    duration: '',
-    branchId: '',
-    credits: 1,
-    semester: 1,
-    syllabus: ''
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      if (editingCourse) {
-        await updateCourse({ id: editingCourse._id, updates: formData }).unwrap();
-      } else {
-        await createCourse(formData).unwrap();
-      }
-      handleCloseModal();
-    } catch (error) {
-      console.error('Failed to save course:', error);
-    }
-  };
-
-  const handleEdit = (course: any) => {
-    setEditingCourse(course);
-    setFormData({
-      courseName: course.courseName,
-      courseCode: course.courseCode,
-      description: course.description,
-      duration: course.duration,
-      branchId: course.branchId?._id || course.branchId,
-      credits: course.credits,
-      semester: course.semester,
-      syllabus: course.syllabus || ''
-    });
-    setIsModalOpen(true);
+  const handleEdit = (courseId: string) => {
+    navigate(`/admin/courses/edit/${courseId}`);
   };
 
   const handleDelete = async (courseId: string) => {
@@ -75,21 +23,6 @@ const Courses: React.FC = () => {
         console.error('Failed to delete course:', error);
       }
     }
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setEditingCourse(null);
-    setFormData({
-      courseName: '',
-      courseCode: '',
-      description: '',
-      duration: '',
-      branchId: '',
-      credits: 1,
-      semester: 1,
-      syllabus: ''
-    });
   };
 
   const filteredCourses = coursesData?.data?.filter(course =>
@@ -114,7 +47,7 @@ const Courses: React.FC = () => {
           <p className="text-gray-600">Manage course catalog and curriculum</p>
         </div>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => navigate('/admin/courses/add')}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
         >
           <Plus className="w-4 h-4" />
@@ -139,75 +72,197 @@ const Courses: React.FC = () => {
       {/* Courses Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCourses.map((course) => (
-          <div key={course._id} className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow">
-            <div className="flex items-start justify-between mb-4">
-              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-white" />
+          <div key={course._id} className="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
+            {/* Banner Image */}
+            {course.bannerImage?.url ? (
+              <div className="relative h-40 overflow-hidden">
+                <img
+                  src={course.bannerImage.url}
+                  alt={course.courseName}
+                  className="w-full h-full object-cover"
+                />
+                {course.isLimitedOffer && (
+                  <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                    Limited Offer
+                  </span>
+                )}
+                <div className="absolute top-2 right-2 flex space-x-1">
+                  <button
+                    onClick={() => handleEdit(course._id)}
+                    className="p-2 bg-white/90 hover:bg-white rounded-full text-blue-600 transition-colors"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(course._id)}
+                    className="p-2 bg-white/90 hover:bg-white rounded-full text-red-600 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => handleEdit(course)}
-                  className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                >
-                  <Edit2 className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleDelete(course._id)}
-                  className="p-2 text-gray-400 hover:text-red-600 transition-colors"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+            ) : (
+              <div className="relative h-40 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                <BookOpen className="w-16 h-16 text-white/50" />
+                {course.isLimitedOffer && (
+                  <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                    Limited Offer
+                  </span>
+                )}
+                <div className="absolute top-2 right-2 flex space-x-1">
+                  <button
+                    onClick={() => handleEdit(course._id)}
+                    className="p-2 bg-white/90 hover:bg-white rounded-full text-blue-600 transition-colors"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(course._id)}
+                    className="p-2 bg-white/90 hover:bg-white rounded-full text-red-600 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
 
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">{course.courseName}</h3>
-            <p className="text-sm text-gray-600 mb-4 line-clamp-3">{course.description}</p>
+            <div className="p-4">
+              {/* Course Code & Level Badge */}
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                  {course.courseCode}
+                </span>
+                {course.level && (
+                  <span className={`text-xs px-2 py-1 rounded-full ${
+                    course.level === 'Beginner Friendly' ? 'bg-green-100 text-green-700' :
+                    course.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-700' :
+                    'bg-red-100 text-red-700'
+                  }`}>
+                    {course.level}
+                  </span>
+                )}
+              </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Code:</span>
-                <span className="font-medium">{course.courseCode}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Credits:</span>
-                <span className="font-medium">{course.credits}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Semester:</span>
-                <span className="font-medium">{course.semester}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Duration:</span>
-                <span className="font-medium">{course.duration}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Branch:</span>
-                <span className="font-medium">{course.branchId?.branchName || 'N/A'}</span>
-              </div>
-            </div>
+              {/* Course Name */}
+              <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{course.courseName}</h3>
 
-            <div className="mt-4 pt-4 border-t">
-              <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                course.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-              }`}>
-                {course.isActive ? 'Active' : 'Inactive'}
-              </span>
+              {/* Description */}
+              <p className="text-sm text-gray-600 mb-3 line-clamp-2">{course.description}</p>
+
+              {/* Course Meta */}
+              <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  <span>{course.duration}</span>
+                </div>
+                {course.batchSize && (
+                  <div className="flex items-center gap-1">
+                    <Users className="w-4 h-4" />
+                    <span>{course.batchSize}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Features */}
+              {course.features && course.features.length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {course.features.slice(0, 3).map((feature, idx) => (
+                    <span key={idx} className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded">
+                      {feature}
+                    </span>
+                  ))}
+                  {course.features.length > 3 && (
+                    <span className="text-xs text-gray-400">+{course.features.length - 3} more</span>
+                  )}
+                </div>
+              )}
+
+              {/* Pricing */}
+              <div className="flex items-center justify-between pt-3 border-t">
+                <div className="flex items-center gap-2">
+                  {course.discountedPrice && course.originalPrice && course.discountedPrice < course.originalPrice ? (
+                    <>
+                      <span className="text-lg font-bold text-green-600">
+                        Rs {course.discountedPrice.toLocaleString()}
+                      </span>
+                      <span className="text-sm text-gray-400 line-through">
+                        Rs {course.originalPrice.toLocaleString()}
+                      </span>
+                      {course.discountPercentage > 0 && (
+                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                          {course.discountPercentage}% OFF
+                        </span>
+                      )}
+                    </>
+                  ) : course.originalPrice ? (
+                    <span className="text-lg font-bold text-gray-900">
+                      Rs {course.originalPrice.toLocaleString()}
+                    </span>
+                  ) : (
+                    <span className="text-sm text-gray-400">Price not set</span>
+                  )}
+                </div>
+                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                  course.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                }`}>
+                  {course.isActive ? 'Active' : 'Inactive'}
+                </span>
+              </div>
+
+              {/* Additional Info */}
+              <div className="mt-3 pt-3 border-t grid grid-cols-2 gap-2 text-xs text-gray-500">
+                {course.branchId?.branchName && (
+                  <div>
+                    <span className="font-medium">Branch:</span> {course.branchId.branchName}
+                  </div>
+                )}
+                {course.semester && (
+                  <div>
+                    <span className="font-medium">Semester:</span> {course.semester}
+                  </div>
+                )}
+                {course.credits && (
+                  <div>
+                    <span className="font-medium">Credits:</span> {course.credits}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}
       </div>
 
+      {/* Empty State */}
+      {filteredCourses.length === 0 && !isLoading && (
+        <div className="text-center py-12 bg-white rounded-lg border">
+          <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No courses found</h3>
+          <p className="text-gray-500 mb-4">
+            {searchTerm ? 'Try adjusting your search terms' : 'Get started by creating your first course'}
+          </p>
+          {!searchTerm && (
+            <button
+              onClick={() => navigate('/admin/courses/add')}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg inline-flex items-center space-x-2"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Course</span>
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Pagination */}
       {coursesData?.pagination && coursesData.pagination.totalPages > 1 && (
         <div className="flex items-center justify-between bg-white rounded-lg shadow-sm border p-4">
           <div className="text-sm text-gray-700">
-            Showing {((page - 1) * 10) + 1} to {Math.min(page * 10, coursesData.pagination.total)} of {coursesData.pagination.total} results
+            Showing {((page - 1) * 12) + 1} to {Math.min(page * 12, coursesData.pagination.total)} of {coursesData.pagination.total} results
           </div>
           <div className="flex space-x-2">
             <button
               onClick={() => setPage(page - 1)}
               disabled={page === 1}
-              className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
               Previous
             </button>
@@ -217,163 +272,10 @@ const Courses: React.FC = () => {
             <button
               onClick={() => setPage(page + 1)}
               disabled={page === coursesData.pagination.totalPages}
-              className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
               Next
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b">
-              <h2 className="text-xl font-semibold text-gray-900">
-                {editingCourse ? 'Edit Course' : 'Add New Course'}
-              </h2>
-              <button
-                onClick={handleCloseModal}
-                className="p-2 text-gray-400 hover:text-gray-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Course Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.courseName}
-                    onChange={(e) => setFormData({ ...formData, courseName: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Course Code *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.courseCode}
-                    onChange={(e) => setFormData({ ...formData, courseCode: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Branch *
-                  </label>
-                  <select
-                    required
-                    value={formData.branchId}
-                    onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    <option value="">Select Branch</option>
-                    {branchesData?.data?.map((branch) => (
-                      <option key={branch._id} value={branch._id}>
-                        {branch.branchName}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Duration *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g., 3 months, 1 semester"
-                    value={formData.duration}
-                    onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Credits *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    value={formData.credits}
-                    onChange={(e) => setFormData({ ...formData, credits: parseInt(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Semester *
-                  </label>
-                  <select
-                    required
-                    value={formData.semester}
-                    onChange={(e) => setFormData({ ...formData, semester: parseInt(e.target.value) })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
-                      <option key={sem} value={sem}>Semester {sem}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description *
-                </label>
-                <textarea
-                  required
-                  rows={3}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Syllabus (Optional)
-                </label>
-                <textarea
-                  rows={4}
-                  value={formData.syllabus}
-                  onChange={(e) => setFormData({ ...formData, syllabus: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div className="flex justify-end space-x-3 pt-4">
-                <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  {editingCourse ? 'Update Course' : 'Create Course'}
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       )}

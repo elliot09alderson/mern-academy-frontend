@@ -1,5 +1,5 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQueryWithReauth } from './baseQueryWithReauth';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { API_BASE_URL } from '../../config/api';
 
 export interface OutstandingStudent {
   _id: string;
@@ -34,7 +34,13 @@ export interface CreateOutstandingStudentRequest {
 
 export const outstandingStudentApi = createApi({
   reducerPath: 'outstandingStudentApi',
-  baseQuery: baseQueryWithReauth,
+  baseQuery: fetchBaseQuery({
+    baseUrl: API_BASE_URL,
+    credentials: 'include',
+    prepareHeaders: (headers) => {
+      return headers;
+    },
+  }),
   tagTypes: ['OutstandingStudent'],
   endpoints: (builder) => ({
     getOutstandingStudents: builder.query<{ success: boolean; count: number; data: OutstandingStudent[] }, { isActive?: boolean }>({

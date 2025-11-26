@@ -81,7 +81,7 @@ const Register = () => {
       const result = await register(registerData).unwrap();
       if (result.success) {
         toast.success('Student registration successful!');
-        navigate('/auth/login');
+        navigate('/login');
       }
     } catch (err: any) {
       if (err?.data?.errors) {
@@ -110,7 +110,7 @@ const Register = () => {
       const result = await register(registerData).unwrap();
       if (result.success) {
         toast.success('Faculty registration successful!');
-        navigate('/auth/login');
+        navigate('/login');
       }
     } catch (err: any) {
       if (err?.data?.errors) {

@@ -25,7 +25,7 @@ const AdminLayout: React.FC = () => {
     try {
       await logout().unwrap();
       localStorage.removeItem('token');
-      navigate('/auth/login');
+      navigate('/admin/login');
     } catch (error) {
       console.error('Logout failed:', error);
     }

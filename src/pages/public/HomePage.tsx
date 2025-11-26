@@ -7,8 +7,8 @@ import {
   useGetFeaturedEventsQuery,
 } from "../../store/api/eventApi";
 import { useGetOutstandingStudentsQuery } from "../../store/api/studentApi";
+import { useGetTestimonialsQuery } from "../../store/api/testimonialApi";
 import { useLogoutMutation } from "../../store/api/authApi";
-import { useAuthPolling } from "../../hooks/useAuthPolling";
 import { useAppSelector, useAppDispatch } from "../../store/store";
 import {
   selectIsAuthenticated,
@@ -29,14 +29,12 @@ import {
   Star,
   LogOut,
   User as UserIcon,
+  Quote,
 } from "lucide-react";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  // Use auth polling to check token validity every 15 seconds
-  const { isPolling, isFetching, refreshAuth } = useAuthPolling();
 
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const currentUser = useAppSelector(selectCurrentUser);
@@ -46,11 +44,10 @@ const HomePage: React.FC = () => {
   React.useEffect(() => {
     console.log("HomePage - Auth State:", {
       isAuthenticated,
-      isPolling,
       hasUser: !!currentUser,
       userName: currentUser?.name,
     });
-  }, [isAuthenticated, isPolling, currentUser]);
+  }, [isAuthenticated, currentUser]);
 
   const { data: coursesData } = useGetActiveCoursesQuery({ limit: 6 });
   const { data: branchesData } = useGetActiveBranchesQuery({ limit: 4 });
@@ -59,6 +56,7 @@ const HomePage: React.FC = () => {
   const { data: outstandingStudents } = useGetOutstandingStudentsQuery({
     limit: 6,
   });
+  const { data: testimonials } = useGetTestimonialsQuery({ isActive: true, limit: 3 });
 
   const handleLogout = async () => {
     try {
@@ -430,6 +428,95 @@ const HomePage: React.FC = () => {
         </section>
       )}
 
+      {/* Testimonials Section */}
+      {testimonials?.data && testimonials.data.length > 0 && (
+        <section className="py-20 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            {/* Background decorative elements */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+              <div className="absolute top-20 left-10 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+              <div className="absolute top-20 right-10 w-64 h-64 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+              <div className="absolute -bottom-8 left-20 w-64 h-64 bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+            </div>
+
+            <div className="text-center mb-16 relative z-10">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+                What Our Students Say
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Hear from our community about their learning journey and success stories
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+              {testimonials.data.map((testimonial, index) => (
+                <div
+                  key={testimonial._id}
+                  className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-500 ease-out hover:-translate-y-2 border border-gray-100"
+                  style={{ animationDelay: `${index * 150}ms` }}
+                >
+                  {/* Quote Icon Background */}
+                  <div className="absolute top-6 right-6 text-gray-100 group-hover:text-blue-50 transition-colors duration-300">
+                    <Quote className="w-12 h-12 transform group-hover:scale-110 transition-transform duration-300" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative z-10">
+                    <div className="flex items-center mb-6">
+                      <div className="relative">
+                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-md group-hover:shadow-blue-200 transition-shadow duration-300">
+                          <img
+                            src={testimonial.image.url}
+                            alt={testimonial.name}
+                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                          />
+                        </div>
+                        <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm">
+                          <div className="bg-green-500 w-3 h-3 rounded-full animate-pulse"></div>
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <h3 className="font-bold text-gray-900 text-lg group-hover:text-blue-600 transition-colors duration-300">
+                          {testimonial.name}
+                        </h3>
+                        <p className="text-sm text-gray-500 font-medium">
+                          {testimonial.role}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mb-6">
+                      <div className="flex space-x-1 mb-3">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              i < testimonial.rating
+                                ? "text-yellow-400 fill-yellow-400"
+                                : "text-gray-300"
+                            } transform group-hover:scale-110 transition-transform duration-300`}
+                            style={{ transitionDelay: `${i * 50}ms` }}
+                          />
+                        ))}
+                      </div>
+                      <h4 className="font-semibold text-gray-800 mb-2 group-hover:translate-x-1 transition-transform duration-300">
+                        "{testimonial.title}"
+                      </h4>
+                      <p className="text-gray-600 leading-relaxed text-sm group-hover:text-gray-700 transition-colors duration-300">
+                        {testimonial.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Bottom Gradient Line */}
+                  <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out rounded-b-2xl"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Upcoming Events */}
       {upcomingEvents?.data && upcomingEvents.data.length > 0 && (
         <section className="py-16 bg-gray-50">
@@ -556,12 +643,12 @@ const HomePage: React.FC = () => {
               <h4 className="text-lg font-semibold mb-4">Students</h4>
               <ul className="space-y-2 text-gray-400">
                 <li>
-                  <Link to="/auth/register" className="hover:text-white">
+                  <Link to="/register" className="hover:text-white">
                     Apply Now
                   </Link>
                 </li>
                 <li>
-                  <Link to="/auth/login" className="hover:text-white">
+                  <Link to="/login" className="hover:text-white">
                     Student Portal
                   </Link>
                 </li>

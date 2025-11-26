@@ -10,6 +10,7 @@ import { store, persistor } from "@/store/store";
 import { useAuthPersistence } from "@/hooks/useAuthPersistence";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { PrivateRoute } from "@/components/PrivateRoute";
+import { CustomCursor } from "@/components/CustomCursor";
 import { AuthDebug } from "@/components/AuthDebug";
 import { Loader2 } from "lucide-react";
 import Index from "./pages/Index";
@@ -28,8 +29,13 @@ import AddBranch from "./pages/admin/AddBranch";
 import OutstandingStudents from "./pages/admin/OutstandingStudents";
 import AddOutstandingStudent from "./pages/admin/AddOutstandingStudent";
 import AddCourse from "./pages/admin/AddCourse";
+import EditCourse from "./pages/admin/EditCourse";
 import AddEvent from "./pages/admin/AddEvent";
 import AddFaculty from "./pages/admin/AddFaculty";
+import EditFaculty from "./pages/admin/EditFaculty";
+import AdminFaculty from "./pages/admin/Faculty";
+import AdminBranches from "./pages/admin/Branches";
+import EditBranch from "./pages/admin/EditBranch";
 import Testimonials from "./pages/admin/Testimonials";
 import AddTestimonial from "./pages/admin/AddTestimonial";
 import EditTestimonial from "./pages/admin/EditTestimonial";
@@ -46,6 +52,7 @@ const AppContent = () => {
   return (
     <BrowserRouter>
       <SmoothScroll>
+        <CustomCursor />
         <AuthDebug />
         <Routes>
           {/* Public Routes */}
@@ -69,8 +76,11 @@ const AppContent = () => {
               element={<AddOutstandingStudent />}
             />
             <Route path="/admin/courses/add" element={<AddCourse />} />
+            <Route path="/admin/courses/edit/:id" element={<EditCourse />} />
             <Route path="/admin/events/add" element={<AddEvent />} />
             <Route path="/admin/faculty/add" element={<AddFaculty />} />
+            <Route path="/admin/faculty/edit/:id" element={<EditFaculty />} />
+            <Route path="/admin/branches/edit/:id" element={<EditBranch />} />
             <Route path="/admin/testimonials" element={<Testimonials />} />
             <Route path="/admin/add-testimonial" element={<AddTestimonial />} />
             <Route path="/admin/edit-testimonial/:id" element={<EditTestimonial />} />
@@ -81,6 +91,8 @@ const AppContent = () => {
               <Route path="/admin/students" element={<AdminStudents />} />
               <Route path="/admin/courses" element={<AdminCourses />} />
               <Route path="/admin/events" element={<AdminEvents />} />
+              <Route path="/admin/faculty" element={<AdminFaculty />} />
+              <Route path="/admin/branches" element={<AdminBranches />} />
               <Route
                 path="/admin/outstanding-students"
                 element={<OutstandingStudents />}

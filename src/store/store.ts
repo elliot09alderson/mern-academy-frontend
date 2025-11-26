@@ -9,6 +9,7 @@ import { facultyApi } from './api/facultyApi';
 import { studentApi } from './api/studentApi';
 import { outstandingStudentApi } from './api/outstandingStudentApi';
 import { testimonialApi } from './api/testimonialApi';
+import { inquiryApi } from './api/inquiryApi';
 import authReducer from './slices/authSlice';
 
 // Persist configuration
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   [studentApi.reducerPath]: studentApi.reducer,
   [outstandingStudentApi.reducerPath]: outstandingStudentApi.reducer,
   [testimonialApi.reducerPath]: testimonialApi.reducer,
+  [inquiryApi.reducerPath]: inquiryApi.reducer,
 });
 
 // Create persisted reducer
@@ -49,7 +51,8 @@ export const store = configureStore({
       facultyApi.middleware,
       studentApi.middleware,
       outstandingStudentApi.middleware,
-      testimonialApi.middleware
+      testimonialApi.middleware,
+      inquiryApi.middleware
     ),
 });
 

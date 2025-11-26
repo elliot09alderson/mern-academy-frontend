@@ -6,8 +6,56 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Mail, Phone, User, GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { useCreateInquiryMutation } from '@/store/api/inquiryApi';
+import { useToast } from '@/hooks/use-toast';
 
 export const NewsletterSection = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    qualification: '',
+    hereAboutUs: '',
+    message: ''
+  });
+
+  const [createInquiry, { isLoading }] = useCreateInquiryMutation();
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      await createInquiry(formData).unwrap();
+
+      toast({
+        title: "Success!",
+        description: "Thank you for your inquiry. We'll get back to you soon!",
+      });
+
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        qualification: '',
+        hereAboutUs: '',
+        message: ''
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.data?.message || "Failed to submit inquiry. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   return (
     <section id="course-info" className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
@@ -38,7 +86,7 @@ export const NewsletterSection = () => {
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Name */}
               <div className="relative">
@@ -48,6 +96,8 @@ export const NewsletterSection = () => {
                   placeholder="Full Name *"
                   className="glass-card border-0 pl-10 h-12"
                   required
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
                 />
               </div>
 
@@ -60,6 +110,8 @@ export const NewsletterSection = () => {
                   placeholder="Email Address *"
                   className="glass-card border-0 pl-10 h-12"
                   required
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
                 />
               </div>
 
@@ -72,6 +124,8 @@ export const NewsletterSection = () => {
                   placeholder="Phone Number *"
                   className="glass-card border-0 pl-10 h-12"
                   required
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
                 />
               </div>
 
@@ -83,12 +137,14 @@ export const NewsletterSection = () => {
                   placeholder="Qualification *"
                   className="glass-card border-0 pl-10 h-12"
                   required
+                  value={formData.qualification}
+                  onChange={(e) => handleInputChange('qualification', e.target.value)}
                 />
               </div>
             </div>
 
             {/* How did you hear about us */}
-            <Select required>
+            <Select required value={formData.hereAboutUs} onValueChange={(value) => handleInputChange('hereAboutUs', value)}>
               <SelectTrigger className="glass-card border-0 h-12">
                 <SelectValue placeholder="How did you hear about us? *" />
               </SelectTrigger>
@@ -109,6 +165,8 @@ export const NewsletterSection = () => {
               placeholder="Your message or questions (Optional)"
               className="glass-card border-0 min-h-[100px] resize-none"
               rows={3}
+              value={formData.message}
+              onChange={(e) => handleInputChange('message', e.target.value)}
             />
 
             {/* Submit Button */}
@@ -116,8 +174,9 @@ export const NewsletterSection = () => {
               type="submit"
               size="lg"
               className="w-full bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 text-white border-0 h-12 font-semibold"
+              disabled={isLoading}
             >
-              Get Course Information
+              {isLoading ? 'Submitting...' : 'Get Course Information'}
             </Button>
 
             {/* Privacy Note */}
