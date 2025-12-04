@@ -66,7 +66,7 @@ export const NewsletterSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-10"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
             Get{' '}
             <span className="relative inline-block">
               <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 blur-md opacity-10" />

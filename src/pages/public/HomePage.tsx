@@ -8,6 +8,7 @@ import {
 } from "../../store/api/eventApi";
 import { useGetOutstandingStudentsQuery } from "../../store/api/studentApi";
 import { useGetTestimonialsQuery } from "../../store/api/testimonialApi";
+import { useGetActiveFacultiesQuery } from "../../store/api/facultyApi";
 import { useLogoutMutation } from "../../store/api/authApi";
 import { useAppSelector, useAppDispatch } from "../../store/store";
 import {
@@ -30,6 +31,8 @@ import {
   LogOut,
   User as UserIcon,
   Quote,
+  Award,
+  Briefcase,
 } from "lucide-react";
 
 const HomePage: React.FC = () => {
@@ -57,6 +60,7 @@ const HomePage: React.FC = () => {
     limit: 6,
   });
   const { data: testimonials } = useGetTestimonialsQuery({ isActive: true, limit: 3 });
+  const { data: facultyData } = useGetActiveFacultiesQuery({ limit: 6 });
 
   const handleLogout = async () => {
     try {
@@ -428,6 +432,89 @@ const HomePage: React.FC = () => {
         </section>
       )}
 
+      {/* Learn From Industry Experts Section */}
+      {facultyData?.data && facultyData.data.length > 0 && (
+        <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-6">
+                <Briefcase className="w-8 h-8 text-indigo-600" />
+              </div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+                Learn From Industry Experts
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Our faculty brings real-world experience and cutting-edge knowledge to help you succeed
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {facultyData.data.map((faculty) => (
+                <div
+                  key={faculty._id}
+                  className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
+                >
+                  {/* Image Container */}
+                  <div className="relative h-64 overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600">
+                    {faculty.image?.url ? (
+                      <img
+                        src={faculty.image.url}
+                        alt={faculty.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <UserIcon className="w-24 h-24 text-white/50" />
+                      </div>
+                    )}
+                    {/* Overlay gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    {/* Experience badge */}
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                      <span className="text-sm font-semibold text-indigo-600">
+                        {faculty.experience}+ Years
+                      </span>
+                    </div>
+                    {/* Name overlay */}
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h3 className="text-xl font-bold text-white mb-1">{faculty.name}</h3>
+                      <p className="text-white/80 text-sm">{faculty.specialization}</p>
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6">
+                    <div className="flex items-center text-gray-600 mb-3">
+                      <GraduationCap className="w-4 h-4 mr-2 text-indigo-500" />
+                      <span className="text-sm">{faculty.qualification}</span>
+                    </div>
+
+                    {/* Expertise Tags */}
+                    {faculty.expertise && faculty.expertise.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {faculty.expertise.slice(0, 3).map((skill, index) => (
+                          <span
+                            key={index}
+                            className="px-3 py-1 bg-indigo-50 text-indigo-600 text-xs font-medium rounded-full"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                        {faculty.expertise.length > 3 && (
+                          <span className="px-3 py-1 bg-gray-100 text-gray-500 text-xs font-medium rounded-full">
+                            +{faculty.expertise.length - 3} more
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Testimonials Section */}
       {testimonials?.data && testimonials.data.length > 0 && (
         <section className="py-20 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
@@ -599,6 +686,77 @@ const HomePage: React.FC = () => {
           </div>
         </section>
       )}
+
+      {/* What Experts Say Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-6">
+              <Award className="w-8 h-8 text-blue-600" />
+            </div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">
+              What Experts Say
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Industry leaders and education experts share their thoughts about MERN Academy
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Expert 1 - Md Mobeen */}
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 relative overflow-hidden">
+              <div className="absolute top-4 right-4 text-blue-200">
+                <Quote className="w-16 h-16" />
+              </div>
+              <div className="relative z-10">
+                <p className="text-gray-700 text-lg leading-relaxed mb-6 italic">
+                  "MERN Academy represents the future of education - combining traditional academic values with modern technological skills. Their commitment to holistic student development and practical learning approach prepares students not just for jobs, but for successful careers."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-white shadow-lg">
+                    <img
+                      src="/experts/md-mobeen.jpg"
+                      alt="Md Mobeen"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="font-bold text-gray-900 text-lg">Md Mobeen</h4>
+                    <p className="text-sm text-gray-600">Retired Principal, Zila School, Ranchi</p>
+                    <p className="text-xs text-blue-600 font-medium">Veteran Educator & Academic Leader</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Expert 2 - Dr. Md Imran */}
+            <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-2xl p-8 relative overflow-hidden">
+              <div className="absolute top-4 right-4 text-green-200">
+                <Quote className="w-16 h-16" />
+              </div>
+              <div className="relative z-10">
+                <p className="text-gray-700 text-lg leading-relaxed mb-6 italic">
+                  "In today's rapidly evolving world, institutions like MERN Academy are essential. They bridge the gap between academic knowledge and industry requirements, ensuring students are equipped with both technical expertise and professional skills needed for success."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-white shadow-lg">
+                    <img
+                      src="/experts/dr-md-imran.jpg"
+                      alt="Dr. Md Imran"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="font-bold text-gray-900 text-lg">Dr. Md Imran</h4>
+                    <p className="text-sm text-gray-600">Paediatric Surgeon</p>
+                    <p className="text-xs text-green-600 font-medium">Medical Expert & Healthcare Professional</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
