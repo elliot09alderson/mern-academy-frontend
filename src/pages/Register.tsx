@@ -2,71 +2,56 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Code2, Mail, Lock, User, Phone, GraduationCap, Loader2 } from 'lucide-react';
+import { Loader2, Mail, Lock, User, Phone, GraduationCap } from 'lucide-react';
 import { useRegisterMutation } from '@/store/api/authApi';
 import { toast } from 'sonner';
 
-// Validation schemas
+const inputClass =
+  'w-full bg-transparent border-b border-[#2A2522] focus:border-[#C4622D] text-[#F0EBE1] placeholder:text-[#6B6660] py-3 text-sm outline-none transition-colors duration-200 font-mono tracking-[0.03em]';
+
+const labelClass =
+  'font-mono text-[9px] tracking-[0.2em] text-[#6B6660] uppercase block mb-2';
+
+const errorClass = 'font-mono text-[9px] text-red-400 tracking-[0.06em] mt-1';
+
+const selectClass =
+  'w-full bg-[#0D0C0A] border-b border-[#2A2522] focus:border-[#C4622D] text-[#F0EBE1] py-3 text-sm outline-none transition-colors duration-200 font-mono tracking-[0.03em] appearance-none cursor-pointer';
+
 const studentValidationSchema = Yup.object({
-  fullname: Yup.string()
-    .min(2, 'Full name must be at least 2 characters')
-    .max(100, 'Full name cannot exceed 100 characters')
-    .required('Full name is required'),
-  email: Yup.string()
-    .email('Please enter a valid email address')
-    .required('Email is required'),
+  fullname: Yup.string().min(2).max(100).required('Full name is required'),
+  email: Yup.string().email('Invalid email').required('Email is required'),
   phonenumber: Yup.string()
-    .matches(/^[\+]?[1-9][\d]{9,14}$/, 'Please enter a valid phone number')
+    .matches(/^[\+]?[1-9][\d]{9,14}$/, 'Invalid phone number')
     .required('Phone number is required'),
-  qualification: Yup.string()
-    .required('Qualification is required'),
-  hereaboutus: Yup.string()
-    .required('Please tell us how you heard about us'),
+  qualification: Yup.string().required('Qualification is required'),
+  hereaboutus: Yup.string().required('Required'),
   password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-    )
+    .min(6, 'At least 6 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Must include uppercase, lowercase, and number')
     .required('Password is required'),
 });
 
 const facultyValidationSchema = Yup.object({
-  fullname: Yup.string()
-    .min(2, 'Full name must be at least 2 characters')
-    .max(100, 'Full name cannot exceed 100 characters')
-    .required('Full name is required'),
-  email: Yup.string()
-    .email('Please enter a valid email address')
-    .required('Email is required'),
+  fullname: Yup.string().min(2).max(100).required('Full name is required'),
+  email: Yup.string().email('Invalid email').required('Email is required'),
   phonenumber: Yup.string()
-    .matches(/^[\+]?[1-9][\d]{9,14}$/, 'Please enter a valid phone number')
+    .matches(/^[\+]?[1-9][\d]{9,14}$/, 'Invalid phone number')
     .required('Phone number is required'),
-  specialization: Yup.string()
-    .required('Specialization is required'),
+  specialization: Yup.string().required('Specialization is required'),
   password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-    )
+    .min(6, 'At least 6 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Must include uppercase, lowercase, and number')
     .required('Password is required'),
 });
 
 const Register = () => {
   const navigate = useNavigate();
+  const [tab, setTab] = useState<'student' | 'faculty'>('student');
   const [register, { isLoading, error }] = useRegisterMutation();
 
   const handleStudentRegister = async (values: any) => {
     try {
-      const registerData = {
+      const result = await register({
         name: values.fullname,
         email: values.email,
         password: values.password,
@@ -74,413 +59,249 @@ const Register = () => {
         phone: values.phonenumber,
         qualification: values.qualification,
         hereaboutus: values.hereaboutus,
-        guardianName: 'Parent Name', // These would need to be added to the form
+        guardianName: 'Parent Name',
         guardianContact: values.phonenumber,
-      };
-
-      const result = await register(registerData).unwrap();
+      }).unwrap();
       if (result.success) {
-        toast.success('Student registration successful!');
+        toast.success('Registration successful!');
         navigate('/login');
       }
     } catch (err: any) {
       if (err?.data?.errors) {
-        err.data.errors.forEach((error: any) => {
-          toast.error(`${error.field}: ${error.message}`);
-        });
+        err.data.errors.forEach((e: any) => toast.error(`${e.field}: ${e.message}`));
       } else {
-        toast.error(err?.data?.message || 'Student registration failed');
+        toast.error(err?.data?.message || 'Registration failed');
       }
     }
   };
 
   const handleFacultyRegister = async (values: any) => {
     try {
-      const registerData = {
+      const result = await register({
         name: values.fullname,
         email: values.email,
         password: values.password,
         role: 'faculty' as const,
         phone: values.phonenumber,
         specialization: values.specialization,
-        qualification: 'Masters', // This would need to be added to the form
-        experience: 5, // This would need to be added to the form
-      };
-
-      const result = await register(registerData).unwrap();
+        qualification: 'Masters',
+        experience: 5,
+      }).unwrap();
       if (result.success) {
-        toast.success('Faculty registration successful!');
+        toast.success('Registration successful!');
         navigate('/login');
       }
     } catch (err: any) {
       if (err?.data?.errors) {
-        err.data.errors.forEach((error: any) => {
-          toast.error(`${error.field}: ${error.message}`);
-        });
+        err.data.errors.forEach((e: any) => toast.error(`${e.field}: ${e.message}`));
       } else {
-        toast.error(err?.data?.message || 'Faculty registration failed');
+        toast.error(err?.data?.message || 'Registration failed');
       }
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 py-12 bg-gradient-to-br from-black via-slate-950 to-black relative overflow-hidden">
-      {/* Animated background orbs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-80 h-80 bg-blue-600/15 rounded-full blur-3xl animate-orb-float"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl animate-orb-float-delayed"></div>
-        <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-indigo-600/15 rounded-full blur-3xl animate-orb-pulse"></div>
-      </div>
+    <div className="min-h-screen bg-[#0D0C0A] flex items-center justify-center px-6 py-16">
+      <div className="w-full max-w-md">
 
-      {/* Floating code snippets */}
-      <div className="absolute inset-0 opacity-10 text-indigo-400 text-xs font-mono overflow-hidden pointer-events-none">
-        <div className="absolute top-32 left-20 animate-float-slow">
-          <pre>{`const newUser = {
-  name, email,
-  role: 'student'
-}`}</pre>
+        {/* Logo */}
+        <div className="mb-10 flex justify-center">
+          <Link to="/">
+            <img
+              src="/mern_academy_logo_transparent.png"
+              alt="MERN Academy"
+              className="h-10 w-auto opacity-90 hover:opacity-100 transition-opacity duration-200"
+            />
+          </Link>
         </div>
-        <div className="absolute top-2/3 right-24 animate-float-delay-1">
-          <pre>{`await User.create({
-  ...userData,
-  password: hash
-})`}</pre>
+
+        {/* Tab switcher */}
+        <div
+          className="flex gap-px mb-10"
+          style={{ backgroundColor: '#2A2522' }}
+        >
+          {(['student', 'faculty'] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`flex-1 font-mono text-[10px] tracking-[0.2em] uppercase py-3 transition-colors duration-200 ${
+                tab === t
+                  ? 'bg-[#C4622D] text-[#F0EBE1]'
+                  : 'bg-[#0D0C0A] text-[#6B6660] hover:text-[#A39E95]'
+              }`}
+            >
+              {t}
+            </button>
+          ))}
         </div>
-        <div className="absolute bottom-32 left-1/4 animate-float-delay-2">
-          <pre>{`// Registration API
-POST /api/auth/register`}</pre>
-        </div>
-        <div className="absolute top-1/2 right-1/4 animate-float-slow">
-          <pre>{`validate(email, password)
-sendVerification()`}</pre>
-        </div>
-        <div className="absolute bottom-1/4 right-1/3 animate-float-delay-1">
-          <pre>{`// MERN Academy
-JWT.sign(payload)`}</pre>
-        </div>
-      </div>
 
-      {/* Grid pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.07)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.07)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+        {/* Student form */}
+        {tab === 'student' && (
+          <Formik
+            key="student"
+            initialValues={{ fullname: '', email: '', phonenumber: '', qualification: '', hereaboutus: '', password: '' }}
+            validationSchema={studentValidationSchema}
+            onSubmit={handleStudentRegister}
+          >
+            {({ isSubmitting, setFieldValue }) => (
+              <Form className="space-y-7">
+                <div>
+                  <label className={labelClass}>Full Name</label>
+                  <Field name="fullname" placeholder="John Doe" className={inputClass} />
+                  <ErrorMessage name="fullname" component="p" className={errorClass} />
+                </div>
 
-      <Card className="w-full max-w-md relative z-10 bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl shadow-indigo-500/20">
-        <CardHeader className="text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center">
-              <Code2 className="h-6 w-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold gradient-text">MERN Academy</span>
-          </div>
-          <CardTitle className="text-2xl">Join Us Today</CardTitle>
-          <CardDescription>Create your account to start learning</CardDescription>
-        </CardHeader>
-        
-        <CardContent>
-          <Tabs defaultValue="student" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="student">Student</TabsTrigger>
-              <TabsTrigger value="faculty">Faculty</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="student" className="space-y-4">
-              <Formik
-                initialValues={{
-                  fullname: '',
-                  email: '',
-                  phonenumber: '',
-                  qualification: '',
-                  hereaboutus: '',
-                  password: ''
-                }}
-                validationSchema={studentValidationSchema}
-                onSubmit={handleStudentRegister}
-              >
-                {({ isSubmitting, touched, errors: formErrors, setFieldValue, values }) => (
-                  <Form className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="student-name">Full Name</Label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Field
-                          as={Input}
-                          id="student-name"
-                          name="fullname"
-                          type="text"
-                          placeholder="John Doe"
-                          className={`pl-10 ${
-                            touched.fullname && formErrors.fullname ? 'border-red-500' : ''
-                          }`}
-                        />
-                      </div>
-                      <ErrorMessage name="fullname" component="p" className="text-sm text-red-500" />
-                    </div>
+                <div>
+                  <label className={labelClass}>Email</label>
+                  <Field name="email" type="email" placeholder="john@example.com" className={inputClass} />
+                  <ErrorMessage name="email" component="p" className={errorClass} />
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="student-email">Email</Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Field
-                          as={Input}
-                          id="student-email"
-                          name="email"
-                          type="email"
-                          placeholder="john@example.com"
-                          className={`pl-10 ${
-                            touched.email && formErrors.email ? 'border-red-500' : ''
-                          }`}
-                        />
-                      </div>
-                      <ErrorMessage name="email" component="p" className="text-sm text-red-500" />
-                    </div>
+                <div>
+                  <label className={labelClass}>Phone Number</label>
+                  <Field name="phonenumber" type="tel" placeholder="+91 9876543210" className={inputClass} />
+                  <ErrorMessage name="phonenumber" component="p" className={errorClass} />
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="student-phone">Phone Number</Label>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Field
-                          as={Input}
-                          id="student-phone"
-                          name="phonenumber"
-                          type="tel"
-                          placeholder="+91 9876543210"
-                          className={`pl-10 ${
-                            touched.phonenumber && formErrors.phonenumber ? 'border-red-500' : ''
-                          }`}
-                        />
-                      </div>
-                      <ErrorMessage name="phonenumber" component="p" className="text-sm text-red-500" />
-                    </div>
+                <div>
+                  <label className={labelClass}>Qualification</label>
+                  <select
+                    onChange={(e) => setFieldValue('qualification', e.target.value)}
+                    defaultValue=""
+                    className={selectClass}
+                  >
+                    <option value="" disabled>Select qualification</option>
+                    <option value="12th Pass">12th Pass</option>
+                    <option value="Diploma">Diploma</option>
+                    <option value="Graduate">Graduate</option>
+                    <option value="Post Graduate">Post Graduate</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <ErrorMessage name="qualification" component="p" className={errorClass} />
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="qualification">Qualification</Label>
-                      <div className="relative">
-                        <GraduationCap className="absolute left-3 top-3 h-4 w-4 text-muted-foreground z-10" />
-                        <Select onValueChange={(value) => setFieldValue('qualification', value)}>
-                          <SelectTrigger className={`pl-10 ${
-                            touched.qualification && formErrors.qualification ? 'border-red-500' : ''
-                          }`}>
-                            <SelectValue placeholder="Select your qualification" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="12th Pass">12th Pass</SelectItem>
-                            <SelectItem value="Diploma">Diploma</SelectItem>
-                            <SelectItem value="Graduate">Graduate</SelectItem>
-                            <SelectItem value="Post Graduate">Post Graduate</SelectItem>
-                            <SelectItem value="Other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <ErrorMessage name="qualification" component="p" className="text-sm text-red-500" />
-                    </div>
+                <div>
+                  <label className={labelClass}>How did you hear about us?</label>
+                  <select
+                    onChange={(e) => setFieldValue('hereaboutus', e.target.value)}
+                    defaultValue=""
+                    className={selectClass}
+                  >
+                    <option value="" disabled>Select option</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="Friend">Friend / Referral</option>
+                    <option value="College">College</option>
+                    <option value="Poster">Poster</option>
+                    <option value="Website">Website / Search Engine</option>
+                    <option value="Google Maps">Google Maps</option>
+                  </select>
+                  <ErrorMessage name="hereaboutus" component="p" className={errorClass} />
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="hear-about">How did you hear about us?</Label>
-                      <Select onValueChange={(value) => setFieldValue('hereaboutus', value)}>
-                        <SelectTrigger className={`${
-                          touched.hereaboutus && formErrors.hereaboutus ? 'border-red-500' : ''
-                        }`}>
-                          <SelectValue placeholder="Select option" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="LinkedIn">LinkedIn</SelectItem>
-                          <SelectItem value="Friend">Friend</SelectItem>
-                          <SelectItem value="College">College</SelectItem>
-                          <SelectItem value="Poster">Poster</SelectItem>
-                          <SelectItem value="Website">Website</SelectItem>
-                          <SelectItem value="Google Maps">Google Maps</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <ErrorMessage name="hereaboutus" component="p" className="text-sm text-red-500" />
-                    </div>
+                <div>
+                  <label className={labelClass}>Password</label>
+                  <Field name="password" type="password" placeholder="Create a strong password" className={inputClass} />
+                  <ErrorMessage name="password" component="p" className={errorClass} />
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="student-password">Password</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Field
-                          as={Input}
-                          id="student-password"
-                          name="password"
-                          type="password"
-                          placeholder="Create a strong password"
-                          className={`pl-10 ${
-                            touched.password && formErrors.password ? 'border-red-500' : ''
-                          }`}
-                        />
-                      </div>
-                      <ErrorMessage name="password" component="p" className="text-sm text-red-500" />
-                    </div>
-
-                    {error && (
-                      <Alert variant="destructive">
-                        <AlertDescription>
-                          {(error as any)?.data?.message || 'Registration failed'}
-                        </AlertDescription>
-                      </Alert>
-                    )}
-
-                    <Button
-                      type="submit"
-                      className="w-full gradient-primary text-white"
-                      disabled={isSubmitting || isLoading}
-                    >
-                      {isSubmitting || isLoading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Registering...
-                        </>
-                      ) : (
-                        'Register as Student'
-                      )}
-                    </Button>
-                  </Form>
+                {error && (
+                  <p className="font-mono text-[10px] text-red-400 tracking-[0.06em]">
+                    {(error as any)?.data?.message || 'Registration failed'}
+                  </p>
                 )}
-              </Formik>
-            </TabsContent>
-            
-            <TabsContent value="faculty" className="space-y-4">
-              <Formik
-                initialValues={{
-                  fullname: '',
-                  email: '',
-                  phonenumber: '',
-                  specialization: '',
-                  password: ''
-                }}
-                validationSchema={facultyValidationSchema}
-                onSubmit={handleFacultyRegister}
-              >
-                {({ isSubmitting, touched, errors: formErrors, setFieldValue }) => (
-                  <Form className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="faculty-name">Full Name</Label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Field
-                          as={Input}
-                          id="faculty-name"
-                          name="fullname"
-                          type="text"
-                          placeholder="Dr. Jane Smith"
-                          className={`pl-10 ${
-                            touched.fullname && formErrors.fullname ? 'border-red-500' : ''
-                          }`}
-                        />
-                      </div>
-                      <ErrorMessage name="fullname" component="p" className="text-sm text-red-500" />
-                    </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="faculty-email">Email</Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Field
-                          as={Input}
-                          id="faculty-email"
-                          name="email"
-                          type="email"
-                          placeholder="jane@mernacademy.com"
-                          className={`pl-10 ${
-                            touched.email && formErrors.email ? 'border-red-500' : ''
-                          }`}
-                        />
-                      </div>
-                      <ErrorMessage name="email" component="p" className="text-sm text-red-500" />
-                    </div>
+                <button
+                  type="submit"
+                  disabled={isSubmitting || isLoading}
+                  className="w-full group flex items-center justify-center bg-[#C4622D] hover:bg-[#D4723D] disabled:opacity-50 text-[#F0EBE1] py-4 font-display font-semibold text-sm tracking-[0.06em] transition-all duration-200 mt-2"
+                >
+                  {isSubmitting || isLoading ? (
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Registering…</>
+                  ) : 'Register as Student'}
+                </button>
+              </Form>
+            )}
+          </Formik>
+        )}
 
-                    <div className="space-y-2">
-                      <Label htmlFor="faculty-phone">Phone Number</Label>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Field
-                          as={Input}
-                          id="faculty-phone"
-                          name="phonenumber"
-                          type="tel"
-                          placeholder="+91 9876543210"
-                          className={`pl-10 ${
-                            touched.phonenumber && formErrors.phonenumber ? 'border-red-500' : ''
-                          }`}
-                        />
-                      </div>
-                      <ErrorMessage name="phonenumber" component="p" className="text-sm text-red-500" />
-                    </div>
+        {/* Faculty form */}
+        {tab === 'faculty' && (
+          <Formik
+            key="faculty"
+            initialValues={{ fullname: '', email: '', phonenumber: '', specialization: '', password: '' }}
+            validationSchema={facultyValidationSchema}
+            onSubmit={handleFacultyRegister}
+          >
+            {({ isSubmitting, setFieldValue }) => (
+              <Form className="space-y-7">
+                <div>
+                  <label className={labelClass}>Full Name</label>
+                  <Field name="fullname" placeholder="Dr. Jane Smith" className={inputClass} />
+                  <ErrorMessage name="fullname" component="p" className={errorClass} />
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="specialization">Specialization</Label>
-                      <Select onValueChange={(value) => setFieldValue('specialization', value)}>
-                        <SelectTrigger className={`${
-                          touched.specialization && formErrors.specialization ? 'border-red-500' : ''
-                        }`}>
-                          <SelectValue placeholder="Select your specialization" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="MERN Stack">MERN Stack</SelectItem>
-                          <SelectItem value="AI/ML">AI/ML</SelectItem>
-                          <SelectItem value="Data Structures & Algorithms">Data Structures & Algorithms</SelectItem>
-                          <SelectItem value="System Design">System Design</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <ErrorMessage name="specialization" component="p" className="text-sm text-red-500" />
-                    </div>
+                <div>
+                  <label className={labelClass}>Email</label>
+                  <Field name="email" type="email" placeholder="jane@mernacademy.com" className={inputClass} />
+                  <ErrorMessage name="email" component="p" className={errorClass} />
+                </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="faculty-password">Password</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Field
-                          as={Input}
-                          id="faculty-password"
-                          name="password"
-                          type="password"
-                          placeholder="Create a strong password"
-                          className={`pl-10 ${
-                            touched.password && formErrors.password ? 'border-red-500' : ''
-                          }`}
-                        />
-                      </div>
-                      <ErrorMessage name="password" component="p" className="text-sm text-red-500" />
-                    </div>
+                <div>
+                  <label className={labelClass}>Phone Number</label>
+                  <Field name="phonenumber" type="tel" placeholder="+91 9876543210" className={inputClass} />
+                  <ErrorMessage name="phonenumber" component="p" className={errorClass} />
+                </div>
 
-                    {error && (
-                      <Alert variant="destructive">
-                        <AlertDescription>
-                          {(error as any)?.data?.message || 'Registration failed'}
-                        </AlertDescription>
-                      </Alert>
-                    )}
+                <div>
+                  <label className={labelClass}>Specialization</label>
+                  <select
+                    onChange={(e) => setFieldValue('specialization', e.target.value)}
+                    defaultValue=""
+                    className={selectClass}
+                  >
+                    <option value="" disabled>Select specialization</option>
+                    <option value="MERN Stack">MERN Stack</option>
+                    <option value="AI/ML">AI / ML</option>
+                    <option value="Data Structures & Algorithms">Data Structures &amp; Algorithms</option>
+                    <option value="System Design">System Design</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <ErrorMessage name="specialization" component="p" className={errorClass} />
+                </div>
 
-                    <Button
-                      type="submit"
-                      className="w-full gradient-secondary text-white"
-                      disabled={isSubmitting || isLoading}
-                    >
-                      {isSubmitting || isLoading ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Registering...
-                        </>
-                      ) : (
-                        'Register as Faculty'
-                      )}
-                    </Button>
-                  </Form>
+                <div>
+                  <label className={labelClass}>Password</label>
+                  <Field name="password" type="password" placeholder="Create a strong password" className={inputClass} />
+                  <ErrorMessage name="password" component="p" className={errorClass} />
+                </div>
+
+                {error && (
+                  <p className="font-mono text-[10px] text-red-400 tracking-[0.06em]">
+                    {(error as any)?.data?.message || 'Registration failed'}
+                  </p>
                 )}
-              </Formik>
-            </TabsContent>
-          </Tabs>
-          
-          <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              Already have an account?{' '}
-              <Link to="/login" className="text-primary hover:underline font-medium">
-                Sign in here
-              </Link>
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting || isLoading}
+                  className="w-full group flex items-center justify-center bg-[#C4622D] hover:bg-[#D4723D] disabled:opacity-50 text-[#F0EBE1] py-4 font-display font-semibold text-sm tracking-[0.06em] transition-all duration-200 mt-2"
+                >
+                  {isSubmitting || isLoading ? (
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Registering…</>
+                  ) : 'Register as Faculty'}
+                </button>
+              </Form>
+            )}
+          </Formik>
+        )}
+
+        <p className="font-mono text-[10px] text-[#6B6660] text-center mt-8 tracking-[0.08em]">
+          Already have an account?{' '}
+          <Link to="/login" className="text-[#C4622D] hover:opacity-70 transition-opacity duration-200">
+            Sign in
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };
