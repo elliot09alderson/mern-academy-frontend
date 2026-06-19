@@ -38,7 +38,7 @@ export const Navigation = () => {
               <img
                 src="/mern_academy_logo_transparent.png"
                 alt="MERN Academy"
-                className="h-9 w-auto"
+                className="h-12 w-auto"
               />
             </Link>
 

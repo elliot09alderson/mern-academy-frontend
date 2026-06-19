@@ -28,7 +28,7 @@ export const Footer = () => {
               <img
                 src="/mern_academy_logo_transparent.png"
                 alt="MERN Academy"
-                className="h-9 w-auto"
+                className="h-12 w-auto"
               />
             </Link>
             <p className="text-[#6B6660] text-sm leading-relaxed max-w-xs">
