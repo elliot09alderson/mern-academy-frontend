@@ -50,7 +50,7 @@ const Login = () => {
             <img
               src="/mern_academy_logo_transparent.png"
               alt="MERN Academy"
-              className="h-10 w-auto opacity-90 hover:opacity-100 transition-opacity duration-200"
+              className="h-16 w-auto opacity-90 hover:opacity-100 transition-opacity duration-200"
             />
           </Link>
         </div>
