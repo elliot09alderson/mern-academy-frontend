@@ -1,77 +1,98 @@
-import { Mail, Phone, MapPin, Linkedin, Twitter, Instagram, Youtube } from 'lucide-react';
+import { Link } from "react-router-dom";
+import { Mail, Phone, MapPin } from "lucide-react";
+
+const navLinks = [
+  { to: "/#courses",  label: "Courses"  },
+  { to: "/students",  label: "Alumni"   },
+  { to: "/branches",  label: "Branches" },
+  { to: "/gallery",   label: "Gallery"  },
+];
+
+const legalLinks = [
+  { href: "/privacy", label: "Privacy Policy"  },
+  { href: "/terms",   label: "Terms of Service"},
+  { href: "/refund",  label: "Refund Policy"   },
+];
 
 export const Footer = () => {
   return (
-    <footer className="glass-card mt-20 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
+    <footer className="bg-[#0D0C0A] border-t border-[#2A2522] px-6 lg:px-8 pt-20 pb-12">
+      <div className="max-w-7xl mx-auto">
+
+        {/* Main grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+
+          {/* Brand */}
           <div className="lg:col-span-2">
-            <div className="flex items-center mb-4">
-              <img src="/mern_academy_logo_transparent.png" alt="MERN Academy" className="h-10 w-auto" />
-            </div>
-            <p className="text-muted-foreground mb-6 max-w-md">
-              Empowering the next generation of developers with cutting-edge MERN stack development, 
-              AI-powered tools, and placement-oriented training programs.
+            <Link to="/" className="inline-block mb-8 opacity-90 hover:opacity-100 transition-opacity duration-200">
+              <img
+                src="/mern_academy_logo_transparent.png"
+                alt="MERN Academy"
+                className="h-9 w-auto"
+              />
+            </Link>
+            <p className="text-[#6B6660] text-sm leading-relaxed max-w-xs">
+              Empowering the next generation of full-stack engineers with
+              industry-first curriculum and guaranteed placement support.
             </p>
-            <div className="flex space-x-4">
-              <div className="w-10 h-10 glass-card rounded-lg flex items-center justify-center hover:scale-105 transition-smooth cursor-pointer">
-                <Linkedin className="h-5 w-5 text-primary" />
-              </div>
-              <div className="w-10 h-10 glass-card rounded-lg flex items-center justify-center hover:scale-105 transition-smooth cursor-pointer">
-                <Twitter className="h-5 w-5 text-primary" />
-              </div>
-              <div className="w-10 h-10 glass-card rounded-lg flex items-center justify-center hover:scale-105 transition-smooth cursor-pointer">
-                <Instagram className="h-5 w-5 text-primary" />
-              </div>
-              <div className="w-10 h-10 glass-card rounded-lg flex items-center justify-center hover:scale-105 transition-smooth cursor-pointer">
-                <Youtube className="h-5 w-5 text-primary" />
-              </div>
-            </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Navigation */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
-            <ul className="space-y-3 text-muted-foreground">
-              <li><a href="#courses" className="hover:text-foreground transition-smooth">Courses</a></li>
-              <li><a href="#students" className="hover:text-foreground transition-smooth">Success Stories</a></li>
-              <li><a href="#branches" className="hover:text-foreground transition-smooth">Our Branches</a></li>
-              <li><a href="#gallery" className="hover:text-foreground transition-smooth">Gallery</a></li>
-              <li><a href="/about" className="hover:text-foreground transition-smooth">About Us</a></li>
-              <li><a href="/contact" className="hover:text-foreground transition-smooth">Contact</a></li>
+            <p className="font-mono text-[9px] tracking-[0.25em] text-[#6B6660] uppercase mb-8">
+              Navigation
+            </p>
+            <ul className="space-y-4">
+              {navLinks.map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="text-[#A39E95] hover:text-[#F0EBE1] text-sm transition-colors duration-200"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Contact */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">Contact Us</h3>
-            <div className="space-y-3 text-muted-foreground">
-              <div className="flex items-center gap-3">
-                <MapPin className="h-4 w-4 text-primary" />
-                <span className="text-sm">Koramangala, Bangalore</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-primary" />
-                <span className="text-sm">+91 98765 43210</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Mail className="h-4 w-4 text-primary" />
-                <span className="text-sm">info@mernacademy.com</span>
-              </div>
+            <p className="font-mono text-[9px] tracking-[0.25em] text-[#6B6660] uppercase mb-8">
+              Contact
+            </p>
+            <div className="space-y-4">
+              <p className="text-[#A39E95] text-sm flex items-start gap-2.5">
+                <MapPin className="h-4 w-4 text-[#C4622D] flex-shrink-0 mt-0.5" />
+                Koramangala, Bangalore
+              </p>
+              <p className="text-[#A39E95] text-sm flex items-center gap-2.5">
+                <Phone className="h-4 w-4 text-[#C4622D] flex-shrink-0" />
+                +91 98765 43210
+              </p>
+              <p className="text-[#A39E95] text-sm flex items-center gap-2.5">
+                <Mail className="h-4 w-4 text-[#C4622D] flex-shrink-0" />
+                info@mernacademy.com
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-muted-foreground text-sm">
+        {/* Bottom bar */}
+        <div className="border-t border-[#2A2522] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="font-mono text-[10px] text-[#6B6660] tracking-[0.08em]">
             © 2024 MERN Academy. All rights reserved.
           </p>
-          <div className="flex space-x-6 text-sm text-muted-foreground mt-4 md:mt-0">
-            <a href="/privacy" className="hover:text-foreground transition-smooth">Privacy Policy</a>
-            <a href="/terms" className="hover:text-foreground transition-smooth">Terms of Service</a>
-            <a href="/refund" className="hover:text-foreground transition-smooth">Refund Policy</a>
+          <div className="flex gap-6">
+            {legalLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="font-mono text-[10px] text-[#6B6660] hover:text-[#A39E95] transition-colors duration-200 tracking-[0.06em]"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>

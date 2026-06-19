@@ -1,132 +1,142 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Star, MapPin, Building2, ExternalLink, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useGetOutstandingStudentsQuery } from '@/store/api/outstandingStudentApi';
+import { motion } from "framer-motion";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { useGetOutstandingStudentsQuery } from "@/store/api/outstandingStudentApi";
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export const OutstandingStudents = () => {
   const { data: studentsData, isLoading } = useGetOutstandingStudentsQuery({ isActive: true });
 
   return (
-    <section id="students" className="py-20 px-4 sm:px-6 lg:px-8">
+    <section id="students" className="py-32 px-6 lg:px-8 bg-[#0D0C0A]">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
+
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          transition={{ duration: 0.8, ease }}
+          className="mb-20"
         >
-          <Badge className="glass-card mb-4">Success Stories</Badge>
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Our{' '}
-            <span className="relative inline-block">
-              <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 blur-md opacity-10" />
-              <span className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Outstanding Students
-              </span>
-            </span>
+          <span className="font-mono text-[10px] tracking-[0.3em] text-[#C4622D] uppercase block mb-6">
+            Success Stories
+          </span>
+          <h2
+            className="font-display font-bold text-[#F0EBE1] leading-[1.05] tracking-[-0.03em]"
+            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
+          >
+            Alumni at<br />Leading Companies
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Meet our top performers who landed dream jobs at leading tech companies
-          </p>
         </motion.div>
 
-        {/* Students Grid */}
+        {/* Grid */}
         {isLoading ? (
-          <div className="flex justify-center items-center py-12">
-            <Loader2 className="h-12 w-12 animate-spin text-violet-500" />
+          <div className="flex justify-center py-24">
+            <Loader2 className="h-6 w-6 animate-spin text-[#C4622D]" />
           </div>
-        ) : studentsData && studentsData.data.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        ) : studentsData?.data.length ? (
+          <div
+            className="grid grid-cols-1 md:grid-cols-3 gap-px mb-16"
+            style={{ backgroundColor: "#2A2522" }}
+          >
             {studentsData.data.slice(0, 3).map((student, index) => (
               <motion.div
                 key={student._id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: index * 0.1, ease }}
+                className="bg-[#0D0C0A] p-10 group hover:bg-[#141210] transition-colors duration-300"
               >
-                <Card className="glass-card border-0 transition-all duration-300 hover:scale-105 hover:shadow-xl overflow-hidden">
-                <CardContent className="p-6">
-                  {/* Student Image & Basic Info */}
-                  <div className="text-center mb-6">
-                    <div className="relative mb-4">
-                      <img
-                        src={student.image.url}
-                        alt={student.name}
-                        className="w-24 h-24 rounded-full mx-auto object-cover ring-4 ring-primary/20"
-                      />
-                      <div className="absolute -top-2 -right-2 bg-gradient-primary rounded-full p-2 text-white font-bold text-sm">
-                        #{student.rank}
-                      </div>
-                    </div>
-                    <h3 className="font-bold text-lg mb-1">{student.name}</h3>
-                    <p className="text-sm text-muted-foreground flex items-center justify-center gap-1">
-                      <Building2 className="h-3 w-3" />
-                      {student.college}
-                    </p>
-                  </div>
+                {/* Rank */}
+                <div className="font-mono text-[10px] text-[#6B6660] tracking-[0.2em] uppercase mb-8">
+                  Rank #{student.rank}
+                </div>
 
-                  {/* Company & Package */}
-                  <div className="mb-4 p-3 glass-card rounded-lg text-center">
-                    <p className="text-sm text-muted-foreground mb-1">Now at</p>
-                    <p className="font-bold text-lg gradient-text">{student.company}</p>
-                    <p className="text-sm font-medium text-muted-foreground">{student.role}</p>
-                    <p className="text-sm font-semibold text-green-400 mt-1">{student.package}</p>
-                  </div>
+                {/* Photo */}
+                <div className="mb-8">
+                  <img
+                    src={student.image.url}
+                    alt={student.name}
+                    className="w-14 h-14 object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                  />
+                </div>
 
-                  {/* Skills */}
-                  <div className="mb-4">
-                    <p className="text-sm font-semibold mb-2">Key Skills:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {student.skills.map((skill, skillIndex) => (
-                        <Badge key={skillIndex} variant="secondary" className="text-xs glass-card">
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
+                {/* Name & College */}
+                <h3 className="font-display font-semibold text-[#F0EBE1] text-xl tracking-[-0.02em] mb-1">
+                  {student.name}
+                </h3>
+                <p className="font-mono text-[10px] text-[#6B6660] tracking-[0.1em] mb-8">
+                  {student.college}
+                </p>
 
-                  {/* Achievement */}
-                  <div className="p-2 glass-card rounded-lg text-center">
-                    <p className="text-xs text-muted-foreground">{student.achievement}</p>
-                  </div>
-                </CardContent>
-              </Card>
+                {/* Company block */}
+                <div className="border-t border-[#2A2522] pt-6 mb-6">
+                  <p className="font-mono text-[9px] text-[#6B6660] tracking-[0.2em] uppercase mb-2">
+                    Now at
+                  </p>
+                  <p className="font-display font-bold text-[#C4622D] text-xl tracking-[-0.01em]">
+                    {student.company}
+                  </p>
+                  <p className="text-[#A39E95] text-sm mt-1">{student.role}</p>
+                  <p className="font-mono text-sm text-[#F0EBE1] mt-2 font-medium">
+                    {student.package}
+                  </p>
+                </div>
+
+                {/* Skills */}
+                <div className="flex flex-wrap gap-1.5">
+                  {student.skills.slice(0, 4).map((skill, i) => (
+                    <span
+                      key={i}
+                      className="font-mono text-[9px] text-[#6B6660] border border-[#2A2522] px-2.5 py-1 tracking-[0.08em]"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </motion.div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No outstanding students found</p>
+          <div className="border border-[#2A2522] p-24 text-center mb-16">
+            <p className="font-mono text-sm text-[#6B6660]">No student profiles yet</p>
           </div>
         )}
 
-        {/* Call to Action */}
+        {/* CTA block */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease }}
+          className="border border-[#2A2522] p-10 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8"
         >
-          <div className="glass-card p-8 rounded-2xl max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold mb-4">Be the Next Success Story</h3>
-            <p className="text-muted-foreground mb-6">
-              Join our placement-oriented program and get placed in top tech companies with our proven track record
+          <div>
+            <h3 className="font-display font-bold text-[#F0EBE1] text-2xl tracking-[-0.025em] mb-2">
+              Be the Next Success Story
+            </h3>
+            <p className="text-[#6B6660] text-sm max-w-md leading-relaxed">
+              Join our placement-oriented program and get placed at top tech companies.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="gradient-primary text-white btn-glow">
-                View All Success Stories
-                <ExternalLink className="ml-2 h-4 w-4" />
-              </Button>
-              <Button variant="outline" className="glass-card">
-                Start Your Journey
-              </Button>
-            </div>
+          </div>
+          <div className="flex gap-3 flex-shrink-0 flex-wrap">
+            <a
+              href="/students"
+              className="group flex items-center gap-2 text-sm font-display font-semibold text-[#A39E95] hover:text-[#F0EBE1] border border-[#2A2522] hover:border-[#3A3330] px-6 py-3.5 transition-all duration-200"
+            >
+              View All Alumni
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+            </a>
+            <button
+              onClick={() =>
+                document.getElementById("course-info")?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="flex items-center gap-2 text-sm font-display font-semibold bg-[#C4622D] hover:bg-[#D4723D] text-[#F0EBE1] px-6 py-3.5 transition-colors duration-200"
+            >
+              Start Your Journey
+            </button>
           </div>
         </motion.div>
       </div>

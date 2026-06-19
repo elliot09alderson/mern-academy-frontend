@@ -1,143 +1,112 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { GraduationCap, Award, Briefcase, Mail } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useGetActiveFacultiesQuery } from '@/store/api/facultyApi';
-import { Loader2 } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import { useGetActiveFacultiesQuery } from "@/store/api/facultyApi";
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export const FacultySection = () => {
   const { data: facultiesData, isLoading } = useGetActiveFacultiesQuery({ limit: 6 });
 
   return (
-    <section id="faculty" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-muted/20">
+    <section id="faculty" className="py-32 px-6 lg:px-8 bg-[#141210]">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
+
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          transition={{ duration: 0.8, ease }}
+          className="mb-20 border-b border-[#2A2522] pb-12"
         >
-          <div className="inline-block mb-6">
-            <Badge className="glass-card-modern px-6 py-2 text-base font-semibold border border-blue-500/20">
-              Our Faculty
-            </Badge>
-          </div>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Learn From{' '}
-            <span className="relative inline-block">
-              <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 blur-md opacity-10" />
-              <span className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Industry Experts
-              </span>
-            </span>
+          <span className="font-mono text-[10px] tracking-[0.3em] text-[#C4622D] uppercase block mb-6">
+            Faculty
+          </span>
+          <h2
+            className="font-display font-bold text-[#F0EBE1] leading-[1.05] tracking-[-0.03em]"
+            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
+          >
+            Built by<br />Practitioners
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Our experienced faculty members bring real-world expertise and dedication to help you succeed
-          </p>
         </motion.div>
 
-        {/* Faculty Grid */}
+        {/* Faculty grid */}
         {isLoading ? (
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-12 w-12 animate-spin text-violet-500" />
+          <div className="flex justify-center py-24">
+            <Loader2 className="h-6 w-6 animate-spin text-[#C4622D]" />
           </div>
-        ) : facultiesData && facultiesData.data.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        ) : facultiesData?.data.length ? (
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px"
+            style={{ backgroundColor: "#2A2522" }}
+          >
             {facultiesData.data.map((faculty, index) => (
               <motion.div
                 key={faculty._id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="pt-16"
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.6, delay: index * 0.08, ease }}
+                className="bg-[#141210] p-8 group hover:bg-[#1C1916] transition-colors duration-300"
               >
-                {/* Floating Profile Image */}
-                <div className="flex justify-center mb-[-3.5rem] relative z-10">
-                  <div className="relative">
-                    <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-background shadow-2xl bg-background">
+                <div className="flex gap-6">
+                  {/* Index number */}
+                  <span className="font-mono text-[10px] text-[#6B6660] tracking-[0.1em] mt-1 flex-shrink-0 w-6">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+
+                  <div className="flex-1 min-w-0">
+                    {/* Photo */}
+                    <div className="mb-5">
                       <img
                         src={faculty.image.url}
                         alt={faculty.name}
-                        className="w-full h-full object-cover"
+                        className="w-12 h-12 object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
                       />
                     </div>
-                    <div className="absolute bottom-2 right-2 w-7 h-7 bg-green-500 rounded-full border-4 border-background shadow-lg" />
-                  </div>
-                </div>
 
-                <Card className="glass-card border border-border/40 hover:shadow-2xl transition-all duration-300 h-full rounded-3xl overflow-visible">
-                  <CardContent className="pt-16 pb-8 px-8">
                     {/* Name */}
-                    <h3 className="text-center text-2xl font-bold mb-3 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    <h3 className="font-display font-semibold text-[#F0EBE1] text-lg tracking-[-0.01em] mb-1">
                       {faculty.name}
                     </h3>
 
-                    {/* Specialization Badge */}
-                    <div className="flex justify-center mb-8">
-                      <div className="px-6 py-3 rounded-full bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500 text-white text-center font-semibold shadow-lg text-sm">
-                        {faculty.specialization}
-                      </div>
-                    </div>
+                    {/* Specialization */}
+                    <p className="font-mono text-[10px] text-[#C4622D] tracking-[0.1em] uppercase mb-5">
+                      {faculty.specialization}
+                    </p>
 
                     {/* Details */}
-                    <div className="space-y-4 mb-6">
-                      <div className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-violet-50/50 to-purple-50/50 dark:from-violet-950/20 dark:to-purple-950/20">
-                        <Award className="h-5 w-5 text-violet-600 mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">Qualification</p>
-                          <p className="text-sm font-medium">{faculty.qualification}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-purple-50/50 to-pink-50/50 dark:from-purple-950/20 dark:to-pink-950/20">
-                        <Briefcase className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">Experience</p>
-                          <p className="text-sm font-medium">{faculty.experience} years</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-pink-50/50 to-violet-50/50 dark:from-pink-950/20 dark:to-violet-950/20">
-                        <Mail className="h-5 w-5 text-pink-600 mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-1">Email</p>
-                          <p className="text-sm font-medium break-all">{faculty.email}</p>
-                        </div>
-                      </div>
+                    <div className="space-y-1 mb-6 font-mono text-[10px] text-[#6B6660] tracking-[0.05em]">
+                      <p>{faculty.qualification}</p>
+                      <p>{faculty.experience} years experience</p>
                     </div>
 
                     {/* Expertise */}
-                    {faculty.expertise && faculty.expertise.length > 0 && (
-                      <div className="pt-6 border-t border-border/50">
-                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-3">Expertise</p>
-                        <div className="flex flex-wrap gap-2">
-                          {faculty.expertise.slice(0, 5).map((skill, idx) => (
-                            <div
-                              key={idx}
-                              className="px-4 py-2 rounded-full bg-gradient-to-r from-violet-500/10 via-purple-500/10 to-pink-500/10 border border-violet-200/50 dark:border-violet-800/50 text-xs font-semibold hover:scale-105 transition-transform"
-                            >
-                              {skill}
-                            </div>
-                          ))}
-                          {faculty.expertise.length > 5 && (
-                            <div className="px-4 py-2 rounded-full bg-secondary border border-border text-xs font-semibold">
-                              +{faculty.expertise.length - 5}
-                            </div>
-                          )}
-                        </div>
+                    {faculty.expertise?.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-5 border-t border-[#2A2522]">
+                        {faculty.expertise.slice(0, 4).map((skill, i) => (
+                          <span
+                            key={i}
+                            className="font-mono text-[9px] text-[#6B6660] border border-[#2A2522] px-2 py-0.5 tracking-[0.06em]"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                        {faculty.expertise.length > 4 && (
+                          <span className="font-mono text-[9px] text-[#6B6660] border border-[#2A2522] px-2 py-0.5">
+                            +{faculty.expertise.length - 4}
+                          </span>
+                        )}
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-20">
-            <p className="text-xl text-muted-foreground">No faculty members available at the moment</p>
+          <div className="border border-[#2A2522] p-16 text-center">
+            <p className="font-mono text-sm text-[#6B6660]">No faculty profiles available</p>
           </div>
         )}
       </div>

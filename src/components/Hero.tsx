@@ -1,246 +1,185 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Sparkles,
-  Code2,
-  Brain,
-  Users,
-  Award,
-  ArrowRight,
-  CheckCircle,
-  TrendingUp,
-  Zap,
-  Rocket,
-  Terminal,
-  Cpu,
-  Download,
-} from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { ArrowRight, Download } from "lucide-react";
 import { CurriculumBubbleMenu } from "./CurriculumBubbleMenu";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+const stats = [
+  { value: "16+",    label: "Placed"      },
+  { value: "25+",    label: "Companies"   },
+  { value: "6mo",    label: "Program"     },
+  { value: "12 LPA", label: "Avg Package" },
+];
+
+const techs = ["React", "Node.js", "MongoDB", "Express", "TypeScript", "AI Tools", "System Design", "DSA"];
 
 export const Hero = () => {
   const [isCurriculumMenuOpen, setIsCurriculumMenuOpen] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
+  const heroRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+      setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    };
+    el.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => el.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   const scrollToCourseInfo = () => {
-    const element = document.getElementById('course-info');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    document.getElementById("course-info")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center pt-4">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Main Headline with Gradient */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold my-12 md:my-16 leading-[1.2]"
-        >
-          <span className="inline-block mb-2 text-foreground">
-            Transform Into a
-          </span>
-          <br />
-          <span className="relative inline-block">
-            <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 blur-md opacity-10" />
-            <span className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Tech Leader
-            </span>
-          </span>
-          <br />
-          <span className="text-foreground">with </span>
-          <span className="relative inline-block">
-            <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 blur-md opacity-10" />
-            <span className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              AI & MERN
-            </span>
-          </span>
-        </motion.h1>
+    <section
+      ref={heroRef}
+      className="relative min-h-screen flex items-center overflow-hidden bg-[#0D0C0A]"
+      style={{ paddingTop: "calc(68px + 28px)" }}
+    >
+      {/* Cursor spotlight */}
+      <div
+        className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(700px circle at ${mousePos.x}px ${mousePos.y}px, rgba(196,98,45,0.055), transparent 40%)`,
+        }}
+      />
 
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-base md:text-lg lg:text-xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed"
-        >
-          Master{" "}
-          <span className="text-violet-600 dark:text-violet-400 font-bold">
-            MERN Stack
-          </span>
-          ,
-          <span className="text-blue-600 dark:text-blue-400 font-bold">
-            {" "}
-            AI Tools
-          </span>
-          ,
-          <span className="text-purple-600 dark:text-purple-400 font-bold">
-            {" "}
-            System Design
-          </span>{" "}
-          &
-          <span className="text-emerald-600 dark:text-emerald-400 font-bold">
-            {" "}
-            DSA
-          </span>{" "}
-          in our intensive 6-month program.
-          <br className="hidden md:block" />
-          <span className="inline-block mt-2 text-foreground/90 font-medium">
-            Join 16+ successfully placed students at top tech companies.
-          </span>
-        </motion.p>
+      {/* Subtle column grid lines */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-30"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(42,37,34,0.5) 99px, rgba(42,37,34,0.5) 100px)",
+        }}
+      />
 
-        {/* Key Benefits */}
+      {/* Grain overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none z-20 opacity-[0.028]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: "160px 160px",
+        }}
+      />
+
+      <div className="relative z-30 max-w-7xl mx-auto px-6 lg:px-8 w-full py-20">
+        {/* Eyebrow */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex flex-wrap justify-center gap-4 mb-14"
+          transition={{ duration: 0.6, delay: 0.3, ease }}
+          className="mb-10"
         >
-          {[
-            {
-              icon: CheckCircle,
-              text: "100% Placement Support",
-              iconColor: "text-emerald-500",
-            },
-            {
-              icon: Award,
-              text: "Industry-Ready Curriculum",
-              iconColor: "text-violet-500",
-            },
-            {
-              icon: Users,
-              text: "Expert Mentorship",
-              iconColor: "text-blue-500",
-            },
-          ].map((benefit, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-3 glass-card px-6 py-3 rounded-full hover:scale-105 transition-all duration-300"
-            >
-              <benefit.icon className={`h-5 w-5 ${benefit.iconColor}`} />
-              <span className="text-sm font-semibold">{benefit.text}</span>
-            </div>
-          ))}
+          <span className="font-mono text-[10px] tracking-[0.3em] text-[#C4622D] uppercase">
+            MERN Academy &mdash; Placement Program &middot; Est. 2024
+          </span>
         </motion.div>
 
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-16 max-w-5xl mx-auto"
-        >
+        {/* Headline — assembles line by line */}
+        <div className="mb-10">
           {[
-            {
-              number: "16+",
-              label: "Successful Placements",
-              icon: Award,
-              gradient: "from-emerald-500 to-teal-500",
-            },
-            {
-              number: "25+",
-              label: "Partner Companies",
-              icon: Users,
-              gradient: "from-violet-500 to-purple-500",
-            },
-            {
-              number: "6",
-              label: "Months Program",
-              icon: Code2,
-              gradient: "from-blue-500 to-cyan-500",
-            },
-            {
-              number: "12 LPA",
-              label: "Average Package",
-              icon: TrendingUp,
-              gradient: "from-purple-500 to-pink-500",
-            },
-          ].map((stat, index) => (
-            <div
-              key={index}
-              className="glass-card p-6 rounded-2xl hover:scale-105 transition-all duration-300 group"
-            >
-              <div className="flex justify-center mb-3">
-                <stat.icon className="h-8 w-8 text-primary group-hover:scale-110 transition-transform" />
-              </div>
-              <div
-                className={`text-3xl md:text-4xl font-bold bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent mb-2`}
+            { text: "The School",      accent: false },
+            { text: "For Full-Stack",  accent: true  },
+            { text: "Engineers.",      accent: false },
+          ].map((line, i) => (
+            <div key={i} className="overflow-hidden">
+              <motion.div
+                initial={{ opacity: 0, x: -56 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.85, delay: 0.5 + i * 0.14, ease }}
               >
-                {stat.number}
+                <h1
+                  className={`font-display font-bold leading-[1.0] tracking-[-0.04em] ${
+                    line.accent ? "text-[#C4622D]" : "text-[#F0EBE1]"
+                  }`}
+                  style={{ fontSize: "clamp(3rem, 9.5vw, 8.5rem)" }}
+                >
+                  {line.text}
+                </h1>
+              </motion.div>
+            </div>
+          ))}
+        </div>
+
+        {/* Subheading */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.05, ease }}
+          className="text-[#A39E95] text-lg md:text-xl max-w-lg leading-relaxed mb-14"
+          style={{ fontFamily: "'DM Sans', sans-serif" }}
+        >
+          Master MERN, AI Tools, System Design &amp; DSA in our
+          intensive 6-month program. Placed at top tech companies.
+        </motion.p>
+
+        {/* Stats bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 1.2, ease }}
+          className="flex flex-wrap border border-[#2A2522] divide-x divide-[#2A2522] mb-14 w-fit"
+        >
+          {stats.map((stat, i) => (
+            <div key={i} className="px-7 py-5">
+              <div className="font-mono text-2xl md:text-3xl font-bold text-[#F0EBE1] tracking-[-0.02em]">
+                {stat.value}
               </div>
-              <div className="text-xs md:text-sm text-muted-foreground font-medium">
+              <div className="font-mono text-[9px] tracking-[0.22em] text-[#6B6660] uppercase mt-1">
                 {stat.label}
               </div>
             </div>
           ))}
         </motion.div>
 
-        {/* CTA Buttons */}
+        {/* CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center mb-16"
+          transition={{ duration: 0.7, delay: 1.4, ease }}
+          className="flex flex-col sm:flex-row gap-4"
         >
-          <Button
-            size="lg"
+          <button
             onClick={scrollToCourseInfo}
-            className="w-full sm:w-auto bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 text-white px-8 md:px-10 py-4 md:py-6 text-base md:text-lg rounded-xl shadow-lg hover:scale-105 transition-all duration-300 group border-0 font-semibold"
+            className="group flex items-center gap-3 bg-[#C4622D] hover:bg-[#D4723D] text-[#F0EBE1] px-8 py-4 font-display font-semibold text-sm tracking-[0.06em] transition-all duration-200"
           >
-            <Award className="mr-2 md:mr-3 h-5 w-5 group-hover:rotate-12 transition-transform" />
             Start Your Journey
-            <ArrowRight className="ml-2 md:ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
+            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+          </button>
+
+          <button
             onClick={() => setIsCurriculumMenuOpen(true)}
-            className="w-full sm:w-auto px-8 md:px-10 py-4 md:py-6 text-base md:text-lg rounded-xl border-2 hover:scale-105 transition-all duration-300 font-semibold group"
+            className="group flex items-center gap-3 border border-[#2A2522] hover:border-[#3A3330] text-[#A39E95] hover:text-[#F0EBE1] px-8 py-4 font-display font-semibold text-sm tracking-[0.06em] transition-all duration-200"
           >
-            <Download className="mr-2 md:mr-3 h-5 w-5 group-hover:animate-bounce" />
+            <Download className="h-4 w-4" />
             Download Curriculum
-          </Button>
+          </button>
         </motion.div>
 
-        {/* Tech Stack */}
+        {/* Tech stack line */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.65, ease }}
+          className="mt-16 pt-10 border-t border-[#2A2522]"
         >
-          <p className="text-base md:text-lg text-muted-foreground mb-8 font-semibold">
-            Master Future-Ready Technologies
-          </p>
-          <div className="flex flex-wrap justify-center gap-3 md:gap-4 max-w-4xl mx-auto">
-            {[
-              { name: "React", gradient: "from-cyan-500 to-blue-500" },
-              { name: "Node.js", gradient: "from-green-500 to-emerald-500" },
-              { name: "MongoDB", gradient: "from-green-600 to-teal-600" },
-              { name: "Express", gradient: "from-gray-600 to-slate-500" },
-              { name: "AI Tools", gradient: "from-purple-500 to-pink-500" },
-              { name: "System Design", gradient: "from-orange-500 to-red-500" },
-              { name: "DSA", gradient: "from-indigo-500 to-purple-500" },
-              { name: "TypeScript", gradient: "from-blue-600 to-cyan-500" },
-            ].map((tech) => (
-              <div
-                key={tech.name}
-                className={`px-5 md:px-6 py-2.5 md:py-3 rounded-full text-sm md:text-base font-bold hover:scale-110 transition-all duration-300 bg-gradient-to-r ${tech.gradient} text-white shadow-lg hover:shadow-xl cursor-pointer`}
-              >
-                {tech.name}
-              </div>
-            ))}
-          </div>
+          <span className="font-mono text-[10px] tracking-[0.22em] text-[#6B6660] uppercase">
+            Technologies —{" "}
+          </span>
+          <span className="font-mono text-[10px] text-[#A39E95] tracking-[0.06em]">
+            {techs.join(" · ")}
+          </span>
         </motion.div>
-
-        {/* Curriculum Bubble Menu */}
-        <CurriculumBubbleMenu
-          isOpen={isCurriculumMenuOpen}
-          onClose={() => setIsCurriculumMenuOpen(false)}
-        />
       </div>
+
+      <CurriculumBubbleMenu
+        isOpen={isCurriculumMenuOpen}
+        onClose={() => setIsCurriculumMenuOpen(false)}
+      />
     </section>
   );
 };

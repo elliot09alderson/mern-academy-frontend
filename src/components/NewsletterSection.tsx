@@ -1,23 +1,22 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Mail, Phone, User, GraduationCap } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { useCreateInquiryMutation } from '@/store/api/inquiryApi';
-import { useToast } from '@/hooks/use-toast';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { useCreateInquiryMutation } from "@/store/api/inquiryApi";
+import { useToast } from "@/hooks/use-toast";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+const inputClass =
+  "w-full bg-transparent border-b border-[#2A2522] focus:border-[#C4622D] text-[#F0EBE1] placeholder:text-[#6B6660] py-3.5 text-sm outline-none transition-colors duration-200 font-mono tracking-[0.03em]";
 
 export const NewsletterSection = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    qualification: '',
-    hereAboutUs: '',
-    message: ''
+    name: "",
+    email: "",
+    phone: "",
+    qualification: "",
+    hereAboutUs: "",
+    message: "",
   });
 
   const [createInquiry, { isLoading }] = useCreateInquiryMutation();
@@ -25,166 +24,157 @@ export const NewsletterSection = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       await createInquiry(formData).unwrap();
-
       toast({
-        title: "Success!",
-        description: "Thank you for your inquiry. We'll get back to you soon!",
+        title: "Inquiry received.",
+        description: "We'll get back to you soon.",
       });
-
-      // Reset form
       setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        qualification: '',
-        hereAboutUs: '',
-        message: ''
+        name: "",
+        email: "",
+        phone: "",
+        qualification: "",
+        hereAboutUs: "",
+        message: "",
       });
     } catch (error: any) {
       toast({
-        title: "Error",
-        description: error?.data?.message || "Failed to submit inquiry. Please try again.",
+        title: "Submission failed",
+        description: error?.data?.message || "Please try again.",
         variant: "destructive",
       });
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  const set = (field: string, value: string) =>
+    setFormData((prev) => ({ ...prev, [field]: value }));
 
   return (
-    <section id="course-info" className="py-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-10"
-        >
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Get{' '}
-            <span className="relative inline-block">
-              <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 blur-md opacity-10" />
-              <span className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Course Information
-              </span>
-            </span>
-          </h2>
-          <p className="text-muted-foreground">
-            Share your details and connect with us
-          </p>
-        </motion.div>
+    <section id="course-info" className="py-32 px-6 lg:px-8 bg-[#141210]">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-28">
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Name */}
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-                <Input
-                  id="name"
+          {/* Left — copy */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease }}
+          >
+            <span className="font-mono text-[10px] tracking-[0.3em] text-[#C4622D] uppercase block mb-6">
+              Inquire
+            </span>
+            <h2
+              className="font-display font-bold text-[#F0EBE1] leading-[1.05] tracking-[-0.03em] mb-8"
+              style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
+            >
+              Get Course<br />Information
+            </h2>
+            <p className="text-[#6B6660] text-sm leading-relaxed mb-12">
+              Share your details and we'll get back to you with everything you
+              need to know about our placement-oriented programs.
+            </p>
+
+            <div className="border-t border-[#2A2522] pt-10 space-y-5">
+              {[
+                { label: "Email",    value: "info@mernacademy.com" },
+                { label: "Phone",    value: "+91 98765 43210"      },
+                { label: "Location", value: "Bangalore · Hyderabad · Pune" },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center gap-8">
+                  <span className="font-mono text-[9px] text-[#6B6660] tracking-[0.2em] uppercase w-20 flex-shrink-0">
+                    {item.label}
+                  </span>
+                  <span className="text-[#A39E95] text-sm">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Right — form */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, delay: 0.1, ease }}
+          >
+            <form onSubmit={handleSubmit} className="space-y-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                <input
                   placeholder="Full Name *"
-                  className="glass-card border-0 pl-10 h-12"
                   required
                   value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  onChange={(e) => set("name", e.target.value)}
+                  className={`${inputClass} mb-8`}
                 />
-              </div>
-
-              {/* Email */}
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-                <Input
-                  id="email"
+                <input
                   type="email"
                   placeholder="Email Address *"
-                  className="glass-card border-0 pl-10 h-12"
                   required
                   value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  onChange={(e) => set("email", e.target.value)}
+                  className={`${inputClass} mb-8`}
                 />
-              </div>
-
-              {/* Phone */}
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-                <Input
-                  id="phone"
+                <input
                   type="tel"
                   placeholder="Phone Number *"
-                  className="glass-card border-0 pl-10 h-12"
                   required
                   value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  onChange={(e) => set("phone", e.target.value)}
+                  className={`${inputClass} mb-8`}
                 />
-              </div>
-
-              {/* Qualification */}
-              <div className="relative">
-                <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
-                <Input
-                  id="qualification"
+                <input
                   placeholder="Qualification *"
-                  className="glass-card border-0 pl-10 h-12"
                   required
                   value={formData.qualification}
-                  onChange={(e) => handleInputChange('qualification', e.target.value)}
+                  onChange={(e) => set("qualification", e.target.value)}
+                  className={`${inputClass} mb-8`}
                 />
               </div>
-            </div>
 
-            {/* How did you hear about us */}
-            <Select required value={formData.hereAboutUs} onValueChange={(value) => handleInputChange('hereAboutUs', value)}>
-              <SelectTrigger className="glass-card border-0 h-12">
-                <SelectValue placeholder="How did you hear about us? *" />
-              </SelectTrigger>
-              <SelectContent className="glass-card border-0">
-                <SelectItem value="linkedin">LinkedIn</SelectItem>
-                <SelectItem value="friend">Friend/Referral</SelectItem>
-                <SelectItem value="college">College/University</SelectItem>
-                <SelectItem value="poster">Poster/Advertisement</SelectItem>
-                <SelectItem value="website">Website/Search Engine</SelectItem>
-                <SelectItem value="googlemap">Google Maps</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
+              <select
+                required
+                value={formData.hereAboutUs}
+                onChange={(e) => set("hereAboutUs", e.target.value)}
+                className={`${inputClass} mb-8 appearance-none`}
+                style={{ backgroundColor: "transparent" }}
+              >
+                <option value="" disabled>
+                  How did you hear about us? *
+                </option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="friend">Friend / Referral</option>
+                <option value="college">College / University</option>
+                <option value="poster">Poster / Advertisement</option>
+                <option value="website">Website / Search Engine</option>
+                <option value="googlemap">Google Maps</option>
+                <option value="other">Other</option>
+              </select>
 
-            {/* Message */}
-            <Textarea
-              id="message"
-              placeholder="Your message or questions (Optional)"
-              className="glass-card border-0 min-h-[100px] resize-none"
-              rows={3}
-              value={formData.message}
-              onChange={(e) => handleInputChange('message', e.target.value)}
-            />
+              <textarea
+                placeholder="Message (optional)"
+                rows={3}
+                value={formData.message}
+                onChange={(e) => set("message", e.target.value)}
+                className={`${inputClass} mb-10 resize-none`}
+              />
 
-            {/* Submit Button */}
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 text-white border-0 h-12 font-semibold"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Submitting...' : 'Get Course Information'}
-            </Button>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full group flex items-center justify-between bg-[#C4622D] hover:bg-[#D4723D] disabled:opacity-50 text-[#F0EBE1] px-8 py-4 font-display font-semibold text-sm tracking-[0.06em] transition-all duration-200"
+              >
+                {isLoading ? "Submitting…" : "Get Course Information"}
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+              </button>
 
-            {/* Privacy Note */}
-            <p className="text-xs text-muted-foreground text-center pt-2">
-              We respect your privacy. Unsubscribe anytime.
-            </p>
-          </form>
-        </motion.div>
+              <p className="font-mono text-[9px] text-[#6B6660] text-center mt-6 tracking-[0.1em]">
+                We respect your privacy. Unsubscribe anytime.
+              </p>
+            </form>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

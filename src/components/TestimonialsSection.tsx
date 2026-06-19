@@ -1,111 +1,118 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Quote, Star, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { useGetTestimonialsQuery } from '@/store/api/testimonialApi';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Loader2, Star } from "lucide-react";
+import { useGetTestimonialsQuery } from "@/store/api/testimonialApi";
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export const TestimonialsSection = () => {
-  const { data: testimonialsData, isLoading } = useGetTestimonialsQuery({ isActive: true, limit: 6 });
+  const { data: testimonialsData, isLoading } = useGetTestimonialsQuery({
+    isActive: true,
+    limit: 8,
+  });
+  const [paused, setPaused] = useState(false);
+
+  const testimonials = testimonialsData?.data ?? [];
+  const doubled = [...testimonials, ...testimonials];
+
   return (
-    <section id="testimonials" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-muted/20 to-background">
-      <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
+    <section id="testimonials" className="py-32 bg-[#0D0C0A] overflow-hidden">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 mb-20">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          transition={{ duration: 0.8, ease }}
         >
-          <div className="inline-block mb-6">
-            <Badge className="glass-card-modern px-6 py-2 text-base font-semibold border border-blue-500/20">
-              Student Success Stories
-            </Badge>
-          </div>
-          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
-            What Our{' '}
-            <span className="relative inline-block">
-              <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 blur-md opacity-10" />
-              <span className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Students Say
-              </span>
-            </span>
+          <span className="font-mono text-[10px] tracking-[0.3em] text-[#C4622D] uppercase block mb-6">
+            Student Voices
+          </span>
+          <h2
+            className="font-display font-bold text-[#F0EBE1] leading-[1.05] tracking-[-0.03em]"
+            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
+          >
+            Heard From<br />Our Students
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Hear from our successful students who have transformed their careers with us
-          </p>
         </motion.div>
+      </div>
 
-        {/* Testimonials Grid */}
-        {isLoading ? (
-          <div className="flex justify-center items-center py-20">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
-          </div>
-        ) : testimonialsData && testimonialsData.data.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonialsData.data.map((testimonial, index) => (
-              <motion.div
-                key={testimonial._id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+      {isLoading ? (
+        <div className="flex justify-center py-16">
+          <Loader2 className="h-6 w-6 animate-spin text-[#C4622D]" />
+        </div>
+      ) : testimonials.length > 0 ? (
+        /* Infinite horizontal scroll — Aceternity InfiniteMovingCards pattern */
+        <div
+          className="relative"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
+          {/* Edge fades */}
+          <div
+            className="absolute left-0 top-0 bottom-0 w-40 z-10 pointer-events-none"
+            style={{ background: "linear-gradient(to right, #0D0C0A, transparent)" }}
+          />
+          <div
+            className="absolute right-0 top-0 bottom-0 w-40 z-10 pointer-events-none"
+            style={{ background: "linear-gradient(to left, #0D0C0A, transparent)" }}
+          />
+
+          <div
+            className="flex gap-px"
+            style={{
+              animation: paused ? "none" : "marquee 50s linear infinite",
+              width: "max-content",
+              backgroundColor: "#2A2522",
+            }}
+          >
+            {doubled.map((testimonial, index) => (
+              <div
+                key={`${testimonial._id}-${index}`}
+                className="w-[340px] flex-shrink-0 bg-[#0D0C0A] px-8 py-10 flex flex-col hover:bg-[#141210] transition-colors duration-300"
               >
-              <Card className="glass-card border-0 h-full group hover:shadow-2xl transition-all duration-300">
-                <CardContent className="p-6 flex flex-col h-full">
-                  {/* Quote Icon */}
-                  <div className="mb-4">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Quote className="h-6 w-6 text-white" />
-                    </div>
-                  </div>
+                {/* Stars */}
+                <div className="flex gap-1 mb-6">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className="h-3 w-3 fill-[#C4622D] text-[#C4622D]"
+                    />
+                  ))}
+                </div>
 
-                  {/* Rating */}
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="h-4 w-4 fill-yellow-400 text-yellow-400"
-                      />
-                    ))}
-                  </div>
+                {/* Quote */}
+                <p className="text-[#A39E95] text-sm leading-relaxed mb-auto line-clamp-5 pb-8">
+                  &ldquo;{testimonial.description}&rdquo;
+                </p>
 
-                  {/* Testimonial Content */}
-                  <p className="text-muted-foreground leading-relaxed mb-6 flex-grow">
-                    "{testimonial.description}"
-                  </p>
-
-                  {/* Student Info */}
-                  <div className="flex items-center gap-4 pt-4 border-t border-border/50">
-                    <div className="relative">
-                      <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-blue-500/20">
-                        <img
-                          src={testimonial.image.url}
-                          alt={testimonial.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sm bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                        {testimonial.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {testimonial.role}
-                      </p>
-                    </div>
+                {/* Author */}
+                <div className="flex items-center gap-3 pt-6 border-t border-[#2A2522]">
+                  <img
+                    src={testimonial.image.url}
+                    alt={testimonial.name}
+                    className="w-8 h-8 object-cover grayscale flex-shrink-0"
+                  />
+                  <div className="min-w-0">
+                    <p className="font-display font-semibold text-sm text-[#F0EBE1] tracking-[-0.01em] truncate">
+                      {testimonial.name}
+                    </p>
+                    <p className="font-mono text-[9px] text-[#6B6660] mt-0.5 tracking-[0.08em] truncate">
+                      {testimonial.role}
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
-              </motion.div>
+                </div>
+              </div>
             ))}
           </div>
-        ) : (
-          <div className="text-center py-20">
-            <p className="text-xl text-muted-foreground">No testimonials available at the moment</p>
+        </div>
+      ) : (
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="border border-[#2A2522] p-16 text-center">
+            <p className="font-mono text-sm text-[#6B6660]">No testimonials yet</p>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 };
