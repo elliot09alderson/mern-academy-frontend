@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import AuthButton from './AuthButton';
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  const { pathname } = useLocation();
 
   React.useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -43,16 +44,27 @@ export const Navigation = () => {
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-8">
-              {links.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className="relative text-xs font-mono tracking-[0.12em] uppercase text-[#6B6660] hover:text-[#F0EBE1] transition-colors duration-200 group"
-                >
-                  {link.label}
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[#C4622D] group-hover:w-full transition-all duration-300" />
-                </Link>
-              ))}
+              {links.map((link) => {
+                const isActive = link.to === '/#courses'
+                  ? pathname === '/'
+                  : pathname === link.to;
+                return (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className={`relative text-xs font-mono tracking-[0.12em] uppercase transition-colors duration-200 group ${
+                      isActive ? 'text-[#F0EBE1]' : 'text-[#6B6660] hover:text-[#F0EBE1]'
+                    }`}
+                  >
+                    {link.label}
+                    <span
+                      className={`absolute -bottom-0.5 left-0 h-px bg-[#C4622D] transition-all duration-300 ${
+                        isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`}
+                    />
+                  </Link>
+                );
+              })}
             </div>
 
             {/* Desktop Auth */}
@@ -75,16 +87,24 @@ export const Navigation = () => {
         {isMenuOpen && (
           <div className="md:hidden bg-[#0D0C0A] border-t border-[#2A2522]">
             <div className="px-6 py-8 space-y-6">
-              {links.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className="block font-mono text-xs tracking-[0.15em] uppercase text-[#6B6660] hover:text-[#F0EBE1] transition-colors duration-200"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {links.map((link) => {
+                const isActive = link.to === '/#courses'
+                  ? pathname === '/'
+                  : pathname === link.to;
+                return (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className={`block font-mono text-xs tracking-[0.15em] uppercase transition-colors duration-200 ${
+                      isActive ? 'text-[#F0EBE1]' : 'text-[#6B6660] hover:text-[#F0EBE1]'
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.label}
+                    {isActive && <span className="inline-block ml-2 w-1 h-1 bg-[#C4622D] rounded-full align-middle" />}
+                  </Link>
+                );
+              })}
               <div className="pt-4 border-t border-[#2A2522]">
                 <AuthButton />
               </div>
