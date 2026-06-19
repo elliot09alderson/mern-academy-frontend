@@ -1,174 +1,212 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { MapPin, Briefcase, Code2, Award, Loader2, Building2 } from 'lucide-react';
+import { Loader2, Award, Briefcase, Building2, Code2 } from 'lucide-react';
 import { useGetOutstandingStudentsQuery } from '@/store/api/outstandingStudentApi';
+
+const ease = [0.16, 1, 0.3, 1] as const;
 
 export const Students = () => {
   const { data: studentsData, isLoading, error } = useGetOutstandingStudentsQuery({ isActive: true });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#0D0C0A]">
       <Navigation />
-      
-      <main className="pt-20">
-        {/* Header Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Our Outstanding{' '}
-              <span className="relative inline-block">
-                <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 blur-md opacity-10" />
-                <span className="relative bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Students
-                </span>
-              </span>
-            </h1>
-            <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto">
-              Meet our outstanding performers who have excelled in their careers.
-              These are the success stories that inspire our teaching methodology.
-            </p>
 
-            {/* Stats */}
+      <main className="pt-20">
+        {/* Header */}
+        <section className="py-28 px-6 lg:px-8 bg-[#0D0C0A]">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease }}
+            >
+              <span className="font-mono text-[10px] tracking-[0.3em] text-[#C4622D] uppercase block mb-6">
+                Alumni
+              </span>
+              <h1
+                className="font-display font-bold text-[#F0EBE1] leading-[1.05] tracking-[-0.03em] mb-8"
+                style={{ fontSize: 'clamp(2.5rem, 7vw, 5.5rem)' }}
+              >
+                Outstanding<br />Students
+              </h1>
+              <p className="text-[#6B6660] text-sm leading-relaxed max-w-lg">
+                Meet the performers who have gone on to build careers at the world's leading companies.
+                These success stories define our teaching methodology.
+              </p>
+            </motion.div>
+
+            {/* Stats bar */}
             {studentsData && studentsData.data.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-                <div className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">{studentsData.count}+</div>
-                  <div className="text-muted-foreground">Students Placed</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">25+</div>
-                  <div className="text-muted-foreground">Partner Companies</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">100%</div>
-                  <div className="text-muted-foreground">Placement Rate</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold gradient-text mb-2">12 LPA</div>
-                  <div className="text-muted-foreground">Avg Package</div>
-                </div>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.3, ease }}
+                className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-px"
+                style={{ backgroundColor: '#2A2522' }}
+              >
+                {[
+                  { value: `${studentsData.count}+`, label: 'Students Placed' },
+                  { value: '25+',                    label: 'Partner Companies' },
+                  { value: '100%',                   label: 'Placement Rate' },
+                  { value: '12 LPA',                 label: 'Avg Package' },
+                ].map((stat) => (
+                  <div key={stat.label} className="bg-[#0D0C0A] px-8 py-8">
+                    <p className="font-display font-bold text-[#F0EBE1] text-3xl tracking-[-0.04em] mb-1">
+                      {stat.value}
+                    </p>
+                    <p className="font-mono text-[9px] text-[#6B6660] tracking-[0.15em] uppercase">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
+              </motion.div>
             )}
           </div>
         </section>
 
         {/* Students Grid */}
-        <section className="pb-20 px-4 sm:px-6 lg:px-8">
+        <section className="pb-28 px-6 lg:px-8 bg-[#141210]">
           <div className="max-w-7xl mx-auto">
             {isLoading ? (
-              <div className="flex justify-center items-center py-20">
-                <Loader2 className="h-12 w-12 animate-spin text-violet-500" />
+              <div className="flex justify-center py-28">
+                <Loader2 className="h-6 w-6 animate-spin text-[#C4622D]" />
               </div>
             ) : error ? (
-              <div className="text-center py-20">
-                <p className="text-xl text-red-500">Failed to load students. Please try again later.</p>
+              <div className="border border-[#2A2522] p-16 text-center">
+                <p className="font-mono text-sm text-[#6B6660]">Failed to load students. Please try again later.</p>
               </div>
             ) : studentsData && studentsData.data.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {studentsData.data.map((student) => (
-                  <Card key={student._id} className="glass-card border-0 hover-lift">
-                    <CardContent className="p-0">
-                      {/* Rank Badge */}
-                      <div className="absolute top-4 left-4 z-10">
-                        <Badge className="gradient-primary text-white text-lg px-3 py-1">
-                          #{student.rank}
-                        </Badge>
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px pt-px"
+                style={{ backgroundColor: '#2A2522' }}
+              >
+                {studentsData.data.map((student, index) => (
+                  <motion.div
+                    key={student._id}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-60px' }}
+                    transition={{ duration: 0.6, delay: (index % 3) * 0.08, ease }}
+                    className="bg-[#141210] group hover:bg-[#1C1916] transition-colors duration-300 relative overflow-hidden flex flex-col"
+                  >
+                    {/* Rank */}
+                    <div className="absolute top-4 left-4 z-10">
+                      <span className="font-mono text-[9px] text-[#6B6660] border border-[#2A2522] bg-[#141210] px-2.5 py-1.5 tracking-[0.15em] group-hover:border-[#C4622D]/40 transition-colors duration-300">
+                        #{student.rank}
+                      </span>
+                    </div>
+
+                    {/* Photo */}
+                    <div className="overflow-hidden h-64 relative">
+                      <img
+                        src={student.image.url}
+                        alt={student.name}
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 scale-[1.04] group-hover:scale-100 transition-all duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#141210] via-transparent to-transparent opacity-80" />
+                    </div>
+
+                    {/* Info */}
+                    <div className="p-8 flex flex-col flex-1">
+                      <h3 className="font-display font-bold text-[#F0EBE1] text-xl tracking-[-0.025em] mb-1">
+                        {student.name}
+                      </h3>
+
+                      <div className="flex items-center gap-2 mb-1">
+                        <Building2 className="h-3.5 w-3.5 text-[#6B6660] flex-shrink-0" />
+                        <span className="font-mono text-[10px] text-[#6B6660] tracking-[0.06em]">{student.college}</span>
                       </div>
 
-                      {/* Student Image */}
-                      <div className="relative">
-                        <img
-                          src={student.image.url}
-                          alt={student.name}
-                          className="w-full h-64 object-cover rounded-t-lg"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent rounded-t-lg" />
-
-                        {/* Achievement Badge */}
-                        <div className="absolute bottom-4 right-4">
-                          <Award className="h-6 w-6 text-primary" />
-                        </div>
+                      <div className="flex items-center gap-2 mb-4">
+                        <Briefcase className="h-3.5 w-3.5 text-[#C4622D] flex-shrink-0" />
+                        <span className="text-sm text-[#A39E95]">
+                          {student.role} <span className="text-[#6B6660]">at</span>{' '}
+                          <span className="text-[#C4622D]">{student.company}</span>
+                        </span>
                       </div>
 
-                      <div className="p-6">
-                        {/* Student Info */}
-                        <h3 className="text-xl font-bold mb-2">{student.name}</h3>
+                      {/* Package */}
+                      <span className="font-mono text-[9px] text-[#6B6660] border border-[#2A2522] px-3 py-1.5 tracking-[0.1em] self-start mb-5">
+                        {student.package}
+                      </span>
 
-                        <div className="flex items-center gap-2 mb-2">
-                          <Building2 className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm text-muted-foreground">{student.college}</span>
-                        </div>
-
-                        <div className="flex items-center gap-2 mb-2">
-                          <Briefcase className="h-4 w-4 text-primary" />
-                          <span className="text-sm font-medium">{student.role} at {student.company}</span>
-                        </div>
-
-                        <div className="mb-4">
-                          <Badge variant="secondary" className="bg-green-500/10 text-green-600 border-green-500/20">
-                            {student.package}
-                          </Badge>
-                        </div>
-
-                        {/* Skills */}
-                        <div className="mb-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Code2 className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">Skills</span>
+                      {/* Skills */}
+                      {student.skills?.length > 0 && (
+                        <div className="mb-5">
+                          <div className="flex items-center gap-2 mb-2.5">
+                            <Code2 className="h-3.5 w-3.5 text-[#6B6660]" />
+                            <span className="font-mono text-[9px] text-[#6B6660] tracking-[0.15em] uppercase">Skills</span>
                           </div>
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap gap-1.5">
                             {student.skills.map((skill, idx) => (
-                              <Badge key={idx} variant="outline" className="text-xs">
+                              <span
+                                key={idx}
+                                className="font-mono text-[9px] text-[#6B6660] border border-[#2A2522] px-2.5 py-1 tracking-[0.06em]"
+                              >
                                 {skill}
-                              </Badge>
+                              </span>
                             ))}
                           </div>
                         </div>
+                      )}
 
-                        {/* Achievement */}
-                        <div className="p-3 glass-card rounded-lg">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Award className="h-4 w-4 text-primary" />
-                            <span className="text-sm font-medium text-primary">Achievement</span>
-                          </div>
-                          <p className="text-sm text-muted-foreground">{student.achievement}</p>
+                      {/* Achievement */}
+                      <div className="mt-auto pt-5 border-t border-[#2A2522]">
+                        <div className="flex items-start gap-2.5">
+                          <Award className="h-3.5 w-3.5 text-[#C4622D] flex-shrink-0 mt-0.5" />
+                          <p className="text-sm text-[#6B6660] leading-relaxed">{student.achievement}</p>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </motion.div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20">
-                <Award className="h-20 w-20 text-muted-foreground mx-auto mb-4" />
-                <p className="text-xl text-muted-foreground">No outstanding students found</p>
-                <p className="text-sm text-muted-foreground mt-2">Check back later for our success stories!</p>
+              <div className="border border-[#2A2522] p-16 text-center">
+                <Award className="h-10 w-10 text-[#2A2522] mx-auto mb-4" />
+                <p className="font-mono text-sm text-[#6B6660]">No outstanding students found</p>
+                <p className="font-mono text-[10px] text-[#6B6660] mt-1 tracking-[0.06em]">Check back later for our success stories</p>
               </div>
             )}
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-primary/5 to-secondary/5">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to Join Our <span className="gradient-text">Success Stories?</span>
-            </h2>
-            <p className="text-lg text-muted-foreground mb-8">
-              Start your journey with MERN Academy and become the next success story. 
-              Get placed in top companies with our industry-focused curriculum.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-3 gradient-primary text-white rounded-lg font-medium hover:opacity-90 transition-smooth">
-                Enroll Now - 10% Diwali Discount
-              </button>
-              <button className="px-8 py-3 glass-card rounded-lg font-medium hover:bg-primary/10 transition-smooth">
-                Download Brochure
-              </button>
-            </div>
+        {/* CTA */}
+        <section className="py-28 px-6 lg:px-8 bg-[#0D0C0A]">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease }}
+              className="border border-[#2A2522] p-14 lg:p-20 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10"
+            >
+              <div>
+                <span className="font-mono text-[9px] text-[#C4622D] tracking-[0.25em] uppercase block mb-4">
+                  Your Turn
+                </span>
+                <h2
+                  className="font-display font-bold text-[#F0EBE1] leading-[1.05] tracking-[-0.03em]"
+                  style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)' }}
+                >
+                  Ready to Join<br />Our Success Stories?
+                </h2>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4 flex-shrink-0">
+                <button
+                  onClick={() => document.getElementById('course-info')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="font-display font-semibold text-sm tracking-[0.06em] bg-[#C4622D] hover:bg-[#D4723D] text-[#F0EBE1] px-8 py-4 transition-colors duration-200"
+                >
+                  Enroll Now
+                </button>
+                <button className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#C4622D] border border-[#C4622D]/40 hover:border-[#C4622D] px-8 py-4 transition-colors duration-200">
+                  Download Brochure
+                </button>
+              </div>
+            </motion.div>
           </div>
         </section>
       </main>
