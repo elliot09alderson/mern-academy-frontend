@@ -1,4 +1,4 @@
-import { Code2, Mail, Phone, MapPin, Linkedin, Twitter, Instagram, Youtube } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Twitter, Instagram, Youtube } from 'lucide-react';
 
 export const Footer = () => {
   return (
@@ -7,11 +7,8 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
-                <Code2 className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-bold gradient-text">MERN Academy</span>
+            <div className="flex items-center mb-4">
+              <img src="/mern_academy_logo_transparent.png" alt="MERN Academy" className="h-10 w-auto" />
             </div>
             <p className="text-muted-foreground mb-6 max-w-md">
               Empowering the next generation of developers with cutting-edge MERN stack development, 

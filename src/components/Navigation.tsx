@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Code2 } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import AuthButton from './AuthButton';
 
@@ -15,16 +15,10 @@ export const Navigation = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 md:h-20">
           {/* Logo with glow effect */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity" />
-              <div className="relative w-9 h-9 md:w-10 md:h-10 bg-gradient-to-br from-violet-600 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all duration-300">
-                <Code2 className="h-5 w-5 md:h-6 md:w-6 text-white" />
-              </div>
+          <Link to="/" className="flex items-center group">
+            <div className="relative group-hover:scale-110 transition-all duration-300">
+              <img src="/mern_academy_logo_transparent.png" alt="MERN Academy" className="h-12 w-auto" />
             </div>
-            <span className="text-lg md:text-xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              MERN Academy
-            </span>
           </Link>
 
           {/* Desktop Menu */}
