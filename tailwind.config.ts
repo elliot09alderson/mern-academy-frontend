@@ -16,7 +16,7 @@ export default {
       fontFamily: {
         sans: ['DM Sans', 'system-ui', 'sans-serif'],
         display: ['Space Grotesk', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Menlo', 'Monaco', 'monospace'],
+        mono: ['DM Mono', 'Menlo', 'Monaco', 'monospace'],
       },
       colors: {
         border: "hsl(var(--border))",
