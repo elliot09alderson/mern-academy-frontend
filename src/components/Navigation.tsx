@@ -120,7 +120,7 @@ export const Navigation = () => {
 
       {/* Offer marquee bar */}
       {marqueeItems && (
-        <div className="fixed top-[68px] w-full z-40 bg-[#141210] border-b border-[#2A2522] overflow-hidden">
+        <div className="fixed top-[68px] w-full z-40 bg-[#1a1600] border-b border-[#3a2e00] overflow-hidden">
           <div
             className="flex items-center gap-0 py-2"
             style={{
@@ -130,11 +130,11 @@ export const Navigation = () => {
           >
             {marqueeItems.map((offer, i) => (
               <span key={`${offer._id}-${i}`} className="flex items-center gap-2.5 px-10 flex-shrink-0">
-                <AlertTriangle className="h-3 w-3 text-[#C4622D] flex-shrink-0" />
-                <span className="font-mono text-[10px] tracking-[0.2em] text-[#C4622D] uppercase whitespace-nowrap">
+                <AlertTriangle className="h-3 w-3 text-yellow-400 flex-shrink-0" />
+                <span className="font-mono text-[10px] tracking-[0.2em] text-yellow-400 uppercase whitespace-nowrap">
                   {offer.text}
                 </span>
-                <span className="text-[#2A2522] mx-2">·</span>
+                <span className="text-yellow-900 mx-2">·</span>
               </span>
             ))}
           </div>
