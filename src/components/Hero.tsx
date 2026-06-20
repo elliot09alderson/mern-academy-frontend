@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Download } from "lucide-react";
+import { ArrowRight, Download, Phone } from "lucide-react";
 import { CurriculumBubbleMenu } from "./CurriculumBubbleMenu";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -158,6 +158,14 @@ export const Hero = () => {
             <Download className="h-4 w-4" />
             Download Curriculum
           </button>
+
+          <a
+            href="tel:+918770800807"
+            className="group flex items-center gap-3 border border-[#2A2522] hover:border-[#C4622D]/40 text-[#A39E95] hover:text-[#F0EBE1] px-8 py-4 font-display font-semibold text-sm tracking-[0.06em] transition-all duration-200"
+          >
+            <Phone className="h-4 w-4 text-[#C4622D]" />
+            Call Us
+          </a>
         </motion.div>
 
         {/* Tech stack line */}

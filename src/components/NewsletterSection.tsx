@@ -79,8 +79,8 @@ export const NewsletterSection = () => {
             <div className="border-t border-[#2A2522] pt-10 space-y-5">
               {[
                 { label: "Email",    value: "info@mernacademy.com" },
-                { label: "Phone",    value: "+91 98765 43210"      },
-                { label: "Location", value: "Bangalore · Hyderabad · Pune" },
+                { label: "Phone",    value: "+91 8770800807"       },
+                { label: "Location", value: "Bhilai · Bangalore · Hyderabad · Online" },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-8">
                   <span className="font-mono text-[9px] text-[#6B6660] tracking-[0.2em] uppercase w-20 flex-shrink-0">
