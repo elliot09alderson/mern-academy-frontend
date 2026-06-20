@@ -149,7 +149,7 @@ export const CourseSection = () => {
             {[
               {
                 category: "AI & Agents",
-                topics: ["Agentic AI", "Voice Agents", "Agentic Solutions", "LLM Pipeline", "RAG (Retrieval Augmented Generation)", "Gen AI"],
+                topics: ["Agentic AI", "Voice Agents", "Agentic Solutions", "LLM Pipeline", "RAG", "Gen AI", "LangChain", "LangGraph", "LangFuse", "LangSmith", "Vector DB", "OLLAMA"],
               },
               {
                 category: "Full Stack Development",
