@@ -40,6 +40,7 @@ import Testimonials from "./pages/admin/Testimonials";
 import AddTestimonial from "./pages/admin/AddTestimonial";
 import EditTestimonial from "./pages/admin/EditTestimonial";
 import AdminLayout from "./components/admin/AdminLayout";
+import Offers from "./pages/admin/Offers";
 import FacultyDashboard from "./pages/faculty/Dashboard";
 import StudentDashboard from "./pages/student/Dashboard";
 import NotFound from "./pages/NotFound";
@@ -113,6 +114,7 @@ const AppContent = () => {
                 path="/admin/outstanding-students"
                 element={<OutstandingStudents />}
               />
+              <Route path="/admin/offers" element={<Offers />} />
             </Route>
           </Route>
 

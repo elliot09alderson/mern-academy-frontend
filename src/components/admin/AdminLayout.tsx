@@ -11,7 +11,8 @@ import {
   BarChart3,
   LogOut,
   Menu,
-  X
+  X,
+  AlertTriangle
 } from 'lucide-react';
 import { Navigation } from '../Navigation';
 
@@ -39,6 +40,7 @@ const AdminLayout: React.FC = () => {
     { path: '/admin/branches', label: 'Branches', icon: Building },
     { path: '/admin/events', label: 'Events', icon: Calendar },
     { path: '/admin/outstanding-students', label: 'Outstanding Students', icon: Trophy },
+    { path: '/admin/offers', label: 'Offers', icon: AlertTriangle },
   ];
 
   return (

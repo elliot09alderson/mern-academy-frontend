@@ -1,12 +1,17 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, AlertTriangle } from 'lucide-react';
 import AuthButton from './AuthButton';
+import { useGetOffersQuery } from '@/store/api/offerApi';
 
 export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const { pathname } = useLocation();
+  const { data: offersData } = useGetOffersQuery({ isActive: true });
+  const offers = offersData?.data ?? [];
+  // Duplicate for seamless loop
+  const marqueeItems = offers.length > 0 ? [...offers, ...offers, ...offers] : null;
 
   React.useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -113,12 +118,28 @@ export const Navigation = () => {
         )}
       </nav>
 
-      {/* Slim announcement bar */}
-      <div className="fixed top-[68px] w-full z-40 bg-[#141210] border-b border-[#2A2522]">
-        <p className="text-center py-2 font-mono text-[10px] tracking-[0.25em] text-[#C4622D] uppercase">
-          Diwali Special — 10% Off + Free Placement Support
-        </p>
-      </div>
+      {/* Offer marquee bar */}
+      {marqueeItems && (
+        <div className="fixed top-[68px] w-full z-40 bg-[#141210] border-b border-[#2A2522] overflow-hidden">
+          <div
+            className="flex items-center gap-0 py-2"
+            style={{
+              animation: 'marquee 40s linear infinite',
+              width: 'max-content',
+            }}
+          >
+            {marqueeItems.map((offer, i) => (
+              <span key={`${offer._id}-${i}`} className="flex items-center gap-2.5 px-10 flex-shrink-0">
+                <AlertTriangle className="h-3 w-3 text-[#C4622D] flex-shrink-0" />
+                <span className="font-mono text-[10px] tracking-[0.2em] text-[#C4622D] uppercase whitespace-nowrap">
+                  {offer.text}
+                </span>
+                <span className="text-[#2A2522] mx-2">·</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 };
