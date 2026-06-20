@@ -12,7 +12,7 @@ const stats = [
   { value: "12 LPA", label: "Avg Package" },
 ];
 
-const techs = ["React", "Node.js", "MongoDB", "Express", "TypeScript", "AI Tools", "System Design", "DSA"];
+const techs = ["React", "Node.js", "MongoDB", "Express", "TypeScript", "Agentic AI", "Voice Agents", "Gen AI", "LLM Pipeline", "RAG", "Automation", "Android · iOS (AI)", "Distributed System Design", "Social Media Marketing", "Communication", "DSA"];
 
 export const Hero = () => {
   const [isCurriculumMenuOpen, setIsCurriculumMenuOpen] = useState(false);

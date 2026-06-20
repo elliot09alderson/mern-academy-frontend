@@ -128,6 +128,76 @@ export const CourseSection = () => {
           </div>
         )}
 
+        {/* What We Teach */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease }}
+          className="mt-24 border border-[#2A2522]"
+        >
+          <div className="border-b border-[#2A2522] px-10 py-5 flex items-center justify-between">
+            <span className="font-mono text-[10px] tracking-[0.3em] text-[#C4622D] uppercase">
+              What We Teach
+            </span>
+            <span className="font-mono text-[9px] text-[#6B6660] tracking-[0.1em]">
+              Full-spectrum curriculum
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px" style={{ backgroundColor: "#2A2522" }}>
+            {[
+              {
+                category: "AI & Agents",
+                topics: ["Agentic AI", "Voice Agents", "Agentic Solutions", "LLM Pipeline", "RAG (Retrieval Augmented Generation)", "Gen AI"],
+              },
+              {
+                category: "Full Stack Development",
+                topics: ["MERN Stack", "React · Next.js", "Node.js · Express", "MongoDB · SQL", "TypeScript", "REST APIs"],
+              },
+              {
+                category: "Mobile & Automation",
+                topics: ["Android App Dev (AI)", "iOS App Dev (AI)", "Workflow Automation", "n8n · Make · Zapier", "Web Scraping", "AI-Powered Tools"],
+              },
+              {
+                category: "System & Architecture",
+                topics: ["Distributed System Design", "Microservices", "DSA & Problem Solving", "System Design Interviews", "Cloud Deployment", "Docker · CI/CD"],
+              },
+              {
+                category: "Marketing & Growth",
+                topics: ["Social Media Marketing", "Content Strategy", "Personal Branding", "LinkedIn Growth", "Freelancing", "Client Acquisition"],
+              },
+              {
+                category: "Soft Skills & Career",
+                topics: ["Communication Skills", "Interview Preparation", "Resume Building", "Placement Support", "Industry Mentorship", "Live Client Projects"],
+              },
+            ].map((block, i) => (
+              <motion.div
+                key={block.category}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: i * 0.06, ease }}
+                className="bg-[#0D0C0A] hover:bg-[#141210] transition-colors duration-300 p-8"
+              >
+                <p className="font-mono text-[9px] tracking-[0.25em] text-[#C4622D] uppercase mb-5">
+                  {block.category}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {block.topics.map((topic) => (
+                    <span
+                      key={topic}
+                      className="font-mono text-[10px] text-[#A39E95] border border-[#2A2522] px-3 py-1.5 tracking-[0.05em] hover:border-[#C4622D]/40 hover:text-[#F0EBE1] transition-colors duration-200"
+                    >
+                      {topic}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
         {/* Why MERN Academy */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
