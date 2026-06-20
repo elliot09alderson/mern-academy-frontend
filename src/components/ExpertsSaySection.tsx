@@ -5,21 +5,21 @@ const ease = [0.16, 1, 0.3, 1] as const;
 const experts = [
   {
     id: 1,
-    name: "Md Mobeen",
-    title: "Retired Principal, Zila School, Ranchi",
-    credential: "Veteran Educator & Academic Leader",
+    name: "Pratik Verma",
+    title: "Forward Deployed Engineer",
+    credential: "5+ Years Experience · FDE",
     quote:
       "MERN Academy represents the future of education — combining traditional academic values with modern technological skills. Their commitment to holistic student development prepares students not just for jobs, but for successful careers.",
-    image: "/experts/md-mobeen.jpg",
+    image: "/experts/pratik-verma.jpg",
   },
   {
     id: 2,
-    name: "Dr. Md Imran",
-    title: "Paediatric Surgeon",
-    credential: "Medical Expert & Healthcare Professional",
+    name: "Abhishek Verma",
+    title: "Senior Software Engineer",
+    credential: "Full Stack & Systems Expert",
     quote:
       "In today's rapidly evolving world, institutions like MERN Academy are essential. They bridge the gap between academic knowledge and industry requirements, ensuring students are equipped with both technical expertise and professional skills.",
-    image: "/experts/dr-md-imran.jpg",
+    image: "/experts/abhishek-verma.jpg",
   },
 ];
 
