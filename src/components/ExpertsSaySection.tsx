@@ -10,7 +10,7 @@ const experts = [
     credential: "5+ Years Experience · FDE",
     quote:
       "MERN Academy represents the future of education — combining traditional academic values with modern technological skills. Their commitment to holistic student development prepares students not just for jobs, but for successful careers.",
-    image: "/experts/pratik-verma.jpg",
+    image: "/experts/pratik-verma.svg",
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const experts = [
     credential: "Full Stack & Systems Expert",
     quote:
       "In today's rapidly evolving world, institutions like MERN Academy are essential. They bridge the gap between academic knowledge and industry requirements, ensuring students are equipped with both technical expertise and professional skills.",
-    image: "/experts/abhishek-verma.jpg",
+    image: "/experts/abhishek-verma.svg",
   },
 ];
 
