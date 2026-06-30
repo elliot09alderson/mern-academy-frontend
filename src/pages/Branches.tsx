@@ -240,10 +240,15 @@ export const Branches = () => {
 
                       {/* Actions */}
                       <div className="flex flex-col sm:flex-row gap-3">
-                        <button className="font-display font-semibold text-sm tracking-[0.04em] bg-[#C4622D] hover:bg-[#D4723D] text-[#F0EBE1] px-6 py-3 transition-colors duration-200 flex items-center gap-2">
+                        <a
+                          href={branch.mapUrl || `https://www.google.com/maps/search/${encodeURIComponent(branch.address?.fullAddress || branch.branchName)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-display font-semibold text-sm tracking-[0.04em] bg-[#C4622D] hover:bg-[#D4723D] text-[#F0EBE1] px-6 py-3 transition-colors duration-200 flex items-center gap-2"
+                        >
                           <NavigationIcon className="h-4 w-4" />
                           Get Directions
-                        </button>
+                        </a>
                         {branch.contactInfo?.phone && (
                           <button className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#C4622D] border border-[#C4622D]/40 hover:border-[#C4622D] px-6 py-3 transition-colors duration-200 flex items-center gap-2">
                             <Phone className="h-3.5 w-3.5" />

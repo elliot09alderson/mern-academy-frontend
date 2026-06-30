@@ -89,7 +89,8 @@ const EditBranch = () => {
     availableSeats: '',
     establishedYear: '',
     isHeadquarters: false,
-    isActive: true
+    isActive: true,
+    mapUrl: ''
   });
 
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
@@ -119,7 +120,8 @@ const EditBranch = () => {
         availableSeats: branch.availableSeats?.toString() || '',
         establishedYear: branch.establishedYear?.toString() || '',
         isHeadquarters: branch.isHeadquarters || false,
-        isActive: branch.isActive !== false
+        isActive: branch.isActive !== false,
+        mapUrl: branch.mapUrl || ''
       });
 
       setSelectedFacilities(branch.facilities || []);
@@ -212,6 +214,9 @@ const EditBranch = () => {
 
       // Headquarters status
       formDataToSend.append('isHeadquarters', String(formData.isHeadquarters));
+
+      // Map URL
+      if (formData.mapUrl) formDataToSend.append('mapUrl', formData.mapUrl);
 
       // New Images
       newImages.forEach((image) => {
@@ -505,6 +510,18 @@ const EditBranch = () => {
                     value={formData.fullAddress}
                     onChange={handleInputChange}
                     rows={2}
+                    className="glass-card border-emerald-200"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="mapUrl">Google Maps URL</Label>
+                  <Input
+                    id="mapUrl"
+                    name="mapUrl"
+                    value={formData.mapUrl}
+                    onChange={handleInputChange}
+                    placeholder="https://maps.app.goo.gl/..."
                     className="glass-card border-emerald-200"
                   />
                 </div>
