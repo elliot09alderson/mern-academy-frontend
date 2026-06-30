@@ -7,6 +7,7 @@ import { FacultySection } from '@/components/FacultySection';
 import { TestimonialsSection } from '@/components/TestimonialsSection';
 import { BranchesSection } from '@/components/BranchesSection';
 import { ExpertsSaySection } from '@/components/ExpertsSaySection';
+import { AlumniSection } from '@/components/AlumniSection';
 import { Footer } from '@/components/Footer';
 
 const Index = () => {
@@ -22,6 +23,7 @@ const Index = () => {
         <NewsletterSection />
         <BranchesSection />
         <ExpertsSaySection />
+        <AlumniSection />
         <Footer />
       </div>
     </div>
