@@ -9,14 +9,82 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 const categories = ["All", "Academic", "Cultural", "Sports", "Technical", "Workshop", "Seminar", "Other"];
 
+const staticEvents = [
+  {
+    _id: 'static-1',
+    eventName: 'Classroom Session',
+    description: 'Interactive academic sessions at MERN Academy.',
+    category: 'Academic',
+    image: { url: '/institute/academic-classroom.png' },
+    isFeatured: false,
+    startDate: '2024-01-15',
+    venue: 'MERN Academy, Bhilai',
+    registeredParticipants: [],
+    maxParticipants: null,
+    registrationLink: null,
+  },
+  {
+    _id: 'static-2',
+    eventName: 'Lab Practice',
+    description: 'Hands-on lab sessions for practical learning.',
+    category: 'Academic',
+    image: { url: '/institute/academic-lab.png' },
+    isFeatured: false,
+    startDate: '2024-02-10',
+    venue: 'MERN Academy, Bhilai',
+    registeredParticipants: [],
+    maxParticipants: null,
+    registrationLink: null,
+  },
+  {
+    _id: 'static-3',
+    eventName: 'Tech Workshop',
+    description: 'Industry-focused workshop on modern web technologies.',
+    category: 'Workshop',
+    image: { url: '/institute/workshop-session.png' },
+    isFeatured: false,
+    startDate: '2024-03-05',
+    venue: 'MERN Academy, Bhilai',
+    registeredParticipants: [],
+    maxParticipants: null,
+    registrationLink: null,
+  },
+  {
+    _id: 'static-4',
+    eventName: 'Coding Workshop',
+    description: 'Intensive coding workshop for placement preparation.',
+    category: 'Workshop',
+    image: { url: '/institute/workshop-coding.png' },
+    isFeatured: false,
+    startDate: '2024-03-20',
+    venue: 'MERN Academy, Bhilai',
+    registeredParticipants: [],
+    maxParticipants: null,
+    registrationLink: null,
+  },
+  {
+    _id: 'static-5',
+    eventName: 'Seminar on AI & Future Tech',
+    description: 'Expert seminar on emerging technologies and career opportunities.',
+    category: 'Seminar',
+    image: { url: '/institute/seminar-hall.png' },
+    isFeatured: false,
+    startDate: '2024-04-12',
+    venue: 'MERN Academy, Bhilai',
+    registeredParticipants: [],
+    maxParticipants: null,
+    registrationLink: null,
+  },
+];
+
 export const Gallery = () => {
   const { data: eventsData, isLoading } = useGetEventsQuery({ page: 1, limit: 100 });
   const [selectedCategory, setSelectedCategory] = React.useState("All");
 
   const filteredEvents = React.useMemo(() => {
-    if (!eventsData?.data) return [];
-    if (selectedCategory === "All") return eventsData.data;
-    return eventsData.data.filter((event: any) => event.category === selectedCategory);
+    const allEvents = [...staticEvents, ...(eventsData?.data || [])];
+    if (selectedCategory === "All") return allEvents;
+    return allEvents.filter((event: any) => event.category === selectedCategory);
   }, [eventsData, selectedCategory]);
 
   return (
