@@ -15,6 +15,7 @@ import { AuthDebug } from "@/components/AuthDebug";
 import { Loader2 } from "lucide-react";
 import Index from "./pages/Index";
 import Gallery from "./pages/Gallery";
+import Alumni from "./pages/Alumni";
 import Students from "./pages/Students";
 import Branches from "./pages/Branches";
 import Login from "./pages/Login";
@@ -75,6 +76,7 @@ const AppContent = () => {
           {/* Public Routes */}
           <Route path="/" element={<Index />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/alumni" element={<Alumni />} />
           <Route path="/students" element={<Students />} />
           <Route path="/branches" element={<Branches />} />
           <Route path="/login" element={<Login />} />
