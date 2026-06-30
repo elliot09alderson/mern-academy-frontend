@@ -22,6 +22,7 @@ export const Navigation = () => {
   const links = [
     { to: '/#courses', label: 'Courses' },
     { to: '/alumni', label: 'Alumni' },
+    { to: '/students', label: 'Students' },
     { to: '/branches', label: 'Branches' },
     { to: '/gallery', label: 'Gallery' },
   ];
