@@ -3,7 +3,7 @@ import { SEO } from '@/components/SEO';
 import { Hero } from '@/components/Hero';
 import { CourseSection } from '@/components/CourseSection';
 import { NewsletterSection } from '@/components/NewsletterSection';
-import { OutstandingStudents } from '@/components/OutstandingStudents';
+// import { OutstandingStudents } from '@/components/OutstandingStudents'; // temporarily disabled
 import { FacultySection } from '@/components/FacultySection';
 import { TestimonialsSection } from '@/components/TestimonialsSection';
 import { BranchesSection } from '@/components/BranchesSection';
@@ -23,7 +23,8 @@ const Index = () => {
       <div className="pt-0">
         <Hero />
         <CourseSection />
-        <OutstandingStudents />
+        {/* Temporarily disabled until outstanding-student data is finalized */}
+        {/* <OutstandingStudents /> */}
         <FacultySection />
         <TestimonialsSection />
         <NewsletterSection />
