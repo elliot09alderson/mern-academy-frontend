@@ -6,10 +6,6 @@ import { useToast } from '@/hooks/use-toast';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-// Anyone who has already registered once (in this browser) can keep
-// downloading curriculum PDFs without filling the form again every time.
-const REGISTERED_KEY = 'curriculum_registered';
-
 const inputClass =
   'w-full bg-transparent border-b border-[#2A2522] focus:border-[#C4622D] text-[#F0EBE1] placeholder:text-[#6B6660] py-3 text-sm outline-none transition-colors duration-200 font-mono tracking-[0.03em]';
 
@@ -55,8 +51,6 @@ export const CurriculumBubbleMenu = ({ isOpen, onClose }: CurriculumBubbleMenuPr
   const set = (field: string, value: string) =>
     setFormData((prev) => ({ ...prev, [field]: value }));
 
-  const isRegistered = () => localStorage.getItem(REGISTERED_KEY) === 'true';
-
   const handleDownload = async (filename: string, title: string) => {
     try {
       const response = await fetch(`/docs/${encodeURIComponent(filename)}`);
@@ -79,10 +73,6 @@ export const CurriculumBubbleMenu = ({ isOpen, onClose }: CurriculumBubbleMenuPr
   };
 
   const handleCardClick = (filename: string, title: string) => {
-    if (isRegistered()) {
-      handleDownload(filename, title);
-      return;
-    }
     setPendingOption({ filename, title });
   };
 
@@ -90,7 +80,6 @@ export const CurriculumBubbleMenu = ({ isOpen, onClose }: CurriculumBubbleMenuPr
     e.preventDefault();
     try {
       await createInquiry(formData).unwrap();
-      localStorage.setItem(REGISTERED_KEY, 'true');
       if (pendingOption) {
         handleDownload(pendingOption.filename, pendingOption.title);
       }
