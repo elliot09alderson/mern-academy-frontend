@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Clock, Users, Loader2 } from "lucide-react";
-import { useGetActiveCoursesQuery } from "@/store/api/courseApi";
+import { useGetActiveCoursesQuery, type Course } from "@/store/api/courseApi";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -188,8 +188,94 @@ const WhatWeTeach = () => {
   );
 };
 
+const CourseCard = ({ course, index }: { course: Course; index: number }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    whileInView={{ opacity: 1 }}
+    viewport={{ once: true, margin: "-40px" }}
+    transition={{ duration: 0.6, delay: index * 0.07, ease }}
+    className="bg-[#0D0C0A] p-8 group hover:bg-[#141210] transition-colors duration-300 flex flex-col"
+  >
+    {/* Banner image or level */}
+    {course.bannerImage?.url ? (
+      <div className="mb-6 overflow-hidden bg-[#141210]" style={{ aspectRatio: "16/9" }}>
+        <img
+          src={course.bannerImage.url}
+          alt={course.courseName}
+          className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-500"
+        />
+      </div>
+    ) : (
+      <div className="mb-6">
+        <span className="font-mono text-[9px] text-[#C4622D] tracking-[0.25em] uppercase border border-[#C4622D]/30 px-3 py-1.5">
+          {course.level}
+        </span>
+      </div>
+    )}
+
+    <h3 className="font-display font-semibold text-[#F0EBE1] text-xl tracking-[-0.02em] mb-3">
+      {course.courseName}
+    </h3>
+
+    <p className="text-[#6B6660] text-sm leading-relaxed mb-6 flex-grow line-clamp-3">
+      {course.description}
+    </p>
+
+    <div className="flex items-center gap-5 font-mono text-[10px] text-[#6B6660] tracking-[0.1em] mb-6">
+      <span className="flex items-center gap-1.5 uppercase">
+        <Clock className="h-3 w-3" />
+        {course.duration}
+      </span>
+      <span className="flex items-center gap-1.5 uppercase">
+        <Users className="h-3 w-3" />
+        {course.batchSize} seats
+      </span>
+    </div>
+
+    {/* Pricing */}
+    <div className="border-t border-[#2A2522] pt-6">
+      <div className="flex items-baseline justify-between mb-5">
+        {course.discountedPrice > 0 ? (
+          <>
+            <div className="flex items-baseline gap-3">
+              <span className="font-mono text-2xl font-bold text-[#F0EBE1] tracking-[-0.02em]">
+                ₹{course.discountedPrice.toLocaleString("en-IN")}
+              </span>
+              <span className="font-mono text-sm text-[#6B6660] line-through">
+                ₹{course.originalPrice.toLocaleString("en-IN")}
+              </span>
+            </div>
+            <span className="font-mono text-[10px] text-[#C4622D] border border-[#C4622D]/30 px-2 py-1 tracking-[0.1em]">
+              −{course.discountPercentage}%
+            </span>
+          </>
+        ) : (
+          <span className="font-mono text-sm font-bold text-[#C4622D] tracking-[0.02em]">
+            Pay Only After You Succeed — Call +91 8770800807
+          </span>
+        )}
+      </div>
+
+      <button
+        onClick={() =>
+          document
+            .getElementById("course-info")
+            ?.scrollIntoView({ behavior: "smooth" })
+        }
+        className="w-full flex items-center justify-between px-5 py-3.5 bg-[#C4622D] hover:bg-[#D4723D] text-[#F0EBE1] text-sm font-display font-semibold tracking-[0.05em] transition-colors duration-200"
+      >
+        Enroll Now
+        <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+      </button>
+    </div>
+  </motion.div>
+);
+
 export const CourseSection = () => {
   const { data: coursesData, isLoading } = useGetActiveCoursesQuery({ limit: 10 });
+
+  const regularCourses = coursesData?.data.filter((c) => c.discountedPrice > 0) ?? [];
+  const flagshipCourses = coursesData?.data.filter((c) => c.discountedPrice === 0) ?? [];
 
   return (
     <section id="courses" className="py-32 px-6 lg:px-8 bg-[#0D0C0A]">
@@ -223,93 +309,13 @@ export const CourseSection = () => {
           <div className="flex justify-center py-24">
             <Loader2 className="h-6 w-6 animate-spin text-[#C4622D]" />
           </div>
-        ) : coursesData?.data.length ? (
+        ) : regularCourses.length ? (
           <div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px"
             style={{ backgroundColor: "#2A2522" }}
           >
-            {coursesData.data.map((course, index) => (
-              <motion.div
-                key={course._id}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.6, delay: index * 0.07, ease }}
-                className="bg-[#0D0C0A] p-8 group hover:bg-[#141210] transition-colors duration-300 flex flex-col"
-              >
-                {/* Banner image or level */}
-                {course.bannerImage?.url ? (
-                  <div className="mb-6 overflow-hidden bg-[#141210]" style={{ aspectRatio: "16/9" }}>
-                    <img
-                      src={course.bannerImage.url}
-                      alt={course.courseName}
-                      className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-500"
-                    />
-                  </div>
-                ) : (
-                  <div className="mb-6">
-                    <span className="font-mono text-[9px] text-[#C4622D] tracking-[0.25em] uppercase border border-[#C4622D]/30 px-3 py-1.5">
-                      {course.level}
-                    </span>
-                  </div>
-                )}
-
-                <h3 className="font-display font-semibold text-[#F0EBE1] text-xl tracking-[-0.02em] mb-3">
-                  {course.courseName}
-                </h3>
-
-                <p className="text-[#6B6660] text-sm leading-relaxed mb-6 flex-grow line-clamp-3">
-                  {course.description}
-                </p>
-
-                <div className="flex items-center gap-5 font-mono text-[10px] text-[#6B6660] tracking-[0.1em] mb-6">
-                  <span className="flex items-center gap-1.5 uppercase">
-                    <Clock className="h-3 w-3" />
-                    {course.duration}
-                  </span>
-                  <span className="flex items-center gap-1.5 uppercase">
-                    <Users className="h-3 w-3" />
-                    {course.batchSize} seats
-                  </span>
-                </div>
-
-                {/* Pricing */}
-                <div className="border-t border-[#2A2522] pt-6">
-                  <div className="flex items-baseline justify-between mb-5">
-                    {course.discountedPrice > 0 ? (
-                      <>
-                        <div className="flex items-baseline gap-3">
-                          <span className="font-mono text-2xl font-bold text-[#F0EBE1] tracking-[-0.02em]">
-                            ₹{course.discountedPrice.toLocaleString("en-IN")}
-                          </span>
-                          <span className="font-mono text-sm text-[#6B6660] line-through">
-                            ₹{course.originalPrice.toLocaleString("en-IN")}
-                          </span>
-                        </div>
-                        <span className="font-mono text-[10px] text-[#C4622D] border border-[#C4622D]/30 px-2 py-1 tracking-[0.1em]">
-                          −{course.discountPercentage}%
-                        </span>
-                      </>
-                    ) : (
-                      <span className="font-mono text-sm font-bold text-[#C4622D] tracking-[0.02em]">
-                        Pay Only After You Succeed — Call +91 8770800807
-                      </span>
-                    )}
-                  </div>
-
-                  <button
-                    onClick={() =>
-                      document
-                        .getElementById("course-info")
-                        ?.scrollIntoView({ behavior: "smooth" })
-                    }
-                    className="w-full flex items-center justify-between px-5 py-3.5 bg-[#C4622D] hover:bg-[#D4723D] text-[#F0EBE1] text-sm font-display font-semibold tracking-[0.05em] transition-colors duration-200"
-                  >
-                    Enroll Now
-                    <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-                  </button>
-                </div>
-              </motion.div>
+            {regularCourses.map((course, index) => (
+              <CourseCard key={course._id} course={course} index={index} />
             ))}
           </div>
         ) : (
@@ -317,6 +323,38 @@ export const CourseSection = () => {
             <p className="font-mono text-sm text-[#6B6660] tracking-[0.1em]">
               No courses available at the moment
             </p>
+          </div>
+        )}
+
+        {/* Our Flagship Programs */}
+        {!isLoading && flagshipCourses.length > 0 && (
+          <div className="mt-24">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease }}
+              className="mb-12"
+            >
+              <span className="font-mono text-[10px] tracking-[0.3em] text-[#C4622D] uppercase block mb-6">
+                Beyond the Classroom
+              </span>
+              <h2
+                className="font-display font-bold text-[#F0EBE1] leading-[1.05] tracking-[-0.03em]"
+                style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
+              >
+                Our Flagship Programs
+              </h2>
+            </motion.div>
+
+            <div
+              className="grid grid-cols-1 lg:grid-cols-2 gap-px"
+              style={{ backgroundColor: "#2A2522" }}
+            >
+              {flagshipCourses.map((course, index) => (
+                <CourseCard key={course._id} course={course} index={index} />
+              ))}
+            </div>
           </div>
         )}
 

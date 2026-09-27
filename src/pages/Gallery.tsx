@@ -8,7 +8,7 @@ import { Loader2, Calendar, MapPin, Users } from 'lucide-react';
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const categories = ["All", "Academic", "Cultural", "Sports", "Technical", "Workshop", "Seminar", "Other"];
+const categories = ["All", "Academic", "Cultural", "Technical", "Workshop", "Seminar", "Other"];
 
 const staticEvents = [
   {

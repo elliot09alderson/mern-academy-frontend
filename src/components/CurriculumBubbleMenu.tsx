@@ -1,7 +1,17 @@
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, X, FileText } from 'lucide-react';
+import { Download, X, FileText, ArrowRight, ArrowLeft } from 'lucide-react';
+import { useCreateInquiryMutation } from '@/store/api/inquiryApi';
+import { useToast } from '@/hooks/use-toast';
 
 const ease = [0.16, 1, 0.3, 1] as const;
+
+// Anyone who has already registered once (in this browser) can keep
+// downloading curriculum PDFs without filling the form again every time.
+const REGISTERED_KEY = 'curriculum_registered';
+
+const inputClass =
+  'w-full bg-transparent border-b border-[#2A2522] focus:border-[#C4622D] text-[#F0EBE1] placeholder:text-[#6B6660] py-3 text-sm outline-none transition-colors duration-200 font-mono tracking-[0.03em]';
 
 const curriculumOptions = [
   {
@@ -30,6 +40,23 @@ interface CurriculumBubbleMenuProps {
 }
 
 export const CurriculumBubbleMenu = ({ isOpen, onClose }: CurriculumBubbleMenuProps) => {
+  const [pendingOption, setPendingOption] = useState<{ filename: string; title: string } | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    qualification: '',
+    hereAboutUs: '',
+  });
+
+  const [createInquiry, { isLoading }] = useCreateInquiryMutation();
+  const { toast } = useToast();
+
+  const set = (field: string, value: string) =>
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
+  const isRegistered = () => localStorage.getItem(REGISTERED_KEY) === 'true';
+
   const handleDownload = async (filename: string, title: string) => {
     try {
       const response = await fetch(`/docs/${encodeURIComponent(filename)}`);
@@ -48,6 +75,32 @@ export const CurriculumBubbleMenu = ({ isOpen, onClose }: CurriculumBubbleMenuPr
       setTimeout(() => window.URL.revokeObjectURL(blobUrl), 100);
     } catch {
       alert(`Unable to download ${title}. Please try again later.`);
+    }
+  };
+
+  const handleCardClick = (filename: string, title: string) => {
+    if (isRegistered()) {
+      handleDownload(filename, title);
+      return;
+    }
+    setPendingOption({ filename, title });
+  };
+
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await createInquiry(formData).unwrap();
+      localStorage.setItem(REGISTERED_KEY, 'true');
+      if (pendingOption) {
+        handleDownload(pendingOption.filename, pendingOption.title);
+      }
+      setPendingOption(null);
+    } catch (error: any) {
+      toast({
+        title: 'Submission failed',
+        description: error?.data?.message || 'Please try again.',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -97,65 +150,157 @@ export const CurriculumBubbleMenu = ({ isOpen, onClose }: CurriculumBubbleMenuPr
                   className="font-display font-bold text-[#F0EBE1] leading-[1.05] tracking-[-0.03em]"
                   style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)' }}
                 >
-                  Download Curriculum
+                  {pendingOption ? 'Register to Download' : 'Download Curriculum'}
                 </h3>
               </motion.div>
 
-              {/* Cards */}
-              <div
-                className="grid grid-cols-1 md:grid-cols-3 gap-px"
-                style={{ backgroundColor: '#2A2522' }}
-              >
-                {curriculumOptions.map((option, index) => (
-                  <motion.div
-                    key={option.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.4, delay: index * 0.08, ease }}
-                    onClick={() => handleDownload(option.filename, option.title)}
-                    className="bg-[#0D0C0A] hover:bg-[#141210] group cursor-pointer p-10 flex flex-col justify-between transition-colors duration-300 relative overflow-hidden"
+              {pendingOption ? (
+                /* Registration gate — must submit before the file downloads */
+                <motion.form
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3, ease }}
+                  onSubmit={handleRegisterSubmit}
+                  className="border border-[#2A2522] p-8 md:p-10"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setPendingOption(null)}
+                    className="flex items-center gap-2 font-mono text-[9px] text-[#6B6660] hover:text-[#F0EBE1] tracking-[0.15em] uppercase mb-8 transition-colors duration-200"
                   >
-                    {/* Index */}
-                    <span className="font-mono text-[9px] text-[#2A2522] group-hover:text-[#3A3330] tracking-[0.15em] mb-6 transition-colors duration-300">
-                      0{index + 1}
-                    </span>
+                    <ArrowLeft className="h-3 w-3" />
+                    Back
+                  </button>
 
-                    {/* Icon */}
-                    <div className="mb-8">
-                      <FileText className="h-8 w-8 text-[#C4622D] opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
+                  <p className="text-[#A39E95] text-sm leading-relaxed mb-8">
+                    Share your details once and we'll unlock{' '}
+                    <span className="text-[#F0EBE1]">{pendingOption.title}</span> —
+                    plus every other curriculum PDF, no re-registering needed.
+                  </p>
 
-                    {/* Title */}
-                    <div className="mb-8">
-                      <h4 className="font-display font-bold text-[#F0EBE1] text-lg tracking-[-0.02em] leading-snug mb-1">
-                        {option.title}
-                      </h4>
-                      <p className="font-mono text-[9px] text-[#6B6660] tracking-[0.1em] uppercase">
-                        {option.subtitle}
-                      </p>
-                    </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+                    <input
+                      placeholder="Full Name *"
+                      required
+                      value={formData.name}
+                      onChange={(e) => set('name', e.target.value)}
+                      className={`${inputClass} mb-6`}
+                    />
+                    <input
+                      type="email"
+                      placeholder="Email Address *"
+                      required
+                      value={formData.email}
+                      onChange={(e) => set('email', e.target.value)}
+                      className={`${inputClass} mb-6`}
+                    />
+                    <input
+                      type="tel"
+                      placeholder="Phone Number *"
+                      required
+                      value={formData.phone}
+                      onChange={(e) => set('phone', e.target.value)}
+                      className={`${inputClass} mb-6`}
+                    />
+                    <input
+                      placeholder="Qualification *"
+                      required
+                      value={formData.qualification}
+                      onChange={(e) => set('qualification', e.target.value)}
+                      className={`${inputClass} mb-6`}
+                    />
+                  </div>
 
-                    {/* Download CTA */}
-                    <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.15em] uppercase text-[#C4622D] group-hover:text-[#D4723D] transition-colors duration-200">
-                      <Download className="h-3.5 w-3.5 group-hover:translate-y-0.5 transition-transform duration-200" />
-                      Download PDF
-                    </div>
+                  <select
+                    required
+                    value={formData.hereAboutUs}
+                    onChange={(e) => set('hereAboutUs', e.target.value)}
+                    className={`${inputClass} mb-8 appearance-none`}
+                    style={{ backgroundColor: 'transparent' }}
+                  >
+                    <option value="" disabled>
+                      How did you hear about us? *
+                    </option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="friend">Friend / Referral</option>
+                    <option value="college">College / University</option>
+                    <option value="poster">Poster / Advertisement</option>
+                    <option value="website">Website / Search Engine</option>
+                    <option value="googlemap">Google Maps</option>
+                    <option value="other">Other</option>
+                  </select>
 
-                    {/* Hover border accent */}
-                    <div className="absolute bottom-0 left-0 right-0 h-px bg-[#C4622D] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-                  </motion.div>
-                ))}
-              </div>
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full group flex items-center justify-between bg-[#C4622D] hover:bg-[#D4723D] disabled:opacity-50 text-[#F0EBE1] px-8 py-4 font-display font-semibold text-sm tracking-[0.06em] transition-all duration-200"
+                  >
+                    {isLoading ? 'Submitting…' : 'Register & Download'}
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+                  </button>
+                </motion.form>
+              ) : (
+                <>
+                  {/* Cards */}
+                  <div
+                    className="grid grid-cols-1 md:grid-cols-3 gap-px"
+                    style={{ backgroundColor: '#2A2522' }}
+                  >
+                    {curriculumOptions.map((option, index) => (
+                      <motion.div
+                        key={option.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.4, delay: index * 0.08, ease }}
+                        onClick={() => handleCardClick(option.filename, option.title)}
+                        className="bg-[#0D0C0A] hover:bg-[#141210] group cursor-pointer p-10 flex flex-col justify-between transition-colors duration-300 relative overflow-hidden"
+                      >
+                        {/* Index */}
+                        <span className="font-mono text-[9px] text-[#2A2522] group-hover:text-[#3A3330] tracking-[0.15em] mb-6 transition-colors duration-300">
+                          0{index + 1}
+                        </span>
 
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.35 }}
-                className="font-mono text-[9px] text-[#6B6660] tracking-[0.1em] mt-6 text-center"
-              >
-                Click any card to download the course curriculum
-              </motion.p>
+                        {/* Icon */}
+                        <div className="mb-8">
+                          <FileText className="h-8 w-8 text-[#C4622D] opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
+
+                        {/* Title */}
+                        <div className="mb-8">
+                          <h4 className="font-display font-bold text-[#F0EBE1] text-lg tracking-[-0.02em] leading-snug mb-1">
+                            {option.title}
+                          </h4>
+                          <p className="font-mono text-[9px] text-[#6B6660] tracking-[0.1em] uppercase">
+                            {option.subtitle}
+                          </p>
+                        </div>
+
+                        {/* Download CTA */}
+                        <div className="flex items-center gap-2 font-mono text-[10px] tracking-[0.15em] uppercase text-[#C4622D] group-hover:text-[#D4723D] transition-colors duration-200">
+                          <Download className="h-3.5 w-3.5 group-hover:translate-y-0.5 transition-transform duration-200" />
+                          Download PDF
+                        </div>
+
+                        {/* Hover border accent */}
+                        <div className="absolute bottom-0 left-0 right-0 h-px bg-[#C4622D] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.35 }}
+                    className="font-mono text-[9px] text-[#6B6660] tracking-[0.1em] mt-6 text-center"
+                  >
+                    {isRegistered()
+                      ? 'Click any card to download the course curriculum'
+                      : "Click any card — we'll ask for your details first"}
+                  </motion.p>
+                </>
+              )}
             </div>
           </motion.div>
         </>
