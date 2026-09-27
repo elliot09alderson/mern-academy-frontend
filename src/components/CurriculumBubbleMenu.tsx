@@ -284,9 +284,7 @@ export const CurriculumBubbleMenu = ({ isOpen, onClose }: CurriculumBubbleMenuPr
                     transition={{ delay: 0.35 }}
                     className="font-mono text-[9px] text-[#6B6660] tracking-[0.1em] mt-6 text-center"
                   >
-                    {isRegistered()
-                      ? 'Click any card to download the course curriculum'
-                      : "Click any card — we'll ask for your details first"}
+                    Click any card — we'll ask for your details first
                   </motion.p>
                 </>
               )}
