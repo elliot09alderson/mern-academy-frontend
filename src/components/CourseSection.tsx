@@ -188,7 +188,7 @@ const WhatWeTeach = () => {
   );
 };
 
-const CourseCard = ({ course, index }: { course: Course; index: number }) => {
+const CourseCard = ({ course, index, badgeLabel }: { course: Course; index: number; badgeLabel?: string }) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -211,7 +211,7 @@ const CourseCard = ({ course, index }: { course: Course; index: number }) => {
     ) : (
       <div className="mb-6">
         <span className="font-mono text-[9px] text-[#C4622D] tracking-[0.25em] uppercase border border-[#C4622D]/30 px-3 py-1.5">
-          {course.level}
+          {badgeLabel ?? course.level}
         </span>
       </div>
     )}
@@ -292,9 +292,12 @@ const CourseCard = ({ course, index }: { course: Course; index: number }) => {
 export const CourseSection = () => {
   const { data: coursesData, isLoading } = useGetActiveCoursesQuery({ limit: 10 });
 
-  const FLAGSHIP_COURSE_CODES = ["CAP-01", "PGP-01"];
-  const regularCourses = coursesData?.data.filter((c) => !FLAGSHIP_COURSE_CODES.includes(c.courseCode)) ?? [];
-  const flagshipCourses = coursesData?.data.filter((c) => FLAGSHIP_COURSE_CODES.includes(c.courseCode)) ?? [];
+  const FLAGSHIP_BADGES: Record<string, string> = {
+    "PGP-01": "For Freshers",
+    "CAP-01": "For Experienced",
+  };
+  const regularCourses = coursesData?.data.filter((c) => !(c.courseCode in FLAGSHIP_BADGES)) ?? [];
+  const flagshipCourses = coursesData?.data.filter((c) => c.courseCode in FLAGSHIP_BADGES) ?? [];
 
   return (
     <section id="courses" className="py-32 px-6 lg:px-8 bg-[#0D0C0A]">
@@ -371,7 +374,12 @@ export const CourseSection = () => {
               style={{ backgroundColor: "#2A2522" }}
             >
               {flagshipCourses.map((course, index) => (
-                <CourseCard key={course._id} course={course} index={index} />
+                <CourseCard
+                  key={course._id}
+                  course={course}
+                  index={index}
+                  badgeLabel={FLAGSHIP_BADGES[course.courseCode]}
+                />
               ))}
             </div>
           </div>
