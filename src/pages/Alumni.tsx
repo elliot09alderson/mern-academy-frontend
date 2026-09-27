@@ -62,6 +62,14 @@ const alumni = [
     image: "/alumni/pratik.png",
     linkedin: "https://www.linkedin.com/in/pratik-verma-1a0970192",
   },
+  {
+    id: 8,
+    name: "Dushyant Manikpuri",
+    title: "MERN Stack Developer",
+    company: "",
+    image: "/alumni/dushyant.png",
+    linkedin: "https://www.linkedin.com/in/dushyant-manikpuri-b2433b259/",
+  },
 ];
 
 const Alumni = () => {
