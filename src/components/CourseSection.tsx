@@ -33,6 +33,7 @@ const curriculum = [
       "Arrays & Hashing", "Two Pointers & Sliding Window", "Stacks & Queues",
       "Binary Search & Trees", "Heaps & Graphs", "Tries, DP & Backtracking",
     ],
+    practiceUrl: "https://dsa-tracker-sable-nu.vercel.app/",
   },
   {
     id: "mobile",
@@ -167,6 +168,18 @@ const WhatWeTeach = () => {
                   </motion.div>
                 ))}
               </div>
+
+              {"practiceUrl" in selected && selected.practiceUrl && (
+                <a
+                  href={selected.practiceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-8 inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.15em] uppercase text-[#C4622D] hover:text-[#D4723D] transition-colors duration-200"
+                >
+                  Practice on DSA Tracker
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </a>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>

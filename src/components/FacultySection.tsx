@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { Loader2, Globe, Linkedin } from "lucide-react";
 import { useGetActiveFacultiesQuery } from "@/store/api/facultyApi";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -66,9 +66,37 @@ export const FacultySection = () => {
                     </div>
 
                     {/* Name */}
-                    <h3 className="font-display font-semibold text-[#F0EBE1] text-lg tracking-[-0.01em] mb-1">
-                      {faculty.name}
-                    </h3>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-display font-semibold text-[#F0EBE1] text-lg tracking-[-0.01em]">
+                        {faculty.name}
+                      </h3>
+                      {(faculty.socialLinks?.portfolio || faculty.socialLinks?.linkedin) && (
+                        <div className="flex items-center gap-2">
+                          {faculty.socialLinks?.portfolio && (
+                            <a
+                              href={faculty.socialLinks.portfolio}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`${faculty.name}'s portfolio`}
+                              className="text-[#6B6660] hover:text-[#C4622D] transition-colors duration-200"
+                            >
+                              <Globe className="h-3.5 w-3.5" />
+                            </a>
+                          )}
+                          {faculty.socialLinks?.linkedin && (
+                            <a
+                              href={faculty.socialLinks.linkedin}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`${faculty.name}'s LinkedIn`}
+                              className="text-[#6B6660] hover:text-[#C4622D] transition-colors duration-200"
+                            >
+                              <Linkedin className="h-3.5 w-3.5" />
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </div>
 
                     {/* Specialization */}
                     <p className="font-mono text-[10px] text-[#C4622D] tracking-[0.1em] uppercase mb-5">

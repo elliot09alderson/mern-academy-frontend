@@ -22,7 +22,7 @@ const alumni = [
   {
     id: 3,
     name: "Bhupendra Sahu",
-    title: "SDE 2",
+    title: "Senior Frontend Developer | Full Stack Developer",
     company: "Decorpot",
     image: "/alumni/bhupendra.png",
     linkedin: "https://www.linkedin.com/in/bsahu6659/",
@@ -130,6 +130,33 @@ export const AlumniSection = () => {
               )}
             </motion.div>
           ))}
+
+          {/* CTA card filling the last grid slot */}
+          <motion.a
+            href="/register"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.7, delay: alumni.length * 0.1, ease }}
+            className="bg-[#0D0C0A] p-8 group hover:bg-[#141210] transition-colors duration-300 flex flex-col items-center text-center justify-center"
+          >
+            <div className="w-28 h-28 rounded-full overflow-hidden mb-6 ring-1 ring-[#2A2522] group-hover:ring-[#C4622D] transition-all duration-300 flex items-center justify-center bg-[#141210]">
+              <span className="font-display font-bold text-2xl text-[#C4622D]">?</span>
+            </div>
+
+            <h4 className="font-display font-semibold text-[#F0EBE1] tracking-[-0.01em] mb-1">
+              You're Next
+            </h4>
+            <p className="font-mono text-[9px] text-[#C4622D] tracking-[0.08em] mb-1">
+              Future Alumnus
+            </p>
+            <p className="font-mono text-[9px] text-[#6B6660] tracking-[0.06em] leading-relaxed">
+              Your Story Starts Here
+            </p>
+            <span className="mt-4 font-mono text-[9px] text-[#A39E95] group-hover:text-[#C4622D] tracking-[0.08em] transition-colors duration-200">
+              Enroll Now ↗
+            </span>
+          </motion.a>
         </div>
       </div>
     </section>

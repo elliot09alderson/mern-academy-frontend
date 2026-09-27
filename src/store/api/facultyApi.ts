@@ -28,6 +28,10 @@ export interface Faculty {
     date: string;
   }>;
   officeHours?: string;
+  socialLinks?: {
+    portfolio?: string;
+    linkedin?: string;
+  };
   isActive: boolean;
   createdAt: string;
   updatedAt: string;

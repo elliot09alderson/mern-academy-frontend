@@ -22,7 +22,9 @@ const AddFaculty = () => {
     qualification: '',
     experience: '',
     expertise: '',
-    officeHours: ''
+    officeHours: '',
+    portfolio: '',
+    linkedin: ''
   });
 
   const [facultyImage, setFacultyImage] = useState<File | null>(null);
@@ -82,6 +84,12 @@ const AddFaculty = () => {
       }
       if (formData.officeHours) {
         formDataToSend.append('officeHours', formData.officeHours);
+      }
+      if (formData.portfolio) {
+        formDataToSend.append('portfolio', formData.portfolio);
+      }
+      if (formData.linkedin) {
+        formDataToSend.append('linkedin', formData.linkedin);
       }
 
       await createFaculty(formDataToSend).unwrap();
@@ -278,6 +286,32 @@ const AddFaculty = () => {
                   value={formData.officeHours}
                   onChange={(e) => setFormData({ ...formData, officeHours: e.target.value })}
                 />
+              </div>
+
+              {/* Portfolio & LinkedIn */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label htmlFor="portfolio" className="text-base font-semibold">Portfolio URL</Label>
+                  <Input
+                    id="portfolio"
+                    type="url"
+                    className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                    placeholder="e.g., https://pv.pfolio.tech"
+                    value={formData.portfolio}
+                    onChange={(e) => setFormData({ ...formData, portfolio: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="linkedin" className="text-base font-semibold">LinkedIn URL</Label>
+                  <Input
+                    id="linkedin"
+                    type="url"
+                    className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                    placeholder="e.g., https://linkedin.com/in/username"
+                    value={formData.linkedin}
+                    onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
+                  />
+                </div>
               </div>
 
               {/* Action Buttons */}
