@@ -55,7 +55,7 @@ export const Students = () => {
               >
                 {[
                   { value: `${studentsData.count}+`, label: 'Students Placed' },
-                  { value: '25+',                    label: 'Partner Companies' },
+                  { value: '18+',                    label: 'Partner Companies' },
                   { value: '100%',                   label: 'Placement Rate' },
                   { value: '12 LPA',                 label: 'Avg Package' },
                 ].map((stat) => (

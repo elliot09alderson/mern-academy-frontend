@@ -7,7 +7,7 @@ const ease = [0.16, 1, 0.3, 1] as const;
 
 const stats = [
   { value: "16+",    label: "Placed"      },
-  { value: "25+",    label: "Companies"   },
+  { value: "18+",    label: "Companies"   },
   { value: "6mo",    label: "Program"     },
   { value: "12 LPA", label: "Avg Package" },
 ];
