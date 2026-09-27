@@ -241,13 +241,17 @@ const CourseCard = ({ course, index }: { course: Course; index: number }) => (
               <span className="font-mono text-2xl font-bold text-[#F0EBE1] tracking-[-0.02em]">
                 ₹{course.discountedPrice.toLocaleString("en-IN")}
               </span>
-              <span className="font-mono text-sm text-[#6B6660] line-through">
-                ₹{course.originalPrice.toLocaleString("en-IN")}
-              </span>
+              {course.originalPrice > course.discountedPrice && (
+                <span className="font-mono text-sm text-[#6B6660] line-through">
+                  ₹{course.originalPrice.toLocaleString("en-IN")}
+                </span>
+              )}
             </div>
-            <span className="font-mono text-[10px] text-[#C4622D] border border-[#C4622D]/30 px-2 py-1 tracking-[0.1em]">
-              −{course.discountPercentage}%
-            </span>
+            {course.discountPercentage > 0 && (
+              <span className="font-mono text-[10px] text-[#C4622D] border border-[#C4622D]/30 px-2 py-1 tracking-[0.1em]">
+                −{course.discountPercentage}%
+              </span>
+            )}
           </>
         ) : (
           <span className="font-mono text-sm font-bold text-[#C4622D] tracking-[0.02em]">
