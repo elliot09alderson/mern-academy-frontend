@@ -278,8 +278,9 @@ const CourseCard = ({ course, index }: { course: Course; index: number }) => (
 export const CourseSection = () => {
   const { data: coursesData, isLoading } = useGetActiveCoursesQuery({ limit: 10 });
 
-  const regularCourses = coursesData?.data.filter((c) => c.discountedPrice > 0) ?? [];
-  const flagshipCourses = coursesData?.data.filter((c) => c.discountedPrice === 0) ?? [];
+  const FLAGSHIP_COURSE_CODES = ["CAP-01", "PGP-01"];
+  const regularCourses = coursesData?.data.filter((c) => !FLAGSHIP_COURSE_CODES.includes(c.courseCode)) ?? [];
+  const flagshipCourses = coursesData?.data.filter((c) => FLAGSHIP_COURSE_CODES.includes(c.courseCode)) ?? [];
 
   return (
     <section id="courses" className="py-32 px-6 lg:px-8 bg-[#0D0C0A]">
