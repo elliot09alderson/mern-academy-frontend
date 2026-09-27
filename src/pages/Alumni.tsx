@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { SEO } from "@/components/SEO";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -66,6 +67,11 @@ const alumni = [
 const Alumni = () => {
   return (
     <div className="min-h-screen bg-[#0D0C0A]">
+      <SEO
+        title="Alumni - Placed Students & Success Stories | MERN Academy"
+        description="Meet MERN Academy alumni placed at top tech companies. Real success stories from our placement-oriented MERN stack development program."
+        path="/alumni"
+      />
       <Navigation />
 
       <main className="pt-20">

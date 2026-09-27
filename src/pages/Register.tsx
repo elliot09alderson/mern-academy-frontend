@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { Loader2, Mail, Lock, User, Phone, GraduationCap } from 'lucide-react';
 import { useRegisterMutation } from '@/store/api/authApi';
 import { toast } from 'sonner';
+import { SEO } from '@/components/SEO';
 
 const inputClass =
   'w-full bg-transparent border-b border-[#2A2522] focus:border-[#C4622D] text-[#F0EBE1] placeholder:text-[#6B6660] py-3 text-sm outline-none transition-colors duration-200 font-mono tracking-[0.03em]';
@@ -102,6 +103,12 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-[#0D0C0A] flex items-center justify-center px-6 py-16">
+      <SEO
+        title="Register | MERN Academy"
+        description="Create your MERN Academy student account."
+        path="/register"
+        noindex
+      />
       <div className="w-full max-w-md">
 
         {/* Logo */}

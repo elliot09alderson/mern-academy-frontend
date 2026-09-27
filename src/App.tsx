@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { HelmetProvider } from "react-helmet-async";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { Provider } from "react-redux";
@@ -139,26 +140,28 @@ const AppContent = () => {
 };
 
 const App = () => (
-  <Provider store={store}>
-    <PersistGate
-      loading={
-        <div className="min-h-screen flex items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        </div>
-      }
-      persistor={persistor}
-    >
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme="light" storageKey="mern-academy-theme">
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <AppContent />
-          </TooltipProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </PersistGate>
-  </Provider>
+  <HelmetProvider>
+    <Provider store={store}>
+      <PersistGate
+        loading={
+          <div className="min-h-screen flex items-center justify-center">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          </div>
+        }
+        persistor={persistor}
+      >
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider defaultTheme="light" storageKey="mern-academy-theme">
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <AppContent />
+            </TooltipProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </PersistGate>
+    </Provider>
+  </HelmetProvider>
 );
 
 export default App;

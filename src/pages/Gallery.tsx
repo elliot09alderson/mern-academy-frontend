@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
+import { SEO } from '@/components/SEO';
 import { useGetEventsQuery } from '@/store/api/eventApi';
 import { Loader2, Calendar, MapPin, Users } from 'lucide-react';
 
@@ -89,6 +90,11 @@ export const Gallery = () => {
 
   return (
     <div className="min-h-screen bg-[#0D0C0A]">
+      <SEO
+        title="Gallery - Events, Workshops & Seminars | MERN Academy"
+        description="Explore photos from MERN Academy's academic sessions, workshops, seminars, and campus events at our Bhilai, Chhattisgarh coding institute."
+        path="/gallery"
+      />
       <Navigation />
 
       <main className="pt-20">

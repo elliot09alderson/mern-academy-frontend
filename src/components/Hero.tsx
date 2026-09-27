@@ -80,7 +80,7 @@ export const Hero = () => {
         </motion.div>
 
         {/* Headline — assembles line by line */}
-        <div className="mb-10">
+        <h1 className="mb-10">
           {[
             { text: "The School",      accent: false },
             { text: "For Full-Stack",  accent: true  },
@@ -92,18 +92,18 @@ export const Hero = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.85, delay: 0.5 + i * 0.14, ease }}
               >
-                <h1
-                  className={`font-display font-bold leading-[1.0] tracking-[-0.04em] ${
+                <span
+                  className={`block font-display font-bold leading-[1.0] tracking-[-0.04em] ${
                     line.accent ? "text-[#C4622D]" : "text-[#F0EBE1]"
                   }`}
                   style={{ fontSize: "clamp(3rem, 9.5vw, 8.5rem)" }}
                 >
                   {line.text}
-                </h1>
+                </span>
               </motion.div>
             </div>
           ))}
-        </div>
+        </h1>
 
         {/* Subheading */}
         <motion.p

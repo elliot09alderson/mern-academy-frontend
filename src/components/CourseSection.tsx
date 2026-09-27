@@ -26,6 +26,15 @@ const curriculum = [
     ],
   },
   {
+    id: "dsa",
+    category: "Data Structures & Algorithms",
+    count: 6,
+    topics: [
+      "Arrays & Hashing", "Two Pointers & Sliding Window", "Stacks & Queues",
+      "Binary Search & Trees", "Heaps & Graphs", "Tries, DP & Backtracking",
+    ],
+  },
+  {
     id: "mobile",
     category: "Mobile & Automation",
     count: 6,
@@ -39,7 +48,7 @@ const curriculum = [
     category: "System Design",
     count: 6,
     topics: [
-      "Distributed System Design", "Microservices", "DSA & Problem Solving",
+      "Distributed System Design", "Microservices", "Load Balancing & Caching",
       "System Design Interviews", "Cloud Deployment", "Docker & CI/CD",
     ],
   },

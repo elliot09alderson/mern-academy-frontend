@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
+import { SEO } from '@/components/SEO';
 import {
   MapPin, Phone, Mail, Clock, Wifi, Car, Coffee, Users,
   Monitor, BookOpen, Shield, Navigation as NavigationIcon,
@@ -51,6 +52,11 @@ export const Branches = () => {
 
   return (
     <div className="min-h-screen bg-[#0D0C0A]">
+      <SEO
+        title="Our Branches | MERN Academy"
+        description="Find MERN Academy branch locations offering placement-oriented MERN stack development, DSA, and System Design training."
+        path="/branches"
+      />
       <Navigation />
 
       <main className="pt-20">

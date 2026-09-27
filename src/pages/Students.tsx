@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
+import { SEO } from '@/components/SEO';
 import { Loader2, Award, Briefcase, Building2, Code2 } from 'lucide-react';
 import { useGetOutstandingStudentsQuery } from '@/store/api/outstandingStudentApi';
 
@@ -12,6 +13,11 @@ export const Students = () => {
 
   return (
     <div className="min-h-screen bg-[#0D0C0A]">
+      <SEO
+        title="Outstanding Students | MERN Academy"
+        description="Meet the top-performing students of MERN Academy's placement-oriented MERN stack development program in Bhilai, Chhattisgarh."
+        path="/students"
+      />
       <Navigation />
 
       <main className="pt-20">
