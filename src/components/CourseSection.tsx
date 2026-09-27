@@ -188,7 +188,10 @@ const WhatWeTeach = () => {
   );
 };
 
-const CourseCard = ({ course, index }: { course: Course; index: number }) => (
+const CourseCard = ({ course, index }: { course: Course; index: number }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
   <motion.div
     initial={{ opacity: 0 }}
     whileInView={{ opacity: 1 }}
@@ -217,9 +220,19 @@ const CourseCard = ({ course, index }: { course: Course; index: number }) => (
       {course.courseName}
     </h3>
 
-    <p className="text-[#6B6660] text-sm leading-relaxed mb-6 flex-grow line-clamp-3">
+    <p className={`text-[#6B6660] text-sm leading-relaxed mb-2 flex-grow ${expanded ? "" : "line-clamp-3"}`}>
       {course.description}
     </p>
+
+    {course.description.length > 150 && (
+      <button
+        type="button"
+        onClick={() => setExpanded((prev) => !prev)}
+        className="self-start font-mono text-[10px] text-[#C4622D] hover:text-[#D4723D] tracking-[0.1em] uppercase mb-4 transition-colors duration-200"
+      >
+        {expanded ? "Read Less" : "Read More"}
+      </button>
+    )}
 
     <div className="flex items-center gap-5 font-mono text-[10px] text-[#6B6660] tracking-[0.1em] mb-6">
       <span className="flex items-center gap-1.5 uppercase">
@@ -273,7 +286,8 @@ const CourseCard = ({ course, index }: { course: Course; index: number }) => (
       </button>
     </div>
   </motion.div>
-);
+  );
+};
 
 export const CourseSection = () => {
   const { data: coursesData, isLoading } = useGetActiveCoursesQuery({ limit: 10 });
