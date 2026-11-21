@@ -1,10 +1,24 @@
 import { useRef, useState } from "react";
+import type { ComponentType } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { getLenis } from "@/components/SmoothScroll";
-import { ArrowRight, Clock, Users, Loader2 } from "lucide-react";
+import {
+  ArrowRight, Clock, Users, Loader2,
+  Bot, Mic, Workflow, Sparkles, GitBranch, Search, Link2, Share2, Eye, Hammer, Database,
+  Layers, Hash, MoveHorizontal, Network, GitCommit, Zap, Globe, Wand2, Gauge, Cloud,
+  FileText, UserCircle, Briefcase, Handshake, MessagesSquare, ClipboardCheck, Rocket,
+  Boxes, Webhook, Linkedin,
+} from "lucide-react";
+import {
+  SiReact, SiNodedotjs, SiMongodb, SiTypescript, SiAndroid, SiApple, SiDocker, SiOllama,
+} from "react-icons/si";
 import { useGetActiveCoursesQuery, type Course } from "@/store/api/courseApi";
 
+type IconType = ComponentType<{ className?: string }>;
+
 const ease = [0.16, 1, 0.3, 1] as const;
+
+const t = (name: string, Icon: IconType) => ({ name, Icon });
 
 const curriculum = [
   {
@@ -12,9 +26,9 @@ const curriculum = [
     category: "AI & Agents",
     count: 12,
     topics: [
-      "Agentic AI", "Voice Agents", "Agentic Solutions", "Gen AI",
-      "LLM Pipeline", "RAG", "LangChain", "LangGraph",
-      "LangFuse", "LangSmith", "Vector DB", "OLLAMA",
+      t("Agentic AI", Bot), t("Voice Agents", Mic), t("Agentic Solutions", Workflow), t("Gen AI", Sparkles),
+      t("LLM Pipeline", GitBranch), t("RAG", Search), t("LangChain", Link2), t("LangGraph", Share2),
+      t("LangFuse", Eye), t("LangSmith", Hammer), t("Vector DB", Database), t("OLLAMA", SiOllama),
     ],
   },
   {
@@ -22,8 +36,8 @@ const curriculum = [
     category: "Full Stack Dev",
     count: 6,
     topics: [
-      "MERN Stack", "React & Next.js", "Node.js & Express",
-      "MongoDB & SQL", "TypeScript", "REST APIs",
+      t("MERN Stack", Layers), t("React & Next.js", SiReact), t("Node.js & Express", SiNodedotjs),
+      t("MongoDB & SQL", SiMongodb), t("TypeScript", SiTypescript), t("REST APIs", Webhook),
     ],
   },
   {
@@ -31,8 +45,8 @@ const curriculum = [
     category: "Data Structures & Algorithms",
     count: 6,
     topics: [
-      "Arrays & Hashing", "Two Pointers & Sliding Window", "Stacks & Queues",
-      "Binary Search & Trees", "Heaps & Graphs", "Tries, DP & Backtracking",
+      t("Arrays & Hashing", Hash), t("Two Pointers & Sliding Window", MoveHorizontal), t("Stacks & Queues", Layers),
+      t("Binary Search & Trees", Network), t("Heaps & Graphs", Share2), t("Tries, DP & Backtracking", GitCommit),
     ],
     practiceUrl: "https://dsa-tracker-sable-nu.vercel.app/",
   },
@@ -41,8 +55,8 @@ const curriculum = [
     category: "Mobile & Automation",
     count: 6,
     topics: [
-      "Android App Dev (AI)", "iOS App Dev (AI)", "Workflow Automation",
-      "n8n · Make · Zapier", "Web Scraping", "AI-Powered Tools",
+      t("Android App Dev (AI)", SiAndroid), t("iOS App Dev (AI)", SiApple), t("Workflow Automation", Workflow),
+      t("n8n · Make · Zapier", Zap), t("Web Scraping", Globe), t("AI-Powered Tools", Wand2),
     ],
   },
   {
@@ -50,8 +64,8 @@ const curriculum = [
     category: "System Design",
     count: 6,
     topics: [
-      "Distributed System Design", "Microservices", "Load Balancing & Caching",
-      "System Design Interviews", "Cloud Deployment", "Docker & CI/CD",
+      t("Distributed System Design", Network), t("Microservices", Boxes), t("Load Balancing & Caching", Gauge),
+      t("System Design Interviews", MessagesSquare), t("Cloud Deployment", Cloud), t("Docker & CI/CD", SiDocker),
     ],
   },
   {
@@ -59,8 +73,8 @@ const curriculum = [
     category: "Marketing & Growth",
     count: 6,
     topics: [
-      "Social Media Marketing", "Content Strategy", "Personal Branding",
-      "LinkedIn Growth", "Freelancing", "Client Acquisition",
+      t("Social Media Marketing", Share2), t("Content Strategy", FileText), t("Personal Branding", UserCircle),
+      t("LinkedIn Growth", Linkedin), t("Freelancing", Briefcase), t("Client Acquisition", Handshake),
     ],
   },
   {
@@ -68,8 +82,8 @@ const curriculum = [
     category: "Soft Skills & Career",
     count: 6,
     topics: [
-      "Communication Skills", "Interview Preparation", "Resume Building",
-      "Placement Support", "Industry Mentorship", "Live Client Projects",
+      t("Communication Skills", MessagesSquare), t("Interview Preparation", ClipboardCheck), t("Resume Building", FileText),
+      t("Placement Support", Briefcase), t("Industry Mentorship", UserCircle), t("Live Client Projects", Rocket),
     ],
   },
 ];
@@ -206,17 +220,17 @@ const WhatWeTeach = () => {
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-                {selected.topics.map((topic, i) => (
+                {selected.topics.map(({ name, Icon }, i) => (
                   <motion.div
-                    key={topic}
+                    key={name}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2, delay: i * 0.04 }}
                     className="flex items-center gap-3 p-4 border border-[#2A2522] hover:border-[#C4622D]/40 hover:bg-[#141210] group transition-all duration-200 cursor-default"
                   >
-                    <div className="w-1.5 h-1.5 bg-[#C4622D] flex-shrink-0 opacity-50 group-hover:opacity-100 transition-opacity duration-200" />
+                    <Icon className="h-4 w-4 text-[#C4622D] flex-shrink-0 opacity-70 group-hover:opacity-100 transition-opacity duration-200" />
                     <span className="text-[#A39E95] group-hover:text-[#F0EBE1] text-sm font-sans leading-tight transition-colors duration-200">
-                      {topic}
+                      {name}
                     </span>
                   </motion.div>
                 ))}
