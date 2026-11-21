@@ -53,14 +53,15 @@ export const NewsletterSection = () => {
   return (
     <section id="course-info" className="py-32 px-6 lg:px-8 bg-[#141210]">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-28">
+        <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-2 gap-16 lg:gap-x-28 lg:gap-y-10">
 
-          {/* Left — copy */}
+          {/* Intro copy — first on mobile and desktop */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease }}
+            className="order-1 lg:order-none lg:col-start-1 lg:row-start-1"
           >
             <span className="font-mono text-[10px] tracking-[0.3em] text-[#C4622D] uppercase block mb-6">
               Inquire
@@ -71,33 +72,19 @@ export const NewsletterSection = () => {
             >
               Get Course<br />Information
             </h2>
-            <p className="text-[#6B6660] text-sm leading-relaxed mb-12">
+            <p className="text-[#6B6660] text-sm leading-relaxed">
               Share your details and we'll get back to you with everything you
               need to know about our placement-oriented programs.
             </p>
-
-            <div className="border-t border-[#2A2522] pt-10 space-y-5">
-              {[
-                { label: "Email",    value: "info@mernacademy.com" },
-                { label: "Phone",    value: "+91 8770800807"       },
-                { label: "Location", value: "Bhilai · Bangalore · Hyderabad · Online" },
-              ].map((item) => (
-                <div key={item.label} className="flex items-center gap-8">
-                  <span className="font-mono text-[9px] text-[#6B6660] tracking-[0.2em] uppercase w-20 flex-shrink-0">
-                    {item.label}
-                  </span>
-                  <span className="text-[#A39E95] text-sm">{item.value}</span>
-                </div>
-              ))}
-            </div>
           </motion.div>
 
-          {/* Right — form */}
+          {/* Form — second on mobile, right column on desktop */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, delay: 0.1, ease }}
+            className="order-2 lg:order-none lg:col-start-2 lg:row-start-1 lg:row-span-2"
           >
             <form onSubmit={handleSubmit} className="space-y-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
@@ -173,6 +160,28 @@ export const NewsletterSection = () => {
                 We respect your privacy. Unsubscribe anytime.
               </p>
             </form>
+          </motion.div>
+
+          {/* Contact info — after the form on mobile, back under the intro on desktop */}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease }}
+            className="order-3 lg:order-none lg:col-start-1 lg:row-start-2 border-t border-[#2A2522] pt-10 space-y-5 self-start"
+          >
+            {[
+              { label: "Email",    value: "info@mernacademy.com" },
+              { label: "Phone",    value: "+91 8770800807"       },
+              { label: "Location", value: "Bhilai · Bangalore · Hyderabad · Online" },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center gap-8">
+                <span className="font-mono text-[9px] text-[#6B6660] tracking-[0.2em] uppercase w-20 flex-shrink-0">
+                  {item.label}
+                </span>
+                <span className="text-[#A39E95] text-sm">{item.value}</span>
+              </div>
+            ))}
           </motion.div>
         </div>
       </div>
