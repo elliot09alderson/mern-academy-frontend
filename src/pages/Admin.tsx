@@ -1198,7 +1198,7 @@ const Admin = () => {
                       </TableRow>
                     ) : studentsData?.data && studentsData.data.length > 0 ? (
                       studentsData.data.map((student) => (
-                        <TableRow key={student._id} className="hover:bg-emerald-50/50 dark:hover:bg-emerald-950/50">
+                        <TableRow key={student._id} className="hover:bg-emerald-500/10/50 dark:hover:bg-emerald-950/50">
                           <TableCell className="font-medium">{student.userId?.name || 'N/A'}</TableCell>
                           <TableCell>{student.userId?.branchId || 'N/A'}</TableCell>
                           <TableCell>{student.currentSemester ? `Semester ${student.currentSemester}` : 'N/A'}</TableCell>
@@ -1883,7 +1883,7 @@ const Admin = () => {
                               size="sm"
                               variant="outline"
                               onClick={() => handleToggleStudentStatus(student._id)}
-                              className={`glass-card ${student.isActive ? 'text-green-600 hover:bg-green-50' : 'text-muted-foreground'}`}
+                              className={`glass-card ${student.isActive ? 'text-green-600 hover:bg-green-500/10' : 'text-muted-foreground'}`}
                             >
                               {student.isActive ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
                             </Button>
@@ -1891,7 +1891,7 @@ const Admin = () => {
                               size="sm"
                               variant="outline"
                               onClick={() => handleDeleteStudent(student._id)}
-                              className="glass-card text-red-500 hover:bg-red-50 hover:text-red-600"
+                              className="glass-card text-red-500 hover:bg-red-500/10 hover:text-red-600"
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>

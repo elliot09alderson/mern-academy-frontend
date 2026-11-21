@@ -130,7 +130,7 @@ const Offers = () => {
                 <div className="flex items-center gap-2 flex-shrink-0">
                   {editingId === offer._id ? (
                     <>
-                      <button onClick={() => handleUpdate(offer._id)} className="p-1.5 text-green-600 hover:bg-green-50 rounded transition-colors">
+                      <button onClick={() => handleUpdate(offer._id)} className="p-1.5 text-green-600 hover:bg-green-500/10 rounded transition-colors">
                         <Check className="h-4 w-4" />
                       </button>
                       <button onClick={() => setEditingId(null)} className="p-1.5 text-muted-foreground hover:bg-background rounded transition-colors">
@@ -141,7 +141,7 @@ const Offers = () => {
                     <>
                       <button
                         onClick={() => handleToggle(offer._id)}
-                        className={`p-1.5 rounded transition-colors ${offer.isActive ? 'text-orange-500 hover:bg-orange-50' : 'text-muted-foreground hover:bg-background'}`}
+                        className={`p-1.5 rounded transition-colors ${offer.isActive ? 'text-orange-500 hover:bg-primary/10' : 'text-muted-foreground hover:bg-background'}`}
                         title={offer.isActive ? 'Deactivate' : 'Activate'}
                       >
                         {offer.isActive ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
@@ -154,7 +154,7 @@ const Offers = () => {
                       </button>
                       <button
                         onClick={() => handleDelete(offer._id)}
-                        className="p-1.5 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                        className="p-1.5 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

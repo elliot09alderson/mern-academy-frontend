@@ -599,7 +599,7 @@ const EditBranch = () => {
                     return (
                       <div
                         key={facility}
-                        className="flex items-center space-x-2 p-3 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-colors"
+                        className="flex items-center space-x-2 p-3 rounded-lg hover:bg-emerald-500/10 dark:hover:bg-emerald-950/20 transition-colors"
                       >
                         <Checkbox
                           id={facility}

@@ -116,7 +116,7 @@ const AddEvent = () => {
           <Button
             variant="ghost"
             onClick={() => navigate('/admin')}
-            className="mb-4 hover:bg-orange-50"
+            className="mb-4 hover:bg-primary/10"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Admin
