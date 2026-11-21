@@ -216,19 +216,35 @@ export const Hero = () => {
           </a>
         </motion.div>
 
-        {/* Tech stack line */}
+        {/* Tech stack line — scrolling ticker */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.65, ease }}
-          className="mt-16 pt-10 border-t border-[#2A2522]"
+          className="mt-16 pt-10 border-t border-[#2A2522] flex items-center gap-5"
         >
-          <span className="font-mono text-[10px] tracking-[0.22em] text-[#6B6660] uppercase">
-            Technologies —{" "}
+          <span className="font-mono text-[10px] tracking-[0.22em] text-[#6B6660] uppercase flex-shrink-0">
+            Technologies
           </span>
-          <span className="font-mono text-[10px] text-[#A39E95] tracking-[0.06em]">
-            {techs.join(" · ")}
-          </span>
+          <div
+            className="relative flex-1 overflow-hidden"
+            style={{
+              maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+              WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+            }}
+          >
+            <div
+              className="flex items-center whitespace-nowrap"
+              style={{ animation: "marquee 36s linear infinite", width: "max-content" }}
+            >
+              {[...techs, ...techs].map((tech, i) => (
+                <span key={i} className="font-mono text-[10px] text-[#A39E95] tracking-[0.06em] flex items-center">
+                  {tech}
+                  <span className="text-[#C4622D] mx-4">·</span>
+                </span>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </div>
 
