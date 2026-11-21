@@ -72,6 +72,20 @@ export const Footer = () => {
                 Arya Nagar, Kohka, Bhilai, Chhattisgarh (CG) – 490023<br />Near Soni Palace, IIT Bhilai Road
               </a>
               <a
+                href="https://maps.app.goo.gl/YfA5E7kazMCyJdnY7"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full h-32 border border-[#2A2522] hover:border-[#C4622D]/40 overflow-hidden transition-colors duration-200"
+              >
+                <iframe
+                  title="MERN Academy location"
+                  src="https://maps.google.com/maps?q=Arya%20Nagar%2C%20Kohka%2C%20Bhilai%2C%20Chhattisgarh%20490023%2C%20near%20Soni%20Palace%2C%20IIT%20Bhilai%20Road&t=&z=15&output=embed"
+                  className="w-full h-full grayscale contrast-125 opacity-80 hover:opacity-100 pointer-events-none transition-opacity duration-200"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </a>
+              <a
                 href="tel:+918770800807"
                 className="text-[#A39E95] hover:text-[#F0EBE1] text-sm flex items-center gap-2.5 transition-colors duration-200"
               >
