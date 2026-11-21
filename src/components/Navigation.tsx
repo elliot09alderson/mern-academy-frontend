@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, AlertTriangle } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, AlertTriangle, PhoneCall } from 'lucide-react';
 import AuthButton from './AuthButton';
 import { useGetOffersQuery } from '@/store/api/offerApi';
 
@@ -8,6 +8,19 @@ export const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const goToContact = () => {
+    setIsMenuOpen(false);
+    if (pathname === '/') {
+      document.getElementById('course-info')?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/');
+      setTimeout(() => {
+        document.getElementById('course-info')?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+  };
   const { data: offersData } = useGetOffersQuery({ isActive: true });
   const offers = offersData?.data ?? [];
   // Duplicate for seamless loop
@@ -74,6 +87,13 @@ export const Navigation = () => {
 
             {/* Desktop Auth */}
             <div className="hidden md:flex items-center gap-3">
+              <button
+                onClick={goToContact}
+                className="cta-glow flex items-center gap-2 bg-[#C4622D] hover:bg-[#D4723D] text-[#F0EBE1] px-5 py-2.5 text-xs font-display font-semibold tracking-[0.08em] uppercase transition-colors duration-200"
+              >
+                <PhoneCall className="h-3.5 w-3.5" />
+                Contact Now
+              </button>
               <AuthButton />
             </div>
 
@@ -110,6 +130,13 @@ export const Navigation = () => {
                   </Link>
                 );
               })}
+              <button
+                onClick={goToContact}
+                className="cta-glow w-full flex items-center justify-center gap-2 bg-[#C4622D] hover:bg-[#D4723D] text-[#F0EBE1] px-5 py-3 text-xs font-display font-semibold tracking-[0.08em] uppercase transition-colors duration-200"
+              >
+                <PhoneCall className="h-3.5 w-3.5" />
+                Contact Now
+              </button>
               <div className="pt-4 border-t border-[#2A2522]">
                 <AuthButton />
               </div>

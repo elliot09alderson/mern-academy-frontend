@@ -3,6 +3,13 @@
 import { ReactNode, useEffect } from 'react';
 import Lenis from 'lenis';
 
+// Other components (e.g. a pinned scroll section that needs to jump the
+// user out programmatically) need the live instance to drive scroll
+// through Lenis itself — calling window.scrollTo directly fights its RAF
+// loop and gets overwritten on the next frame.
+let lenisInstance: Lenis | null = null;
+export const getLenis = () => lenisInstance;
+
 export const SmoothScroll = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const lenis = new Lenis({
@@ -12,6 +19,7 @@ export const SmoothScroll = ({ children }: { children: ReactNode }) => {
       smoothTouch: false,
       touchMultiplier: 2,
     });
+    lenisInstance = lenis;
 
     function raf(time: number) {
       lenis.raf(time);
@@ -23,6 +31,7 @@ export const SmoothScroll = ({ children }: { children: ReactNode }) => {
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      lenisInstance = null;
     };
   }, []);
 

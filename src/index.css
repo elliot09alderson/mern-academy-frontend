@@ -196,6 +196,15 @@ body:has(a:hover, button:hover, .cursor-pointer:hover) .cursor-outline {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes cta-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(196, 98, 45, 0.55); }
+  50%      { box-shadow: 0 0 0 7px rgba(196, 98, 45, 0); }
+}
+
+.cta-glow {
+  animation: cta-glow 2s ease-out infinite;
+}
+
 @keyframes accordion-down {
   from { height: 0; }
   to   { height: var(--radix-accordion-content-height); }

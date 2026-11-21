@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { getLenis } from "@/components/SmoothScroll";
 import { ArrowRight, Clock, Users, Loader2 } from "lucide-react";
 import { useGetActiveCoursesQuery, type Course } from "@/store/api/courseApi";
 
@@ -87,7 +88,36 @@ const WhatWeTeach = () => {
     offset: ["start start", "end end"],
   });
 
+  const lastYRef = useRef(0);
+  const jumpingRef = useRef(false);
+
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
+    if (jumpingRef.current) return;
+
+    const currentY = window.scrollY;
+    const scrollingUp = currentY < lastYRef.current;
+    lastYRef.current = currentY;
+
+    // Re-entering from below (coming back up after having scrolled past
+    // the whole thing): don't make the user replay every category in
+    // reverse — drop them right above the section and continue.
+    if (scrollingUp && progress > 0.92) {
+      jumpingRef.current = true;
+      const top = wrapperRef.current!.getBoundingClientRect().top + window.scrollY;
+      const lenis = getLenis();
+      if (lenis) {
+        lenis.scrollTo(top, { immediate: true });
+      } else {
+        window.scrollTo(0, top);
+      }
+      setActive(curriculum[0].id);
+      lastYRef.current = top;
+      requestAnimationFrame(() => {
+        jumpingRef.current = false;
+      });
+      return;
+    }
+
     const index = Math.min(
       curriculum.length - 1,
       Math.max(0, Math.floor(progress * curriculum.length))
