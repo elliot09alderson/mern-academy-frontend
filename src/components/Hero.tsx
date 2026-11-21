@@ -1,21 +1,36 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Download, Phone } from "lucide-react";
-import { SiReact, SiNodedotjs, SiMongodb, SiExpress, SiTypescript } from "react-icons/si";
+import { ArrowRight, Download, Phone, Brain, Binary, Database } from "lucide-react";
+import {
+  SiReact, SiNodedotjs, SiMongodb, SiExpress, SiTypescript, SiGsap, SiPython,
+  SiPostgresql, SiMysql, SiNextdotjs, SiNestjs, SiApple, SiAndroid,
+} from "react-icons/si";
 import { CurriculumBubbleMenu } from "./CurriculumBubbleMenu";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
 // Scattered, low-opacity tech marks that drift and slowly spin behind the
 // hero copy — decorative only, kept faint enough not to fight the text.
+// Biased toward the right ~50-98% strip, which stays clear of the headline.
 const floatingLogos = [
-  { Icon: SiReact,      top: "14%", left: "72%",  size: 64, float: 7,  spin: 26 },
-  { Icon: SiNodedotjs,  top: "62%", left: "80%",  size: 52, float: 9,  spin: -34 },
-  { Icon: SiTypescript, top: "8%",  left: "90%",  size: 44, float: 6,  spin: 20 },
-  { Icon: SiMongodb,    top: "78%", left: "64%",  size: 48, float: 8,  spin: -22 },
-  { Icon: SiExpress,    top: "40%", left: "92%",  size: 40, float: 10, spin: 30 },
-  { Icon: SiReact,      top: "88%", left: "88%",  size: 32, float: 5,  spin: -18 },
-  { Icon: SiNodedotjs,  top: "30%", left: "62%",  size: 28, float: 6,  spin: 24 },
+  { Icon: SiReact,       top: "14%", left: "72%", size: 64, float: 7,  spin: 26 },
+  { Icon: SiNodedotjs,   top: "62%", left: "80%", size: 52, float: 9,  spin: -34 },
+  { Icon: SiTypescript,  top: "8%",  left: "90%", size: 44, float: 6,  spin: 20 },
+  { Icon: SiMongodb,     top: "78%", left: "64%", size: 48, float: 8,  spin: -22 },
+  { Icon: SiExpress,     top: "40%", left: "92%", size: 40, float: 10, spin: 30 },
+  { Icon: SiReact,       top: "88%", left: "88%", size: 32, float: 5,  spin: -18 },
+  { Icon: SiNodedotjs,   top: "30%", left: "62%", size: 28, float: 6,  spin: 24 },
+  { Icon: SiGsap,        top: "3%",  left: "55%", size: 34, float: 7,  spin: 22 },
+  { Icon: SiPython,      top: "95%", left: "55%", size: 38, float: 8,  spin: -28 },
+  { Icon: Brain,         top: "50%", left: "96%", size: 36, float: 7,  spin: 18 },
+  { Icon: Binary,        top: "5%",  left: "75%", size: 28, float: 9,  spin: -24 },
+  { Icon: Database,      top: "92%", left: "92%", size: 30, float: 6,  spin: 20 },
+  { Icon: SiPostgresql,  top: "70%", left: "98%", size: 32, float: 8,  spin: -30 },
+  { Icon: SiMysql,       top: "22%", left: "97%", size: 30, float: 7,  spin: 26 },
+  { Icon: SiNextdotjs,   top: "95%", left: "78%", size: 40, float: 9,  spin: -20 },
+  { Icon: SiNestjs,      top: "35%", left: "55%", size: 32, float: 6,  spin: 24 },
+  { Icon: SiApple,       top: "10%", left: "58%", size: 26, float: 8,  spin: -22 },
+  { Icon: SiAndroid,     top: "60%", left: "52%", size: 30, float: 7,  spin: 20 },
 ];
 
 const stats = [
