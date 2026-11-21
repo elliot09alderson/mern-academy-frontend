@@ -256,10 +256,13 @@ export const Branches = () => {
                           Get Directions
                         </a>
                         {branch.contactInfo?.phone && (
-                          <button className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#C4622D] border border-[#C4622D]/40 hover:border-[#C4622D] px-6 py-3 transition-colors duration-200 flex items-center gap-2">
+                          <a
+                            href="tel:+918770800807"
+                            className="font-mono text-[10px] tracking-[0.15em] uppercase text-[#C4622D] border border-[#C4622D]/40 hover:border-[#C4622D] px-6 py-3 transition-colors duration-200 flex items-center gap-2"
+                          >
                             <Phone className="h-3.5 w-3.5" />
                             Contact Branch
-                          </button>
+                          </a>
                         )}
                       </div>
                     </div>

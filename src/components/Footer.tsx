@@ -62,10 +62,15 @@ export const Footer = () => {
               Contact
             </p>
             <div className="space-y-4">
-              <p className="text-[#A39E95] text-sm flex items-start gap-2.5">
+              <a
+                href="https://maps.app.goo.gl/YfA5E7kazMCyJdnY7"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#A39E95] hover:text-[#F0EBE1] text-sm flex items-start gap-2.5 transition-colors duration-200"
+              >
                 <MapPin className="h-4 w-4 text-[#C4622D] flex-shrink-0 mt-0.5" />
                 Arya Nagar, Kohka, Bhilai, Chhattisgarh (CG) – 490023<br />Near Soni Palace, IIT Bhilai Road
-              </p>
+              </a>
               <a
                 href="tel:+918770800807"
                 className="text-[#A39E95] hover:text-[#F0EBE1] text-sm flex items-center gap-2.5 transition-colors duration-200"
