@@ -1,9 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Download, Phone } from "lucide-react";
+import { SiReact, SiNodedotjs, SiMongodb, SiExpress, SiTypescript } from "react-icons/si";
 import { CurriculumBubbleMenu } from "./CurriculumBubbleMenu";
 
 const ease = [0.16, 1, 0.3, 1] as const;
+
+// Scattered, low-opacity tech marks that drift and slowly spin behind the
+// hero copy — decorative only, kept faint enough not to fight the text.
+const floatingLogos = [
+  { Icon: SiReact,      top: "14%", left: "72%",  size: 64, float: 7,  spin: 26 },
+  { Icon: SiNodedotjs,  top: "62%", left: "80%",  size: 52, float: 9,  spin: -34 },
+  { Icon: SiTypescript, top: "8%",  left: "90%",  size: 44, float: 6,  spin: 20 },
+  { Icon: SiMongodb,    top: "78%", left: "64%",  size: 48, float: 8,  spin: -22 },
+  { Icon: SiExpress,    top: "40%", left: "92%",  size: 40, float: 10, spin: 30 },
+  { Icon: SiReact,      top: "88%", left: "88%",  size: 32, float: 5,  spin: -18 },
+  { Icon: SiNodedotjs,  top: "30%", left: "62%",  size: 28, float: 6,  spin: 24 },
+];
 
 const stats = [
   { value: "19+",    label: "Placed"      },
@@ -65,6 +78,26 @@ export const Hero = () => {
           backgroundSize: "160px 160px",
         }}
       />
+
+      {/* Floating tech logos */}
+      <div className="absolute inset-0 pointer-events-none z-20 hidden md:block overflow-hidden">
+        {floatingLogos.map(({ Icon, top, left, size, float, spin }, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-[#C4622D]"
+            style={{ top, left, opacity: 0.14 }}
+            animate={{ y: [0, -float * 3, 0] }}
+            transition={{ duration: float, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <motion.div
+              animate={{ rotate: [0, spin > 0 ? 360 : -360] }}
+              transition={{ duration: Math.abs(spin), repeat: Infinity, ease: "linear" }}
+            >
+              <Icon style={{ width: size, height: size }} />
+            </motion.div>
+          </motion.div>
+        ))}
+      </div>
 
       <div className="relative z-30 max-w-7xl mx-auto px-6 lg:px-8 w-full py-20">
         {/* Eyebrow */}
