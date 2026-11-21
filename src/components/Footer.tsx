@@ -64,7 +64,7 @@ export const Footer = () => {
             <div className="space-y-4">
               <p className="text-[#A39E95] text-sm flex items-start gap-2.5">
                 <MapPin className="h-4 w-4 text-[#C4622D] flex-shrink-0 mt-0.5" />
-                Bhilai (CG), Chhattisgarh 490023<br />Near IIT Bhilai
+                Arya Nagar, Kohka, Bhilai, Chhattisgarh (CG) – 490023<br />Near Soni Palace, IIT Bhilai Road
               </p>
               <a
                 href="tel:+918770800807"
@@ -72,6 +72,13 @@ export const Footer = () => {
               >
                 <Phone className="h-4 w-4 text-[#C4622D] flex-shrink-0" />
                 +91 8770800807
+              </a>
+              <a
+                href="tel:+919200732962"
+                className="text-[#A39E95] hover:text-[#F0EBE1] text-sm flex items-center gap-2.5 transition-colors duration-200"
+              >
+                <Phone className="h-4 w-4 text-[#C4622D] flex-shrink-0" />
+                +91 9200732962
               </a>
               <a
                 href="https://wa.me/918770800807"
@@ -84,10 +91,13 @@ export const Footer = () => {
                 </svg>
                 WhatsApp Us
               </a>
-              <p className="text-[#A39E95] text-sm flex items-center gap-2.5">
+              <a
+                href="mailto:info@mernacademy.com"
+                className="text-[#A39E95] hover:text-[#F0EBE1] text-sm flex items-center gap-2.5 transition-colors duration-200"
+              >
                 <Mail className="h-4 w-4 text-[#C4622D] flex-shrink-0" />
                 info@mernacademy.com
-              </p>
+              </a>
             </div>
           </div>
         </div>
@@ -95,7 +105,7 @@ export const Footer = () => {
         {/* Bottom bar */}
         <div className="border-t border-[#2A2522] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-mono text-[10px] text-[#6B6660] tracking-[0.08em]">
-            © 2024 MERN Academy. All rights reserved.
+            © 2027 MERN Academy. All rights reserved.
           </p>
           <div className="flex gap-6">
             {legalLinks.map((link) => (

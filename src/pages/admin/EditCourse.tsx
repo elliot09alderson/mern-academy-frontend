@@ -204,7 +204,7 @@ const EditCourse = () => {
       <>
         <Navigation />
         <div className="min-h-screen bg-background pt-[64px] md:pt-[80px] flex items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-violet-600" />
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
         </div>
       </>
     );
@@ -216,8 +216,8 @@ const EditCourse = () => {
         <Navigation />
         <div className="min-h-screen bg-background pt-[64px] md:pt-[80px] flex items-center justify-center">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Course Not Found</h2>
-            <p className="text-gray-600 mb-4">The course you're looking for doesn't exist.</p>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Course Not Found</h2>
+            <p className="text-muted-foreground mb-4">The course you're looking for doesn't exist.</p>
             <Button onClick={() => navigate('/admin/courses')}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Courses
@@ -243,7 +243,7 @@ const EditCourse = () => {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Courses
             </Button>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold">
               Edit Course
             </h1>
             <p className="text-muted-foreground mt-2">Update course details and information</p>
@@ -253,7 +253,7 @@ const EditCourse = () => {
             {/* Course Status */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Course Status
                 </CardTitle>
               </CardHeader>
@@ -274,13 +274,13 @@ const EditCourse = () => {
             {/* Course Banner Image */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Course Banner Image
                 </CardTitle>
                 <CardDescription>Upload a banner image for the course (Recommended: 1200x600px)</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="border-2 border-dashed border-violet-300 rounded-lg p-8 glass-card hover:border-violet-400 transition-colors">
+                <div className="border-2 border-dashed border-primary rounded-lg p-8 glass-card hover:border-primary transition-colors">
                   {bannerPreview || existingBanner ? (
                     <div className="relative">
                       <img
@@ -312,7 +312,7 @@ const EditCourse = () => {
                         htmlFor="bannerImage"
                         className="flex flex-col items-center justify-center cursor-pointer"
                       >
-                        <ImageIcon className="h-16 w-16 text-violet-500 mb-4" />
+                        <ImageIcon className="h-16 w-16 text-primary mb-4" />
                         <p className="text-lg font-medium text-foreground mb-2">
                           Click to upload course banner
                         </p>
@@ -329,7 +329,7 @@ const EditCourse = () => {
             {/* Basic Information */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Basic Information
                 </CardTitle>
               </CardHeader>
@@ -344,7 +344,7 @@ const EditCourse = () => {
                       onChange={handleInputChange}
                       placeholder="e.g., Full Stack MERN Development"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
                   <div>
@@ -356,7 +356,7 @@ const EditCourse = () => {
                       onChange={handleInputChange}
                       placeholder="e.g., MERN101"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
                 </div>
@@ -371,7 +371,7 @@ const EditCourse = () => {
                     placeholder="Complete MERN stack development with React, Node.js, MongoDB, and Express"
                     required
                     rows={3}
-                    className="glass-card border-violet-200"
+                    className="glass-card border-primary"
                   />
                 </div>
 
@@ -385,7 +385,7 @@ const EditCourse = () => {
                       onChange={handleInputChange}
                       placeholder="e.g., 6 months"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
                   <div>
@@ -394,7 +394,7 @@ const EditCourse = () => {
                       value={formData.branchId}
                       onValueChange={(value) => handleSelectChange('branchId', value)}
                     >
-                      <SelectTrigger className="glass-card border-violet-200">
+                      <SelectTrigger className="glass-card border-primary">
                         <SelectValue placeholder="Select Branch" />
                       </SelectTrigger>
                       <SelectContent>
@@ -419,7 +419,7 @@ const EditCourse = () => {
                       value={formData.credits}
                       onChange={handleInputChange}
                       placeholder="e.g., 4"
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
                   <div>
@@ -428,7 +428,7 @@ const EditCourse = () => {
                       value={formData.semester}
                       onValueChange={(value) => handleSelectChange('semester', value)}
                     >
-                      <SelectTrigger className="glass-card border-violet-200">
+                      <SelectTrigger className="glass-card border-primary">
                         <SelectValue placeholder="Select Semester" />
                       </SelectTrigger>
                       <SelectContent>
@@ -447,7 +447,7 @@ const EditCourse = () => {
             {/* Course Details */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Course Details
                 </CardTitle>
               </CardHeader>
@@ -459,7 +459,7 @@ const EditCourse = () => {
                       value={formData.icon}
                       onValueChange={(value) => handleSelectChange('icon', value)}
                     >
-                      <SelectTrigger className="glass-card border-violet-200">
+                      <SelectTrigger className="glass-card border-primary">
                         <SelectValue>
                           <div className="flex items-center gap-2">
                             <IconComponent className="h-4 w-4" />
@@ -489,7 +489,7 @@ const EditCourse = () => {
                       value={formData.level}
                       onValueChange={(value) => handleSelectChange('level', value)}
                     >
-                      <SelectTrigger className="glass-card border-violet-200">
+                      <SelectTrigger className="glass-card border-primary">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -508,7 +508,7 @@ const EditCourse = () => {
                       value={formData.batchSize}
                       onValueChange={(value) => handleSelectChange('batchSize', value)}
                     >
-                      <SelectTrigger className="glass-card border-violet-200">
+                      <SelectTrigger className="glass-card border-primary">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -531,7 +531,7 @@ const EditCourse = () => {
                     onChange={handleInputChange}
                     placeholder="e.g., Live Projects, 1-on-1 Sessions, Placement Support, Industry Mentorship"
                     rows={2}
-                    className="glass-card border-violet-200"
+                    className="glass-card border-primary"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
                     Separate each feature with a comma
@@ -547,7 +547,7 @@ const EditCourse = () => {
                     onChange={handleInputChange}
                     placeholder="Enter detailed syllabus..."
                     rows={4}
-                    className="glass-card border-violet-200"
+                    className="glass-card border-primary"
                   />
                 </div>
               </CardContent>
@@ -556,7 +556,7 @@ const EditCourse = () => {
             {/* Pricing */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Pricing
                 </CardTitle>
               </CardHeader>
@@ -572,7 +572,7 @@ const EditCourse = () => {
                       onChange={handleInputChange}
                       placeholder="49999"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
 
@@ -586,7 +586,7 @@ const EditCourse = () => {
                       onChange={handleInputChange}
                       placeholder="44999"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
 
@@ -599,7 +599,7 @@ const EditCourse = () => {
                       value={formData.discountPercentage}
                       onChange={handleInputChange}
                       placeholder="10"
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
                       Auto-calculated if left empty
@@ -627,7 +627,7 @@ const EditCourse = () => {
               <Button
                 type="submit"
                 disabled={isUpdating}
-                className="flex-1 bg-gradient-to-r from-violet-500 to-purple-500 text-white hover:from-violet-600 hover:to-purple-600 h-12 text-lg"
+                className="flex-1 text-white h-12 text-lg"
               >
                 {isUpdating ? (
                   <>

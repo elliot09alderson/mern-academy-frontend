@@ -33,7 +33,7 @@ const Courses: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -43,12 +43,12 @@ const Courses: React.FC = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Courses Management</h1>
-          <p className="text-gray-600">Manage course catalog and curriculum</p>
+          <h1 className="text-2xl font-bold text-foreground">Courses Management</h1>
+          <p className="text-muted-foreground">Manage course catalog and curriculum</p>
         </div>
         <button
           onClick={() => navigate('/admin/courses/add')}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
+          className="bg-primary hover:bg-primary text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
         >
           <Plus className="w-4 h-4" />
           <span>Add Course</span>
@@ -56,15 +56,15 @@ const Courses: React.FC = () => {
       </div>
 
       {/* Search */}
-      <div className="bg-white rounded-lg shadow-sm border p-6">
+      <div className="bg-card rounded-lg shadow-sm border p-6">
         <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <input
             type="text"
             placeholder="Search courses by name or code"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           />
         </div>
       </div>
@@ -72,7 +72,7 @@ const Courses: React.FC = () => {
       {/* Courses Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCourses.map((course) => (
-          <div key={course._id} className="bg-white rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
+          <div key={course._id} className="bg-card rounded-lg shadow-sm border overflow-hidden hover:shadow-md transition-shadow">
             {/* Banner Image */}
             {course.bannerImage?.url ? (
               <div className="relative h-40 overflow-hidden">
@@ -89,20 +89,20 @@ const Courses: React.FC = () => {
                 <div className="absolute top-2 right-2 flex space-x-1">
                   <button
                     onClick={() => handleEdit(course._id)}
-                    className="p-2 bg-white/90 hover:bg-white rounded-full text-blue-600 transition-colors"
+                    className="p-2 bg-card/90 hover:bg-card rounded-full text-primary transition-colors"
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(course._id)}
-                    className="p-2 bg-white/90 hover:bg-white rounded-full text-red-600 transition-colors"
+                    className="p-2 bg-card/90 hover:bg-card rounded-full text-red-600 transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="relative h-40 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+              <div className="relative h-40 flex items-center justify-center">
                 <BookOpen className="w-16 h-16 text-white/50" />
                 {course.isLimitedOffer && (
                   <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
@@ -112,13 +112,13 @@ const Courses: React.FC = () => {
                 <div className="absolute top-2 right-2 flex space-x-1">
                   <button
                     onClick={() => handleEdit(course._id)}
-                    className="p-2 bg-white/90 hover:bg-white rounded-full text-blue-600 transition-colors"
+                    className="p-2 bg-card/90 hover:bg-card rounded-full text-primary transition-colors"
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(course._id)}
-                    className="p-2 bg-white/90 hover:bg-white rounded-full text-red-600 transition-colors"
+                    className="p-2 bg-card/90 hover:bg-card rounded-full text-red-600 transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -129,28 +129,24 @@ const Courses: React.FC = () => {
             <div className="p-4">
               {/* Course Code & Level Badge */}
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                <span className="text-xs font-mono bg-secondary text-muted-foreground px-2 py-1 rounded">
                   {course.courseCode}
                 </span>
                 {course.level && (
-                  <span className={`text-xs px-2 py-1 rounded-full ${
-                    course.level === 'Beginner Friendly' ? 'bg-green-100 text-green-700' :
-                    course.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-red-100 text-red-700'
-                  }`}>
+                  <span className={`text-xs px-2 py-1 rounded-full ${ course.level === 'Beginner Friendly' ? 'bg-green-100 text-green-700' : course.level === 'Intermediate' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700' }`}>
                     {course.level}
                   </span>
                 )}
               </div>
 
               {/* Course Name */}
-              <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{course.courseName}</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2 line-clamp-2">{course.courseName}</h3>
 
               {/* Description */}
-              <p className="text-sm text-gray-600 mb-3 line-clamp-2">{course.description}</p>
+              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{course.description}</p>
 
               {/* Course Meta */}
-              <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+              <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
                   <span>{course.duration}</span>
@@ -167,12 +163,12 @@ const Courses: React.FC = () => {
               {course.features && course.features.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-3">
                   {course.features.slice(0, 3).map((feature, idx) => (
-                    <span key={idx} className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded">
+                    <span key={idx} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
                       {feature}
                     </span>
                   ))}
                   {course.features.length > 3 && (
-                    <span className="text-xs text-gray-400">+{course.features.length - 3} more</span>
+                    <span className="text-xs text-muted-foreground">+{course.features.length - 3} more</span>
                   )}
                 </div>
               )}
@@ -185,7 +181,7 @@ const Courses: React.FC = () => {
                       <span className="text-lg font-bold text-green-600">
                         Rs {course.discountedPrice.toLocaleString()}
                       </span>
-                      <span className="text-sm text-gray-400 line-through">
+                      <span className="text-sm text-muted-foreground line-through">
                         Rs {course.originalPrice.toLocaleString()}
                       </span>
                       {course.discountPercentage > 0 && (
@@ -195,22 +191,20 @@ const Courses: React.FC = () => {
                       )}
                     </>
                   ) : course.originalPrice ? (
-                    <span className="text-lg font-bold text-gray-900">
+                    <span className="text-lg font-bold text-foreground">
                       Rs {course.originalPrice.toLocaleString()}
                     </span>
                   ) : (
-                    <span className="text-sm text-gray-400">Price not set</span>
+                    <span className="text-sm text-muted-foreground">Price not set</span>
                   )}
                 </div>
-                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                  course.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                }`}>
+                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${ course.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }`}>
                   {course.isActive ? 'Active' : 'Inactive'}
                 </span>
               </div>
 
               {/* Additional Info */}
-              <div className="mt-3 pt-3 border-t grid grid-cols-2 gap-2 text-xs text-gray-500">
+              <div className="mt-3 pt-3 border-t grid grid-cols-2 gap-2 text-xs text-muted-foreground">
                 {course.branchId?.branchName && (
                   <div>
                     <span className="font-medium">Branch:</span> {course.branchId.branchName}
@@ -234,16 +228,16 @@ const Courses: React.FC = () => {
 
       {/* Empty State */}
       {filteredCourses.length === 0 && !isLoading && (
-        <div className="text-center py-12 bg-white rounded-lg border">
+        <div className="text-center py-12 bg-card rounded-lg border">
           <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No courses found</h3>
-          <p className="text-gray-500 mb-4">
+          <h3 className="text-lg font-medium text-foreground mb-2">No courses found</h3>
+          <p className="text-muted-foreground mb-4">
             {searchTerm ? 'Try adjusting your search terms' : 'Get started by creating your first course'}
           </p>
           {!searchTerm && (
             <button
               onClick={() => navigate('/admin/courses/add')}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg inline-flex items-center space-x-2"
+              className="bg-primary hover:bg-primary text-white px-4 py-2 rounded-lg inline-flex items-center space-x-2"
             >
               <Plus className="w-4 h-4" />
               <span>Add Course</span>
@@ -254,15 +248,15 @@ const Courses: React.FC = () => {
 
       {/* Pagination */}
       {coursesData?.pagination && coursesData.pagination.totalPages > 1 && (
-        <div className="flex items-center justify-between bg-white rounded-lg shadow-sm border p-4">
-          <div className="text-sm text-gray-700">
+        <div className="flex items-center justify-between bg-card rounded-lg shadow-sm border p-4">
+          <div className="text-sm text-foreground">
             Showing {((page - 1) * 12) + 1} to {Math.min(page * 12, coursesData.pagination.total)} of {coursesData.pagination.total} results
           </div>
           <div className="flex space-x-2">
             <button
               onClick={() => setPage(page - 1)}
               disabled={page === 1}
-              className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="px-3 py-1 border border-border rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-background"
             >
               Previous
             </button>
@@ -272,7 +266,7 @@ const Courses: React.FC = () => {
             <button
               onClick={() => setPage(page + 1)}
               disabled={page === coursesData.pagination.totalPages}
-              className="px-3 py-1 border border-gray-300 rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="px-3 py-1 border border-border rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-background"
             >
               Next
             </button>

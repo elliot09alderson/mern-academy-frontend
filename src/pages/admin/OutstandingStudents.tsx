@@ -260,7 +260,7 @@ const OutstandingStudents = () => {
       {/* Image Upload */}
       <div className="space-y-3">
         <Label className="text-base font-semibold">Student Image {!isEdit && '*'}</Label>
-        <div className="border-2 border-dashed border-violet-300 rounded-lg p-6 glass-card hover:border-violet-400 transition-colors">
+        <div className="border-2 border-dashed border-primary rounded-lg p-6 glass-card hover:border-primary transition-colors">
           {imagePreview ? (
             <div className="relative">
               <img
@@ -279,7 +279,7 @@ const OutstandingStudents = () => {
               )}
               {isEdit && !imageFile && (
                 <div className="text-center mt-2">
-                  <label htmlFor={`studentImage-${isEdit ? 'edit' : 'add'}`} className="text-sm text-violet-600 cursor-pointer hover:underline">
+                  <label htmlFor={`studentImage-${isEdit ? 'edit' : 'add'}`} className="text-sm text-primary cursor-pointer hover:underline">
                     Change Image
                   </label>
                   <input
@@ -306,7 +306,7 @@ const OutstandingStudents = () => {
                 htmlFor={`studentImage-${isEdit ? 'edit' : 'add'}`}
                 className="flex flex-col items-center justify-center cursor-pointer"
               >
-                <Upload className="h-12 w-12 text-violet-500 mb-3" />
+                <Upload className="h-12 w-12 text-primary mb-3" />
                 <p className="text-sm font-medium text-foreground mb-1">
                   Click to upload student photo
                 </p>
@@ -331,7 +331,7 @@ const OutstandingStudents = () => {
             onChange={handleInputChange}
             placeholder="e.g., 1"
             required
-            className="glass-card border-violet-200"
+            className="glass-card border-primary"
           />
         </div>
         <div>
@@ -343,7 +343,7 @@ const OutstandingStudents = () => {
             onChange={handleInputChange}
             placeholder="e.g., Rahul Sharma"
             required
-            className="glass-card border-violet-200"
+            className="glass-card border-primary"
           />
         </div>
       </div>
@@ -357,7 +357,7 @@ const OutstandingStudents = () => {
           onChange={handleInputChange}
           placeholder="e.g., IIT Delhi"
           required
-          className="glass-card border-violet-200"
+          className="glass-card border-primary"
         />
       </div>
 
@@ -372,7 +372,7 @@ const OutstandingStudents = () => {
             onChange={handleInputChange}
             placeholder="e.g., Google"
             required
-            className="glass-card border-violet-200"
+            className="glass-card border-primary"
           />
         </div>
         <div>
@@ -384,7 +384,7 @@ const OutstandingStudents = () => {
             onChange={handleInputChange}
             placeholder="e.g., Software Engineer"
             required
-            className="glass-card border-violet-200"
+            className="glass-card border-primary"
           />
         </div>
       </div>
@@ -398,7 +398,7 @@ const OutstandingStudents = () => {
           onChange={handleInputChange}
           placeholder="e.g., 45 LPA"
           required
-          className="glass-card border-violet-200"
+          className="glass-card border-primary"
         />
       </div>
 
@@ -411,7 +411,7 @@ const OutstandingStudents = () => {
           onChange={handleInputChange}
           placeholder="e.g., React, Node.js, Python, System Design"
           required
-          className="glass-card border-violet-200"
+          className="glass-card border-primary"
         />
       </div>
 
@@ -425,7 +425,7 @@ const OutstandingStudents = () => {
           placeholder="e.g., All India Rank 1 in Placement"
           required
           rows={3}
-          className="glass-card border-violet-200"
+          className="glass-card border-primary"
         />
       </div>
 
@@ -434,7 +434,7 @@ const OutstandingStudents = () => {
         <Button
           type="submit"
           disabled={isEdit ? isUpdating : isCreating}
-          className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex-1"
+          className="text-white flex-1"
         >
           {(isEdit ? isUpdating : isCreating) ? (
             <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{isEdit ? 'Updating...' : 'Creating...'}</>
@@ -460,21 +460,21 @@ const OutstandingStudents = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold">
             Outstanding Students
           </h1>
           <p className="text-muted-foreground mt-2">Manage outstanding student profiles</p>
         </div>
         <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-violet-600 to-purple-600 text-white">
+            <Button className="text-white">
               <Plus className="mr-2 h-4 w-4" />
               Add Student
             </Button>
           </DialogTrigger>
           <DialogContent className="glass-card border-0 max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-2xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+              <DialogTitle className="text-2xl">
                 Add Outstanding Student
               </DialogTitle>
             </DialogHeader>
@@ -490,7 +490,7 @@ const OutstandingStudents = () => {
       }}>
         <DialogContent className="glass-card border-0 max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+            <DialogTitle className="text-2xl">
               Edit Outstanding Student
             </DialogTitle>
           </DialogHeader>
@@ -501,7 +501,7 @@ const OutstandingStudents = () => {
       {/* Students List */}
       {isLoading ? (
         <div className="flex justify-center items-center py-12">
-          <Loader2 className="h-12 w-12 animate-spin text-violet-500" />
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
         </div>
       ) : studentsData && studentsData.data.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -545,12 +545,12 @@ const OutstandingStudents = () => {
                       alt={student.name}
                       className="w-20 h-20 rounded-full object-cover ring-4 ring-primary/20"
                     />
-                    <div className="absolute -top-2 -left-2 bg-gradient-to-r from-violet-600 to-purple-600 rounded-full p-2 text-white font-bold text-sm">
+                    <div className="absolute -top-2 -left-2 rounded-full p-2 text-white font-bold text-sm">
                       #{student.rank}
                     </div>
                   </div>
                   <div>
-                    <CardTitle className="text-lg bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                    <CardTitle className="text-lg">
                       {student.name}
                     </CardTitle>
                     <p className="text-sm text-muted-foreground">{student.college}</p>
@@ -580,7 +580,7 @@ const OutstandingStudents = () => {
 
                   <div className="p-3 glass-card rounded-lg">
                     <div className="flex items-start gap-2">
-                      <Award className="h-4 w-4 text-violet-600 mt-0.5 flex-shrink-0" />
+                      <Award className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
                       <p className="text-sm">{student.achievement}</p>
                     </div>
                   </div>

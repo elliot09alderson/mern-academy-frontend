@@ -156,7 +156,7 @@ const AddCourse = () => {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Admin
             </Button>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold">
               Add New Course
             </h1>
             <p className="text-muted-foreground mt-2">Create a new course for your academy</p>
@@ -166,13 +166,13 @@ const AddCourse = () => {
             {/* Course Banner Image */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Course Banner Image
                 </CardTitle>
                 <CardDescription>Upload a banner image for the course (Recommended: 1200x600px)</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="border-2 border-dashed border-violet-300 rounded-lg p-8 glass-card hover:border-violet-400 transition-colors">
+                <div className="border-2 border-dashed border-primary rounded-lg p-8 glass-card hover:border-primary transition-colors">
                   {bannerPreview ? (
                     <div className="relative">
                       <img
@@ -201,7 +201,7 @@ const AddCourse = () => {
                         htmlFor="bannerImage"
                         className="flex flex-col items-center justify-center cursor-pointer"
                       >
-                        <ImageIcon className="h-16 w-16 text-violet-500 mb-4" />
+                        <ImageIcon className="h-16 w-16 text-primary mb-4" />
                         <p className="text-lg font-medium text-foreground mb-2">
                           Click to upload course banner
                         </p>
@@ -218,7 +218,7 @@ const AddCourse = () => {
             {/* Basic Information */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Basic Information
                 </CardTitle>
               </CardHeader>
@@ -233,7 +233,7 @@ const AddCourse = () => {
                       onChange={handleInputChange}
                       placeholder="e.g., Full Stack MERN Development"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
                   <div>
@@ -245,7 +245,7 @@ const AddCourse = () => {
                       onChange={handleInputChange}
                       placeholder="e.g., MERN101"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
                 </div>
@@ -260,7 +260,7 @@ const AddCourse = () => {
                     placeholder="Complete MERN stack development with React, Node.js, MongoDB, and Express"
                     required
                     rows={3}
-                    className="glass-card border-violet-200"
+                    className="glass-card border-primary"
                   />
                 </div>
 
@@ -273,7 +273,7 @@ const AddCourse = () => {
                     onChange={handleInputChange}
                     placeholder="e.g., 6 months"
                     required
-                    className="glass-card border-violet-200"
+                    className="glass-card border-primary"
                   />
                 </div>
               </CardContent>
@@ -282,7 +282,7 @@ const AddCourse = () => {
             {/* Course Details */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Course Details
                 </CardTitle>
               </CardHeader>
@@ -294,7 +294,7 @@ const AddCourse = () => {
                       value={formData.icon}
                       onValueChange={(value) => handleSelectChange('icon', value)}
                     >
-                      <SelectTrigger className="glass-card border-violet-200">
+                      <SelectTrigger className="glass-card border-primary">
                         <SelectValue>
                           <div className="flex items-center gap-2">
                             <IconComponent className="h-4 w-4" />
@@ -324,7 +324,7 @@ const AddCourse = () => {
                       value={formData.level}
                       onValueChange={(value) => handleSelectChange('level', value)}
                     >
-                      <SelectTrigger className="glass-card border-violet-200">
+                      <SelectTrigger className="glass-card border-primary">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -343,7 +343,7 @@ const AddCourse = () => {
                       value={formData.batchSize}
                       onValueChange={(value) => handleSelectChange('batchSize', value)}
                     >
-                      <SelectTrigger className="glass-card border-violet-200">
+                      <SelectTrigger className="glass-card border-primary">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -367,7 +367,7 @@ const AddCourse = () => {
                     placeholder="e.g., Live Projects, 1-on-1 Sessions, Placement Support, Industry Mentorship"
                     required
                     rows={2}
-                    className="glass-card border-violet-200"
+                    className="glass-card border-primary"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
                     Separate each feature with a comma
@@ -379,7 +379,7 @@ const AddCourse = () => {
             {/* Pricing */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Pricing
                 </CardTitle>
               </CardHeader>
@@ -395,7 +395,7 @@ const AddCourse = () => {
                       onChange={handleInputChange}
                       placeholder="49999"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
 
@@ -409,7 +409,7 @@ const AddCourse = () => {
                       onChange={handleInputChange}
                       placeholder="44999"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
 
@@ -422,7 +422,7 @@ const AddCourse = () => {
                       value={formData.discountPercentage}
                       onChange={handleInputChange}
                       placeholder="10"
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                     <p className="text-xs text-muted-foreground mt-1">
                       Auto-calculated if left empty
@@ -450,7 +450,7 @@ const AddCourse = () => {
               <Button
                 type="submit"
                 disabled={isCreating}
-                className="flex-1 bg-gradient-to-r from-violet-500 to-purple-500 text-white hover:from-violet-600 hover:to-purple-600 h-12 text-lg"
+                className="flex-1 text-white h-12 text-lg"
               >
                 {isCreating ? (
                   <>

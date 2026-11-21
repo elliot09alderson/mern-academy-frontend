@@ -118,7 +118,7 @@ const AddOutstandingStudent = () => {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Admin
             </Button>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold">
               Add Outstanding Student
             </h1>
             <p className="text-muted-foreground mt-2">Add a new outstanding student to showcase on your homepage</p>
@@ -128,13 +128,13 @@ const AddOutstandingStudent = () => {
             {/* Student Image */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Student Photo
                 </CardTitle>
                 <CardDescription>Upload a high-quality photo of the student</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="border-2 border-dashed border-violet-300 rounded-lg p-8 glass-card hover:border-violet-400 transition-colors">
+                <div className="border-2 border-dashed border-primary rounded-lg p-8 glass-card hover:border-primary transition-colors">
                   {imagePreview ? (
                     <div className="relative inline-block">
                       <img
@@ -164,7 +164,7 @@ const AddOutstandingStudent = () => {
                         htmlFor="studentImage"
                         className="flex flex-col items-center justify-center cursor-pointer"
                       >
-                        <Upload className="h-16 w-16 text-violet-500 mb-4" />
+                        <Upload className="h-16 w-16 text-primary mb-4" />
                         <p className="text-lg font-medium text-foreground mb-2">
                           Click to upload student photo
                         </p>
@@ -181,7 +181,7 @@ const AddOutstandingStudent = () => {
             {/* Basic Information */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Basic Information
                 </CardTitle>
               </CardHeader>
@@ -198,7 +198,7 @@ const AddOutstandingStudent = () => {
                       placeholder="e.g., 1"
                       required
                       min="1"
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
                   <div>
@@ -210,7 +210,7 @@ const AddOutstandingStudent = () => {
                       onChange={handleInputChange}
                       placeholder="e.g., Rahul Sharma"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
                 </div>
@@ -224,7 +224,7 @@ const AddOutstandingStudent = () => {
                     onChange={handleInputChange}
                     placeholder="e.g., IIT Delhi"
                     required
-                    className="glass-card border-violet-200"
+                    className="glass-card border-primary"
                   />
                 </div>
               </CardContent>
@@ -233,7 +233,7 @@ const AddOutstandingStudent = () => {
             {/* Placement Information */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Placement Details
                 </CardTitle>
               </CardHeader>
@@ -248,7 +248,7 @@ const AddOutstandingStudent = () => {
                       onChange={handleInputChange}
                       placeholder="e.g., Google"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
                   <div>
@@ -260,7 +260,7 @@ const AddOutstandingStudent = () => {
                       onChange={handleInputChange}
                       placeholder="e.g., Software Engineer"
                       required
-                      className="glass-card border-violet-200"
+                      className="glass-card border-primary"
                     />
                   </div>
                 </div>
@@ -274,7 +274,7 @@ const AddOutstandingStudent = () => {
                     onChange={handleInputChange}
                     placeholder="e.g., 45 LPA"
                     required
-                    className="glass-card border-violet-200"
+                    className="glass-card border-primary"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
                     Enter the package amount (e.g., "45 LPA" or "₹45,00,000")
@@ -286,7 +286,7 @@ const AddOutstandingStudent = () => {
             {/* Skills & Achievement */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Skills & Achievement
                 </CardTitle>
               </CardHeader>
@@ -300,7 +300,7 @@ const AddOutstandingStudent = () => {
                     onChange={handleInputChange}
                     placeholder="e.g., React, Node.js, Python, System Design"
                     required
-                    className="glass-card border-violet-200"
+                    className="glass-card border-primary"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
                     Separate skills with commas. Example: React, Node.js, Python
@@ -317,7 +317,7 @@ const AddOutstandingStudent = () => {
                     placeholder="e.g., All India Rank 1 in Placement"
                     required
                     rows={3}
-                    className="glass-card border-violet-200"
+                    className="glass-card border-primary"
                   />
                   <p className="text-xs text-muted-foreground mt-1">
                     Describe the student's notable achievement
@@ -348,7 +348,7 @@ const AddOutstandingStudent = () => {
               <Button
                 type="submit"
                 disabled={isCreating}
-                className="flex-1 bg-gradient-to-r from-violet-500 to-purple-500 text-white hover:from-violet-600 hover:to-purple-600 h-12 text-lg"
+                className="flex-1 text-white h-12 text-lg"
               >
                 {isCreating ? (
                   <>

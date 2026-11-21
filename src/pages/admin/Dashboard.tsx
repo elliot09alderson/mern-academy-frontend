@@ -16,7 +16,7 @@ const Dashboard: React.FC = () => {
       title: 'Total Students',
       value: studentsData?.pagination?.total || 0,
       icon: Users,
-      color: 'bg-blue-500',
+      color: 'bg-primary',
       change: '+12%',
     },
     {
@@ -30,7 +30,7 @@ const Dashboard: React.FC = () => {
       title: 'Total Branches',
       value: branchesData?.pagination?.total || 0,
       icon: Building,
-      color: 'bg-purple-500',
+      color: 'bg-primary',
       change: '+3%',
     },
     {
@@ -46,8 +46,8 @@ const Dashboard: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-2">Welcome to MERN Academy Admin Panel</p>
+        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-muted-foreground mt-2">Welcome to MERN Academy Admin Panel</p>
       </div>
 
       {/* Stats Cards */}
@@ -55,11 +55,11 @@ const Dashboard: React.FC = () => {
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <div key={index} className="bg-white rounded-lg shadow-sm border p-6">
+            <div key={index} className="bg-card rounded-lg shadow-sm border p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-2">{stat.value}</p>
+                  <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                  <p className="text-3xl font-bold text-foreground mt-2">{stat.value}</p>
                 </div>
                 <div className={`${stat.color} p-3 rounded-lg`}>
                   <Icon className="w-6 h-6 text-white" />
@@ -68,7 +68,7 @@ const Dashboard: React.FC = () => {
               <div className="mt-4 flex items-center">
                 <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
                 <span className="text-sm text-green-600 font-medium">{stat.change}</span>
-                <span className="text-sm text-gray-500 ml-1">from last month</span>
+                <span className="text-sm text-muted-foreground ml-1">from last month</span>
               </div>
             </div>
           );
@@ -78,79 +78,74 @@ const Dashboard: React.FC = () => {
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Events */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">Upcoming Events</h2>
-            <Calendar className="w-5 h-5 text-gray-400" />
+            <h2 className="text-lg font-semibold text-foreground">Upcoming Events</h2>
+            <Calendar className="w-5 h-5 text-muted-foreground" />
           </div>
           <div className="space-y-4">
             {eventsData?.data?.slice(0, 5).map((event) => (
-              <div key={event._id} className="flex items-center p-3 bg-gray-50 rounded-lg">
-                <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+              <div key={event._id} className="flex items-center p-3 bg-background rounded-lg">
+                <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                   <Calendar className="w-5 h-5 text-white" />
                 </div>
                 <div className="ml-3 flex-1">
-                  <p className="text-sm font-medium text-gray-900">{event.eventName}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-sm font-medium text-foreground">{event.eventName}</p>
+                  <p className="text-xs text-muted-foreground">
                     {new Date(event.startDate).toLocaleDateString()}
                   </p>
                 </div>
-                <span className={`px-2 py-1 text-xs rounded-full ${
-                  event.eventType === 'academic' ? 'bg-blue-100 text-blue-800' :
-                  event.eventType === 'cultural' ? 'bg-purple-100 text-purple-800' :
-                  event.eventType === 'sports' ? 'bg-green-100 text-green-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
+                <span className={`px-2 py-1 text-xs rounded-full ${ event.eventType === 'academic' ? 'bg-primary/10 text-primary' : event.eventType === 'cultural' ? 'bg-primary/10 text-primary' : event.eventType === 'sports' ? 'bg-green-100 text-green-800' : 'bg-secondary text-foreground' }`}>
                   {event.eventType}
                 </span>
               </div>
             ))}
             {(!eventsData?.data || eventsData.data.length === 0) && (
-              <p className="text-sm text-gray-500 text-center py-4">No upcoming events</p>
+              <p className="text-sm text-muted-foreground text-center py-4">No upcoming events</p>
             )}
           </div>
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="bg-card rounded-lg shadow-sm border p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">Quick Actions</h2>
-            <Award className="w-5 h-5 text-gray-400" />
+            <h2 className="text-lg font-semibold text-foreground">Quick Actions</h2>
+            <Award className="w-5 h-5 text-muted-foreground" />
           </div>
           <div className="space-y-3">
-            <button className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="w-full text-left p-3 border border-border rounded-lg hover:bg-background transition-colors">
               <div className="flex items-center">
-                <Users className="w-5 h-5 text-blue-500 mr-3" />
+                <Users className="w-5 h-5 text-primary mr-3" />
                 <div>
-                  <p className="font-medium text-gray-900">Add New Student</p>
-                  <p className="text-sm text-gray-500">Register a new student</p>
+                  <p className="font-medium text-foreground">Add New Student</p>
+                  <p className="text-sm text-muted-foreground">Register a new student</p>
                 </div>
               </div>
             </button>
-            <button className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="w-full text-left p-3 border border-border rounded-lg hover:bg-background transition-colors">
               <div className="flex items-center">
                 <BookOpen className="w-5 h-5 text-green-500 mr-3" />
                 <div>
-                  <p className="font-medium text-gray-900">Create Course</p>
-                  <p className="text-sm text-gray-500">Add a new course</p>
+                  <p className="font-medium text-foreground">Create Course</p>
+                  <p className="text-sm text-muted-foreground">Add a new course</p>
                 </div>
               </div>
             </button>
-            <button className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="w-full text-left p-3 border border-border rounded-lg hover:bg-background transition-colors">
               <div className="flex items-center">
                 <Calendar className="w-5 h-5 text-orange-500 mr-3" />
                 <div>
-                  <p className="font-medium text-gray-900">Schedule Event</p>
-                  <p className="text-sm text-gray-500">Create a new event</p>
+                  <p className="font-medium text-foreground">Schedule Event</p>
+                  <p className="text-sm text-muted-foreground">Create a new event</p>
                 </div>
               </div>
             </button>
-            <button className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button className="w-full text-left p-3 border border-border rounded-lg hover:bg-background transition-colors">
               <div className="flex items-center">
-                <Building className="w-5 h-5 text-purple-500 mr-3" />
+                <Building className="w-5 h-5 text-primary mr-3" />
                 <div>
-                  <p className="font-medium text-gray-900">Add Branch</p>
-                  <p className="text-sm text-gray-500">Create a new branch</p>
+                  <p className="font-medium text-foreground">Add Branch</p>
+                  <p className="text-sm text-muted-foreground">Create a new branch</p>
                 </div>
               </div>
             </button>

@@ -125,7 +125,7 @@ const EditFaculty = () => {
       <>
         <Navigation />
         <div className="min-h-screen bg-background pt-[64px] md:pt-[80px] flex items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
         </div>
       </>
     );
@@ -137,8 +137,8 @@ const EditFaculty = () => {
         <Navigation />
         <div className="min-h-screen bg-background pt-[64px] md:pt-[80px] flex items-center justify-center">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Faculty Not Found</h2>
-            <p className="text-gray-600 mb-4">The faculty member you're looking for doesn't exist.</p>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Faculty Not Found</h2>
+            <p className="text-muted-foreground mb-4">The faculty member you're looking for doesn't exist.</p>
             <Button onClick={() => navigate('/admin/faculty')}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Faculty
@@ -159,12 +159,12 @@ const EditFaculty = () => {
             <Button
               variant="ghost"
               onClick={() => navigate('/admin/faculty')}
-              className="mb-4 hover:bg-blue-50"
+              className="mb-4 hover:bg-primary"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Faculty
             </Button>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold">
               Edit Faculty
             </h1>
             <p className="text-muted-foreground mt-2">Update faculty member details</p>
@@ -174,13 +174,13 @@ const EditFaculty = () => {
           <form onSubmit={handleSubmit}>
             <Card className="glass-card border-0 shadow-xl">
               <CardHeader>
-                <CardTitle className="text-2xl bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                <CardTitle className="text-2xl">
                   Faculty Information
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 {/* Status Toggle */}
-                <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center space-x-4 p-4 bg-background rounded-lg">
                   <Switch
                     id="isActive"
                     checked={formData.isActive}
@@ -198,7 +198,7 @@ const EditFaculty = () => {
                       <img
                         src={imagePreview || existingImage}
                         alt="Faculty"
-                        className="w-48 h-48 object-cover rounded-lg border-4 border-blue-200"
+                        className="w-48 h-48 object-cover rounded-lg border-4 border-primary"
                       />
                       {imagePreview && (
                         <Button
@@ -222,13 +222,13 @@ const EditFaculty = () => {
                 <div>
                   <Label htmlFor="facultyImage" className="text-base font-semibold">Update Photo</Label>
                   <div className="mt-2">
-                    <div className="border-2 border-dashed border-blue-300 rounded-lg p-4 text-center hover:border-blue-400 transition-colors">
-                      <Upload className="h-8 w-8 mx-auto mb-2 text-blue-500" />
+                    <div className="border-2 border-dashed border-primary rounded-lg p-4 text-center hover:border-primary transition-colors">
+                      <Upload className="h-8 w-8 mx-auto mb-2 text-primary" />
                       <Label
                         htmlFor="facultyImage"
                         className="cursor-pointer text-sm text-muted-foreground hover:text-foreground"
                       >
-                        <span className="text-blue-600 font-semibold">Click to upload new photo</span>
+                        <span className="text-primary font-semibold">Click to upload new photo</span>
                       </Label>
                       <Input
                         id="facultyImage"
@@ -247,7 +247,7 @@ const EditFaculty = () => {
                     <Label htmlFor="employeeId" className="text-base font-semibold">Employee ID *</Label>
                     <Input
                       id="employeeId"
-                      className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                      className="glass-card border-primary focus:border-primary mt-2"
                       placeholder="e.g., FAC001"
                       value={formData.employeeId}
                       onChange={(e) => setFormData({ ...formData, employeeId: e.target.value.toUpperCase() })}
@@ -258,7 +258,7 @@ const EditFaculty = () => {
                     <Label htmlFor="name" className="text-base font-semibold">Full Name *</Label>
                     <Input
                       id="name"
-                      className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                      className="glass-card border-primary focus:border-primary mt-2"
                       placeholder="e.g., Dr. John Doe"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -274,7 +274,7 @@ const EditFaculty = () => {
                     <Input
                       id="email"
                       type="email"
-                      className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                      className="glass-card border-primary focus:border-primary mt-2"
                       placeholder="e.g., john@mernacademy.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -285,7 +285,7 @@ const EditFaculty = () => {
                     <Label htmlFor="specialization" className="text-base font-semibold">Specialization *</Label>
                     <Input
                       id="specialization"
-                      className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                      className="glass-card border-primary focus:border-primary mt-2"
                       placeholder="e.g., Full Stack Development"
                       value={formData.specialization}
                       onChange={(e) => setFormData({ ...formData, specialization: e.target.value })}
@@ -300,7 +300,7 @@ const EditFaculty = () => {
                     <Label htmlFor="qualification" className="text-base font-semibold">Qualification *</Label>
                     <Input
                       id="qualification"
-                      className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                      className="glass-card border-primary focus:border-primary mt-2"
                       placeholder="e.g., M.Tech in Computer Science"
                       value={formData.qualification}
                       onChange={(e) => setFormData({ ...formData, qualification: e.target.value })}
@@ -313,7 +313,7 @@ const EditFaculty = () => {
                       id="experience"
                       type="number"
                       min="0"
-                      className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                      className="glass-card border-primary focus:border-primary mt-2"
                       placeholder="e.g., 8"
                       value={formData.experience}
                       onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
@@ -327,7 +327,7 @@ const EditFaculty = () => {
                   <Label htmlFor="expertise" className="text-base font-semibold">Expertise (comma-separated)</Label>
                   <Textarea
                     id="expertise"
-                    className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                    className="glass-card border-primary focus:border-primary mt-2"
                     placeholder="e.g., React, Node.js, MongoDB, Express"
                     rows={3}
                     value={formData.expertise}
@@ -341,7 +341,7 @@ const EditFaculty = () => {
                   <Label htmlFor="officeHours" className="text-base font-semibold">Office Hours</Label>
                   <Input
                     id="officeHours"
-                    className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                    className="glass-card border-primary focus:border-primary mt-2"
                     placeholder="e.g., Mon-Fri: 10:00 AM - 5:00 PM"
                     value={formData.officeHours}
                     onChange={(e) => setFormData({ ...formData, officeHours: e.target.value })}
@@ -355,7 +355,7 @@ const EditFaculty = () => {
                     <Input
                       id="portfolio"
                       type="url"
-                      className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                      className="glass-card border-primary focus:border-primary mt-2"
                       placeholder="e.g., https://pv.pfolio.tech"
                       value={formData.portfolio}
                       onChange={(e) => setFormData({ ...formData, portfolio: e.target.value })}
@@ -366,7 +366,7 @@ const EditFaculty = () => {
                     <Input
                       id="linkedin"
                       type="url"
-                      className="glass-card border-blue-200 focus:border-blue-400 mt-2"
+                      className="glass-card border-primary focus:border-primary mt-2"
                       placeholder="e.g., https://linkedin.com/in/username"
                       value={formData.linkedin}
                       onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
@@ -378,7 +378,7 @@ const EditFaculty = () => {
                 <div className="flex gap-4 pt-6">
                   <Button
                     type="submit"
-                    className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex-1 hover:from-emerald-600 hover:to-teal-600 text-base py-6"
+                    className="text-white flex-1 text-base py-6"
                     disabled={isUpdating}
                   >
                     <Save className="mr-2 h-5 w-5" />

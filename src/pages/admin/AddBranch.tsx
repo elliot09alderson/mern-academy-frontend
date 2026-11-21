@@ -209,7 +209,7 @@ const AddBranch = () => {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Admin
           </Button>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold">
             Add New Branch
           </h1>
           <p className="text-muted-foreground mt-2">Fill in the details to create a new branch location</p>
@@ -219,7 +219,7 @@ const AddBranch = () => {
           {/* Branch Images */}
           <Card className="glass-card border-0">
             <CardHeader>
-              <CardTitle className="text-xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <CardTitle className="text-xl">
                 Branch Images
               </CardTitle>
               <CardDescription>Upload high-quality images of the branch (up to 10 images)</CardDescription>
@@ -274,7 +274,7 @@ const AddBranch = () => {
           {/* Basic Information */}
           <Card className="glass-card border-0">
             <CardHeader>
-              <CardTitle className="text-xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <CardTitle className="text-xl">
                 Basic Information
               </CardTitle>
             </CardHeader>
@@ -370,7 +370,7 @@ const AddBranch = () => {
           {/* Address Information */}
           <Card className="glass-card border-0">
             <CardHeader>
-              <CardTitle className="text-xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <CardTitle className="text-xl">
                 Address Information
               </CardTitle>
             </CardHeader>
@@ -443,7 +443,7 @@ const AddBranch = () => {
           {/* Contact Information */}
           <Card className="glass-card border-0">
             <CardHeader>
-              <CardTitle className="text-xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <CardTitle className="text-xl">
                 Contact Information
               </CardTitle>
             </CardHeader>
@@ -491,7 +491,7 @@ const AddBranch = () => {
           {/* Operating Hours */}
           <Card className="glass-card border-0">
             <CardHeader>
-              <CardTitle className="text-xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <CardTitle className="text-xl">
                 Operating Hours
               </CardTitle>
             </CardHeader>
@@ -526,7 +526,7 @@ const AddBranch = () => {
           {/* Facilities & Amenities */}
           <Card className="glass-card border-0">
             <CardHeader>
-              <CardTitle className="text-xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <CardTitle className="text-xl">
                 Facilities & Amenities
               </CardTitle>
               <CardDescription>Select all facilities available at this branch</CardDescription>
@@ -561,7 +561,7 @@ const AddBranch = () => {
             <Button
               type="submit"
               disabled={isLoading}
-              className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 h-12 text-lg"
+              className="flex-1 text-white h-12 text-lg"
             >
               <Save className="mr-2 h-5 w-5" />
               {isLoading ? 'Creating Branch...' : 'Create Branch'}

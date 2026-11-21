@@ -61,22 +61,22 @@ const Offers = () => {
     <div className="p-8 max-w-3xl">
       <div className="flex items-center gap-3 mb-8">
         <AlertTriangle className="h-5 w-5 text-orange-500" />
-        <h1 className="text-2xl font-bold text-gray-800">Announcement Offers</h1>
+        <h1 className="text-2xl font-bold text-foreground">Announcement Offers</h1>
       </div>
-      <p className="text-gray-500 text-sm mb-8">
+      <p className="text-muted-foreground text-sm mb-8">
         Manage the scrolling offers shown in the announcement bar. Active offers appear in the marquee on the website.
       </p>
 
       {/* Add new */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8">
-        <h2 className="font-semibold text-gray-700 mb-4">Add New Offer</h2>
+      <div className="bg-card rounded-lg border border-border p-6 mb-8">
+        <h2 className="font-semibold text-foreground mb-4">Add New Offer</h2>
         <div className="flex gap-3">
           <input
             value={newText}
             onChange={(e) => setNewText(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
             placeholder="e.g. Diwali Special — 10% Off + Free Placement Support"
-            className="flex-1 border border-gray-200 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400"
+            className="flex-1 border border-border rounded px-4 py-2.5 text-sm focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400"
           />
           <button
             onClick={handleCreate}
@@ -90,10 +90,10 @@ const Offers = () => {
       </div>
 
       {/* Offer list */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="font-semibold text-gray-700">All Offers</h2>
-          <span className="text-xs text-gray-400">{offers.length} total · {offers.filter(o => o.isActive).length} active</span>
+      <div className="bg-card rounded-lg border border-border overflow-hidden">
+        <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+          <h2 className="font-semibold text-foreground">All Offers</h2>
+          <span className="text-xs text-muted-foreground">{offers.length} total · {offers.filter(o => o.isActive).length} active</span>
         </div>
 
         {isLoading ? (
@@ -101,7 +101,7 @@ const Offers = () => {
             <Loader2 className="h-6 w-6 animate-spin text-orange-400" />
           </div>
         ) : offers.length === 0 ? (
-          <div className="py-12 text-center text-gray-400 text-sm">No offers yet. Add one above.</div>
+          <div className="py-12 text-center text-muted-foreground text-sm">No offers yet. Add one above.</div>
         ) : (
           <ul className="divide-y divide-gray-100">
             {offers.map((offer) => (
@@ -121,7 +121,7 @@ const Offers = () => {
                       className="w-full border border-orange-300 rounded px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-orange-400"
                     />
                   ) : (
-                    <p className={`text-sm truncate ${offer.isActive ? 'text-gray-800' : 'text-gray-400 line-through'}`}>
+                    <p className={`text-sm truncate ${offer.isActive ? 'text-foreground' : 'text-muted-foreground line-through'}`}>
                       {offer.text}
                     </p>
                   )}
@@ -133,7 +133,7 @@ const Offers = () => {
                       <button onClick={() => handleUpdate(offer._id)} className="p-1.5 text-green-600 hover:bg-green-50 rounded transition-colors">
                         <Check className="h-4 w-4" />
                       </button>
-                      <button onClick={() => setEditingId(null)} className="p-1.5 text-gray-400 hover:bg-gray-50 rounded transition-colors">
+                      <button onClick={() => setEditingId(null)} className="p-1.5 text-muted-foreground hover:bg-background rounded transition-colors">
                         <X className="h-4 w-4" />
                       </button>
                     </>
@@ -141,20 +141,20 @@ const Offers = () => {
                     <>
                       <button
                         onClick={() => handleToggle(offer._id)}
-                        className={`p-1.5 rounded transition-colors ${offer.isActive ? 'text-orange-500 hover:bg-orange-50' : 'text-gray-400 hover:bg-gray-50'}`}
+                        className={`p-1.5 rounded transition-colors ${offer.isActive ? 'text-orange-500 hover:bg-orange-50' : 'text-muted-foreground hover:bg-background'}`}
                         title={offer.isActive ? 'Deactivate' : 'Activate'}
                       >
                         {offer.isActive ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
                       </button>
                       <button
                         onClick={() => { setEditingId(offer._id); setEditingText(offer.text); }}
-                        className="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors"
+                        className="p-1.5 text-muted-foreground hover:text-primary-foreground hover:bg-primary rounded transition-colors"
                       >
                         <Edit2 className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDelete(offer._id)}
-                        className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                        className="p-1.5 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

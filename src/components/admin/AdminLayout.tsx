@@ -46,16 +46,14 @@ const AdminLayout: React.FC = () => {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gray-50 flex pt-[64px] md:pt-[80px]">
+      <div className="min-h-screen bg-background flex pt-[64px] md:pt-[80px]">
         {/* Sidebar */}
-        <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform ${
-          isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 mt-[64px] md:mt-[80px]`}>
+        <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-card shadow-lg transform ${ isMenuOpen ? 'translate-x-0' : '-translate-x-full' } transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 mt-[64px] md:mt-[80px]`}>
         <div className="flex items-center justify-between h-16 px-6 border-b">
-          <h1 className="text-xl font-bold text-gray-800">Admin Panel</h1>
+          <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600"
+            className="lg:hidden p-2 rounded-md text-muted-foreground hover:text-muted-foreground"
           >
             <X className="w-5 h-5" />
           </button>
@@ -71,8 +69,8 @@ const AdminLayout: React.FC = () => {
                 className={({ isActive }) =>
                   `flex items-center px-3 py-2 mb-2 rounded-lg transition-colors ${
                     isActive
-                      ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                      : 'text-gray-600 hover:bg-gray-100'
+                      ? 'bg-primary/10 text-primary border-r-2 border-primary'
+                      : 'text-muted-foreground hover:bg-secondary'
                   }`
                 }
                 onClick={() => setIsMenuOpen(false)}
@@ -86,12 +84,12 @@ const AdminLayout: React.FC = () => {
 
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
           <div className="flex items-center mb-3">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-semibold">
               {user?.name?.charAt(0) || 'A'}
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-700">{user?.name}</p>
-              <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+              <p className="text-sm font-medium text-foreground">{user?.name}</p>
+              <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
             </div>
           </div>
           <button
@@ -107,14 +105,14 @@ const AdminLayout: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 lg:ml-0">
         {/* Header */}
-        <header className="bg-white shadow-sm border-b h-16 flex items-center px-6">
+        <header className="bg-card shadow-sm border-b h-16 flex items-center px-6">
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-600 mr-4"
+            className="lg:hidden p-2 rounded-md text-muted-foreground hover:text-muted-foreground mr-4"
           >
             <Menu className="w-5 h-5" />
           </button>
-          <h2 className="text-lg font-semibold text-gray-800">
+          <h2 className="text-lg font-semibold text-foreground">
             MERN Academy - Administration
           </h2>
         </header>

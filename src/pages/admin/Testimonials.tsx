@@ -66,14 +66,14 @@ const Testimonials = () => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold">
             Testimonials
           </h1>
           <p className="text-muted-foreground mt-2">Manage student testimonials</p>
         </div>
         <Button
           onClick={() => navigate('/admin/add-testimonial')}
-          className="bg-gradient-to-r from-violet-600 to-purple-600 text-white"
+          className="text-white"
         >
           <Plus className="mr-2 h-4 w-4" />
           Add Testimonial
@@ -83,7 +83,7 @@ const Testimonials = () => {
       {/* Testimonials List */}
       {isLoading ? (
         <div className="flex justify-center items-center py-20">
-          <Loader2 className="h-12 w-12 animate-spin text-violet-500" />
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
         </div>
       ) : testimonialsData && testimonialsData.data.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -102,7 +102,7 @@ const Testimonials = () => {
 
                 {/* Student Info */}
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-full overflow-hidden ring-2 ring-violet-500/20">
+                  <div className="w-16 h-16 rounded-full overflow-hidden ring-2 ring-primary/20">
                     <img
                       src={testimonial.image.url}
                       alt={testimonial.name}
@@ -110,7 +110,7 @@ const Testimonials = () => {
                     />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-lg bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                    <h3 className="font-semibold text-lg">
                       {testimonial.name}
                     </h3>
                     <p className="text-sm text-muted-foreground">{testimonial.role}</p>
@@ -177,7 +177,7 @@ const Testimonials = () => {
               </p>
               <Button
                 onClick={() => navigate('/admin/add-testimonial')}
-                className="bg-gradient-to-r from-violet-600 to-purple-600 text-white"
+                className="text-white"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Testimonial

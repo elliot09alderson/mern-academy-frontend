@@ -54,15 +54,15 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
       {/* Code snippets floating in background */}
-      <div className="absolute inset-0 opacity-10 text-purple-400 text-xs font-mono overflow-hidden">
+      <div className="absolute inset-0 opacity-10 text-primary text-xs font-mono overflow-hidden">
         <div className="absolute top-10 left-10 animate-float-slow">
           <pre>{`const admin = {
   role: 'superuser',
@@ -87,25 +87,25 @@ Authorization: Bearer`}</pre>
       {/* Grid pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.05)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
 
-      <Card className="w-full max-w-md relative z-10 border-purple-500/30 bg-slate-900/90 backdrop-blur-2xl shadow-2xl shadow-purple-500/20">
+      <Card className="w-full max-w-md relative z-10 border-primary/30 bg-slate-900/90 backdrop-blur-2xl shadow-2xl shadow-primary/20">
         <CardHeader className="text-center space-y-4">
           <Link
             to="/login"
-            className="inline-flex items-center text-sm text-purple-400 hover:text-purple-300 transition-colors w-fit"
+            className="inline-flex items-center text-sm text-primary hover:text-primary transition-colors w-fit"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back to main login
           </Link>
 
           <div className="flex items-center justify-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/50">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/50">
               <Shield className="h-8 w-8 text-white" />
             </div>
           </div>
 
           <div>
             <CardTitle className="text-3xl font-bold text-white">Admin Portal</CardTitle>
-            <CardDescription className="text-purple-200">
+            <CardDescription className="text-primary">
               Secure administrator access
             </CardDescription>
           </div>
@@ -120,36 +120,32 @@ Authorization: Bearer`}</pre>
             {({ isSubmitting, touched, errors: formErrors }) => (
               <Form className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="admin-email" className="text-purple-100">Admin Email</Label>
+                  <Label htmlFor="admin-email" className="text-primary">Admin Email</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-purple-400" />
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-primary" />
                     <Field
                       as={Input}
                       id="admin-email"
                       name="email"
                       type="email"
                       placeholder="admin@mernacademy.com"
-                      className={`pl-10 bg-slate-800/50 border-purple-500/30 text-white placeholder:text-slate-400 focus:border-purple-500 ${
-                        touched.email && formErrors.email ? 'border-red-500' : ''
-                      }`}
+                      className={`pl-10 bg-slate-800/50 border-primary/30 text-white placeholder:text-slate-400 focus:border-primary ${ touched.email && formErrors.email ? 'border-red-500' : '' }`}
                     />
                   </div>
                   <ErrorMessage name="email" component="p" className="text-sm text-red-400" />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="admin-password" className="text-purple-100">Password</Label>
+                  <Label htmlFor="admin-password" className="text-primary">Password</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-purple-400" />
+                    <Lock className="absolute left-3 top-3 h-4 w-4 text-primary" />
                     <Field
                       as={Input}
                       id="admin-password"
                       name="password"
                       type="password"
                       placeholder="Enter your password"
-                      className={`pl-10 bg-slate-800/50 border-purple-500/30 text-white placeholder:text-slate-400 focus:border-purple-500 ${
-                        touched.password && formErrors.password ? 'border-red-500' : ''
-                      }`}
+                      className={`pl-10 bg-slate-800/50 border-primary/30 text-white placeholder:text-slate-400 focus:border-primary ${ touched.password && formErrors.password ? 'border-red-500' : '' }`}
                     />
                   </div>
                   <ErrorMessage name="password" component="p" className="text-sm text-red-400" />
@@ -165,7 +161,7 @@ Authorization: Bearer`}</pre>
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold shadow-lg shadow-purple-500/50 transition-all"
+                  className="w-full text-white font-semibold shadow-lg shadow-primary/50 transition-all"
                   disabled={isSubmitting || isLoading}
                 >
                   {isSubmitting || isLoading ? (
@@ -184,8 +180,8 @@ Authorization: Bearer`}</pre>
             )}
           </Formik>
 
-          <div className="mt-6 pt-6 border-t border-purple-500/20">
-            <p className="text-xs text-center text-purple-300">
+          <div className="mt-6 pt-6 border-t border-primary/20">
+            <p className="text-xs text-center text-primary">
               This portal is restricted to authorized administrators only.
               <br />
               Unauthorized access attempts will be logged.

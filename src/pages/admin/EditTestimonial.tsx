@@ -121,7 +121,7 @@ const EditTestimonial = () => {
       <>
         <Navigation />
         <div className="min-h-screen bg-background pt-[64px] md:pt-[80px] flex items-center justify-center">
-          <Loader2 className="h-12 w-12 animate-spin text-violet-500" />
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
         </div>
       </>
     );
@@ -142,7 +142,7 @@ const EditTestimonial = () => {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Testimonials
             </Button>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold">
               Edit Testimonial
             </h1>
             <p className="text-muted-foreground mt-2">Update student testimonial details</p>
@@ -152,13 +152,13 @@ const EditTestimonial = () => {
             {/* Student Image */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Student Photo
                 </CardTitle>
                 <CardDescription>Upload a high-quality photo of the student</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="border-2 border-dashed border-violet-300 rounded-lg p-8 glass-card hover:border-violet-400 transition-colors">
+                <div className="border-2 border-dashed border-primary rounded-lg p-8 glass-card hover:border-primary transition-colors">
                   {imagePreview ? (
                     <div className="relative inline-block">
                       <img
@@ -187,7 +187,7 @@ const EditTestimonial = () => {
                         htmlFor="testimonialImage"
                         className="flex flex-col items-center justify-center cursor-pointer"
                       >
-                        <Upload className="h-16 w-16 text-violet-500 mb-4" />
+                        <Upload className="h-16 w-16 text-primary mb-4" />
                         <p className="text-lg font-medium text-foreground mb-2">
                           Click to upload student photo
                         </p>
@@ -204,7 +204,7 @@ const EditTestimonial = () => {
             {/* Basic Information */}
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl">
                   Basic Information
                 </CardTitle>
               </CardHeader>
@@ -316,7 +316,7 @@ const EditTestimonial = () => {
               <Button
                 type="submit"
                 disabled={isUpdating}
-                className="bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 text-white"
+                className="text-white"
               >
                 {isUpdating ? (
                   <>

@@ -590,7 +590,7 @@ const Admin = () => {
       <div className="min-h-screen bg-background pt-[64px] md:pt-[80px] p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Admin Dashboard</h1>
+            <h1 className="text-4xl font-bold font-display">Admin Dashboard</h1>
             <p className="text-muted-foreground mt-2 text-lg">Manage your MERN Academy efficiently with modern tools</p>
           </div>
 
@@ -613,10 +613,10 @@ const Admin = () => {
               <Card className="glass-card border-0 hover:scale-105 transition-all duration-300">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Total Students</CardTitle>
-                  <Users className="h-4 w-4 text-violet-500" />
+                  <Users className="h-4 w-4 text-primary" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold bg-gradient-to-r from-violet-500 to-purple-500 bg-clip-text text-transparent">120</div>
+                  <div className="text-3xl font-bold">120</div>
                   <p className="text-xs text-muted-foreground">+12% from last month</p>
                 </CardContent>
               </Card>
@@ -624,10 +624,10 @@ const Admin = () => {
               <Card className="glass-card border-0 hover:scale-105 transition-all duration-300">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Active Courses</CardTitle>
-                  <BookOpen className="h-4 w-4 text-blue-500" />
+                  <BookOpen className="h-4 w-4 text-primary" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">4</div>
+                  <div className="text-3xl font-bold">4</div>
                   <p className="text-xs text-muted-foreground">All courses active</p>
                 </CardContent>
               </Card>
@@ -638,7 +638,7 @@ const Admin = () => {
                   <GraduationCap className="h-4 w-4 text-emerald-500" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">8</div>
+                  <div className="text-3xl font-bold">8</div>
                   <p className="text-xs text-muted-foreground">2 on leave</p>
                 </CardContent>
               </Card>
@@ -649,7 +649,7 @@ const Admin = () => {
                   <Trophy className="h-4 w-4 text-orange-500" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">16+</div>
+                  <div className="text-3xl font-bold">16+</div>
                   <p className="text-xs text-muted-foreground">This year</p>
                 </CardContent>
               </Card>
@@ -659,7 +659,7 @@ const Admin = () => {
           <TabsContent value="inquiries" className="space-y-6">
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-2xl bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Course Inquiries</CardTitle>
+                <CardTitle className="text-2xl">Course Inquiries</CardTitle>
                 <CardDescription>Manage all course information requests from prospective students</CardDescription>
               </CardHeader>
               <CardContent>
@@ -683,7 +683,7 @@ const Admin = () => {
                     </TableHeader>
                     <TableBody>
                       {inquiriesData.data.map((inquiry) => (
-                        <TableRow key={inquiry._id} className="hover:bg-violet-50/50 dark:hover:bg-violet-950/50">
+                        <TableRow key={inquiry._id} className="hover:bg-primary/50 dark:hover:bg-primary/50">
                           <TableCell className="font-medium">{inquiry.name}</TableCell>
                           <TableCell>{inquiry.email}</TableCell>
                           <TableCell>{inquiry.phone}</TableCell>
@@ -714,9 +714,9 @@ const Admin = () => {
                                   <Badge
                                     variant={inquiry.status === 'enrolled' ? 'default' : 'secondary'}
                                     className={
-                                      inquiry.status === 'enrolled' ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white' :
-                                      inquiry.status === 'contacted' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white' :
-                                      inquiry.status === 'rejected' ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white' : ''
+                                      inquiry.status === 'enrolled' ? 'text-white' :
+                                      inquiry.status === 'contacted' ? 'text-white' :
+                                      inquiry.status === 'rejected' ? 'text-white' : ''
                                     }
                                   >
                                     {inquiry.status}
@@ -815,10 +815,10 @@ const Admin = () => {
 
           <TabsContent value="courses" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Course Management</h2>
+              <h2 className="text-3xl font-bold font-display">Course Management</h2>
               <Button
                 onClick={() => navigate('/admin/courses/add')}
-                className="bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 text-white hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 hover:scale-105 transition-all"
+                className="text-white hover:scale-105 transition-all"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Course
@@ -828,14 +828,14 @@ const Admin = () => {
             <div className="hidden">
               <Dialog open={isAddCourseOpen} onOpenChange={setIsAddCourseOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 hover:scale-105 transition-all">
+                  <Button className="text-white hover:scale-105 transition-all">
                     <Plus className="mr-2 h-4 w-4" />
                     Add Course (Old)
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="glass-card border-0 max-w-2xl">
                   <DialogHeader>
-                    <DialogTitle className="text-2xl bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Add New Course</DialogTitle>
+                    <DialogTitle className="text-2xl">Add New Course</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4 mt-6">
                     <div className="grid grid-cols-2 gap-4">
@@ -843,7 +843,7 @@ const Admin = () => {
                         <Label htmlFor="courseTitle">Course Title</Label>
                         <Input 
                           id="courseTitle" 
-                          className="glass-card border-violet-200 focus:border-violet-400"
+                          className="glass-card border-primary focus:border-primary"
                           placeholder="e.g., Full Stack MERN Development"
                           value={newCourse.title}
                           onChange={(e) => setNewCourse({...newCourse, title: e.target.value})}
@@ -853,7 +853,7 @@ const Admin = () => {
                         <Label htmlFor="courseDuration">Duration</Label>
                         <Input 
                           id="courseDuration" 
-                          className="glass-card border-violet-200 focus:border-violet-400"
+                          className="glass-card border-primary focus:border-primary"
                           placeholder="e.g., 6 months"
                           value={newCourse.duration}
                           onChange={(e) => setNewCourse({...newCourse, duration: e.target.value})}
@@ -864,7 +864,7 @@ const Admin = () => {
                       <Label htmlFor="courseDescription">Description</Label>
                       <Textarea 
                         id="courseDescription" 
-                        className="glass-card border-violet-200 focus:border-violet-400"
+                        className="glass-card border-primary focus:border-primary"
                         placeholder="Comprehensive course description..."
                         value={newCourse.description}
                         onChange={(e) => setNewCourse({...newCourse, description: e.target.value})}
@@ -876,7 +876,7 @@ const Admin = () => {
                         <Input 
                           id="coursePrice" 
                           type="number"
-                          className="glass-card border-violet-200 focus:border-violet-400"
+                          className="glass-card border-primary focus:border-primary"
                           placeholder="25000"
                           value={newCourse.price}
                           onChange={(e) => setNewCourse({...newCourse, price: e.target.value})}
@@ -885,7 +885,7 @@ const Admin = () => {
                       <div>
                         <Label>Category</Label>
                         <Select value={newCourse.category} onValueChange={(value) => setNewCourse({...newCourse, category: value})}>
-                          <SelectTrigger className="glass-card border-violet-200">
+                          <SelectTrigger className="glass-card border-primary">
                             <SelectValue placeholder="Select category" />
                           </SelectTrigger>
                           <SelectContent>
@@ -899,7 +899,7 @@ const Admin = () => {
                       <div>
                         <Label>Level</Label>
                         <Select value={newCourse.level} onValueChange={(value) => setNewCourse({...newCourse, level: value})}>
-                          <SelectTrigger className="glass-card border-violet-200">
+                          <SelectTrigger className="glass-card border-primary">
                             <SelectValue placeholder="Select level" />
                           </SelectTrigger>
                           <SelectContent>
@@ -914,14 +914,14 @@ const Admin = () => {
                       <Label htmlFor="courseTechnologies">Technologies (comma-separated)</Label>
                       <Input 
                         id="courseTechnologies" 
-                        className="glass-card border-violet-200 focus:border-violet-400"
+                        className="glass-card border-primary focus:border-primary"
                         placeholder="React, Node.js, MongoDB, Express"
                         value={newCourse.technologies}
                         onChange={(e) => setNewCourse({...newCourse, technologies: e.target.value})}
                       />
                     </div>
                     <div className="flex gap-4 pt-4">
-                      <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex-1 hover:scale-105 transition-transform">
+                      <Button className="text-white flex-1 hover:scale-105 transition-transform">
                         <Save className="mr-2 h-4 w-4" />
                         Save Course
                       </Button>
@@ -948,10 +948,10 @@ const Admin = () => {
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-lg bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">{course.courseName}</CardTitle>
-                          <Badge className="mt-2 bg-gradient-to-r from-violet-500 to-purple-500 text-white">{course.courseCode}</Badge>
+                          <CardTitle className="text-lg">{course.courseName}</CardTitle>
+                          <Badge className="mt-2 text-white">{course.courseCode}</Badge>
                           {course.isLimitedOffer && (
-                            <Badge className="mt-2 ml-2 bg-gradient-to-r from-red-500 to-orange-500 text-white animate-pulse">
+                            <Badge className="mt-2 ml-2 text-white animate-pulse">
                               Limited Offer
                             </Badge>
                           )}
@@ -960,7 +960,7 @@ const Admin = () => {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="glass-card text-blue-500 hover:scale-110 transition-transform"
+                            className="glass-card text-primary hover:scale-110 transition-transform"
                             onClick={() => navigate(`/admin/courses/edit/${course._id}`)}
                           >
                             <Edit className="h-4 w-4" />
@@ -1013,15 +1013,15 @@ const Admin = () => {
                         {course.discountedPrice ? (
                           <div className="flex items-center gap-2">
                             <span className="line-through text-sm text-muted-foreground">₹{course.originalPrice}</span>
-                            <span className="font-bold text-lg bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">₹{course.discountedPrice}</span>
+                            <span className="font-bold text-lg">₹{course.discountedPrice}</span>
                             {course.discountPercentage && (
-                              <Badge className="bg-gradient-to-r from-red-500 to-orange-500 text-white">
+                              <Badge className="text-white">
                                 {course.discountPercentage}% OFF
                               </Badge>
                             )}
                           </div>
                         ) : (
-                          <span className="font-bold text-lg bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">₹{course.originalPrice}</span>
+                          <span className="font-bold text-lg">₹{course.originalPrice}</span>
                         )}
                       </div>
                     </CardContent>
@@ -1039,9 +1039,9 @@ const Admin = () => {
 
           <TabsContent value="faculty" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Faculty Management</h2>
+              <h2 className="text-3xl font-bold font-display">Faculty Management</h2>
               <Button
-                className="bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 text-white hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 hover:scale-105 transition-all shadow-lg"
+                className="text-white hover:scale-105 transition-all shadow-lg"
                 onClick={() => navigate('/admin/faculty/add')}
               >
                 <Plus className="mr-2 h-4 w-4" />
@@ -1063,7 +1063,7 @@ const Admin = () => {
                       {/* Profile Image */}
                       <div className="flex justify-center mb-4">
                         <div className="relative">
-                          <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-violet-200/50 dark:ring-violet-800/50">
+                          <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-primary/50 dark:ring-primary/50">
                             <img
                               src={member.image.url}
                               alt={member.name}
@@ -1075,24 +1075,20 @@ const Admin = () => {
                       </div>
 
                       {/* Name */}
-                      <h3 className="text-center text-2xl font-bold mb-2 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                      <h3 className="text-center text-2xl font-bold mb-2">
                         {member.name}
                       </h3>
 
                       {/* Role Badge */}
                       <div className="flex justify-center mb-4">
-                        <div className="px-6 py-2 rounded-full bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 text-white text-center font-semibold shadow-lg">
+                        <div className="px-6 py-2 rounded-full text-white text-center font-semibold shadow-lg">
                           {member.specialization}
                         </div>
                       </div>
 
                       {/* Status Badge */}
                       <div className="flex justify-center mb-6">
-                        <div className={`px-6 py-2 rounded-full text-center font-semibold shadow-lg ${
-                          member.isActive
-                            ? 'bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 text-white'
-                            : 'bg-gray-400 text-white'
-                        }`}>
+                        <div className={`px-6 py-2 rounded-full text-center font-semibold shadow-lg ${ member.isActive ? 'text-white' : 'bg-gray-400 text-white' }`}>
                           {member.isActive ? 'Active' : 'Inactive'}
                         </div>
                       </div>
@@ -1130,14 +1126,14 @@ const Admin = () => {
                       {/* Action Buttons */}
                       <div className="flex gap-3 pt-4 border-t">
                         <Button
-                          className="flex-1 rounded-xl py-6 text-base font-semibold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 text-white hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all"
+                          className="flex-1 rounded-xl py-6 text-base font-semibold text-white shadow-lg hover:shadow-xl transition-all"
                           onClick={() => navigate(`/admin/faculty/edit/${member._id}`)}
                         >
                           <Edit className="h-5 w-5 mr-2" />
                           Edit
                         </Button>
                         <Button
-                          className="flex-1 rounded-xl py-6 text-base font-semibold bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 text-white hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all"
+                          className="flex-1 rounded-xl py-6 text-base font-semibold text-white shadow-lg hover:shadow-xl transition-all"
                           onClick={() => handleToggleFacultyStatus(member._id)}
                         >
                           {member.isActive ? (
@@ -1153,7 +1149,7 @@ const Admin = () => {
                           )}
                         </Button>
                         <Button
-                          className="w-16 rounded-xl py-6 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 text-white hover:from-violet-700 hover:via-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all"
+                          className="w-16 rounded-xl py-6 text-white shadow-lg hover:shadow-xl transition-all"
                           onClick={() => handleDeleteFaculty(member._id)}
                         >
                           <Trash2 className="h-5 w-5" />
@@ -1175,7 +1171,7 @@ const Admin = () => {
           <TabsContent value="students" className="space-y-6">
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-2xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Student Management</CardTitle>
+                <CardTitle className="text-2xl">Student Management</CardTitle>
                 <CardDescription>Monitor student progress and performance</CardDescription>
               </CardHeader>
               <CardContent>
@@ -1208,7 +1204,7 @@ const Admin = () => {
                           <TableCell>{student.currentSemester ? `Semester ${student.currentSemester}` : 'N/A'}</TableCell>
                           <TableCell>
                             <Badge variant={student.gpa >= 8.5 ? 'default' : 'secondary'}
-                                   className={student.gpa >= 8.5 ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white' : ''}>
+                                   className={student.gpa >= 8.5 ? 'text-white' : ''}>
                               GPA: {student.gpa?.toFixed(2) || 'N/A'}
                             </Badge>
                           </TableCell>
@@ -1217,7 +1213,7 @@ const Admin = () => {
                             <div className="flex gap-1">
                               <Button
                                 size="sm"
-                                className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600"
+                                className="text-white"
                                 onClick={() => handleEditStudentStart(student)}
                                 title="View/Edit"
                               >
@@ -1225,7 +1221,7 @@ const Admin = () => {
                               </Button>
                               <Button
                                 size="sm"
-                                className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600"
+                                className="text-white"
                                 onClick={() => handleEditStudentStart(student)}
                                 title="Edit"
                               >
@@ -1233,7 +1229,7 @@ const Admin = () => {
                               </Button>
                               <Button
                                 size="sm"
-                                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
+                                className="text-white"
                                 onClick={() => handlePromoteStudent(student._id, student.currentSemester)}
                                 disabled={student.currentSemester >= 8}
                                 title="Promote to Next Semester"
@@ -1242,7 +1238,7 @@ const Admin = () => {
                               </Button>
                               <Button
                                 size="sm"
-                                className="bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
+                                className="text-white"
                                 onClick={() => handleDeleteRegularStudent(student._id, student.userId?.name || 'Unknown')}
                                 title="Delete"
                               >
@@ -1268,7 +1264,7 @@ const Admin = () => {
             <Dialog open={!!editingStudent} onOpenChange={() => setEditingStudent(null)}>
               <DialogContent className="max-w-lg">
                 <DialogHeader>
-                  <DialogTitle className="text-2xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                  <DialogTitle className="text-2xl">
                     Edit Student - {editingStudent?.userId?.name}
                   </DialogTitle>
                 </DialogHeader>
@@ -1335,7 +1331,7 @@ const Admin = () => {
                   </div>
                   <div className="flex gap-3 pt-4">
                     <Button
-                      className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600"
+                      className="flex-1 text-white"
                       onClick={handleSaveStudentEdit}
                     >
                       <Save className="w-4 h-4 mr-2" />
@@ -1357,7 +1353,7 @@ const Admin = () => {
           <TabsContent value="feedbacks" className="space-y-6">
             <Card className="glass-card border-0">
               <CardHeader>
-                <CardTitle className="text-2xl bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">Student Feedbacks</CardTitle>
+                <CardTitle className="text-2xl">Student Feedbacks</CardTitle>
                 <CardDescription>Review and manage student feedback</CardDescription>
               </CardHeader>
               <CardContent>
@@ -1385,9 +1381,9 @@ const Admin = () => {
 
           <TabsContent value="events" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">Event Management</h2>
+              <h2 className="text-3xl font-bold font-display">Event Management</h2>
               <Button
-                className="bg-gradient-to-r from-orange-500 to-red-500 text-white hover:from-orange-600 hover:to-red-600 hover:scale-105 transition-all"
+                className="text-white hover:scale-105 transition-all"
                 onClick={() => navigate('/admin/events/add')}
               >
                 <Plus className="mr-2 h-4 w-4" />
@@ -1423,18 +1419,18 @@ const Admin = () => {
 
                           <div className="flex-1">
                             <div className="flex items-center gap-4 mb-2">
-                              <h3 className="text-lg font-semibold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                              <h3 className="text-lg font-semibold">
                                 {event.eventName}
                               </h3>
                               <Badge
                                 variant={isUpcoming ? 'default' : isPast ? 'secondary' : 'default'}
-                                className={isUpcoming ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white' : isPast ? 'bg-gray-500 text-white' : 'bg-blue-500 text-white'}
+                                className={isUpcoming ? 'text-white' : isPast ? 'bg-gray-500 text-white' : 'bg-primary text-white'}
                               >
                                 {isUpcoming ? 'Upcoming' : isPast ? 'Past' : 'Active'}
                               </Badge>
                               <Badge variant="outline">{event.category}</Badge>
                               {event.isFeatured && (
-                                <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+                                <Badge className="text-white">
                                   Featured
                                 </Badge>
                               )}
@@ -1450,7 +1446,7 @@ const Admin = () => {
                                 {event.venue}
                               </div>
                               <div className="flex items-center gap-1">
-                                <Users className="h-4 w-4 text-blue-500" />
+                                <Users className="h-4 w-4 text-primary" />
                                 {event.registeredParticipants.length}
                                 {event.maxParticipants ? `/${event.maxParticipants}` : ''} participants
                               </div>
@@ -1461,7 +1457,7 @@ const Admin = () => {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="glass-card text-blue-500 hover:scale-110 transition-transform"
+                              className="glass-card text-primary hover:scale-110 transition-transform"
                               onClick={() => navigate(`/admin/events`)}
                             >
                               <Edit className="h-4 w-4" />
@@ -1492,10 +1488,10 @@ const Admin = () => {
 
           <TabsContent value="branches" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Branch Management</h2>
+              <h2 className="text-3xl font-bold font-display">Branch Management</h2>
               <Button
                 onClick={() => window.location.href = '/admin/branches/add'}
-                className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 hover:scale-105 transition-all"
+                className="text-white hover:scale-105 transition-all"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Branch
@@ -1506,7 +1502,7 @@ const Admin = () => {
             <div className="hidden">
               <Dialog open={isAddBranchOpen} onOpenChange={setIsAddBranchOpen} modal>
                 <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 hover:scale-105 transition-all">
+                  <Button className="text-white hover:scale-105 transition-all">
                     <Plus className="mr-2 h-4 w-4" />
                     Add Branch (Old)
                   </Button>
@@ -1516,7 +1512,7 @@ const Admin = () => {
                   onPointerDownOutside={(e) => e.preventDefault()}
                 >
                   <DialogHeader className="flex-shrink-0 px-6 pt-6">
-                    <DialogTitle className="text-2xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Add New Branch</DialogTitle>
+                    <DialogTitle className="text-2xl">Add New Branch</DialogTitle>
                   </DialogHeader>
                   <div
                     className="space-y-6 mt-6 overflow-y-auto px-6 flex-1 scrollbar-thin scrollbar-thumb-emerald-500 scrollbar-track-gray-200"
@@ -1642,7 +1638,7 @@ const Admin = () => {
                     <Button
                       onClick={handleCreateBranch}
                       disabled={isCreating || !newBranch.branchName || !newBranch.branchCode || !newBranch.description || !newBranch.totalSeats}
-                      className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex-1 hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="text-white flex-1 hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Save className="mr-2 h-4 w-4" />
                       {isCreating ? 'Creating...' : 'Save Branch'}
@@ -1690,7 +1686,7 @@ const Admin = () => {
                         />
                       </div>
                     ) : (
-                      <div className="h-48 bg-gradient-to-br from-emerald-400 to-teal-400 flex items-center justify-center">
+                      <div className="h-48 flex items-center justify-center">
                         <ImageIcon className="h-16 w-16 text-white opacity-50" />
                       </div>
                     )}
@@ -1698,10 +1694,10 @@ const Admin = () => {
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
-                          <CardTitle className="text-xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                          <CardTitle className="text-xl">
                             {branch.branchName}
                           </CardTitle>
-                          <Badge className="mt-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white">
+                          <Badge className="mt-2 text-white">
                             {branch.branchCode}
                           </Badge>
                           {branch.establishedYear && (
@@ -1714,7 +1710,7 @@ const Admin = () => {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="glass-card text-blue-500 hover:scale-110 transition-transform"
+                            className="glass-card text-primary hover:scale-110 transition-transform"
                             onClick={() => navigate(`/admin/branches/edit/${branch._id}`)}
                           >
                             <Edit className="h-4 w-4" />
@@ -1737,13 +1733,13 @@ const Admin = () => {
                       </p>
                       <div className="grid grid-cols-2 gap-4 text-center pt-4 border-t">
                         <div>
-                          <div className="text-2xl font-bold bg-gradient-to-r from-violet-500 to-purple-500 bg-clip-text text-transparent">
+                          <div className="text-2xl font-bold">
                             {branch.totalSeats - branch.availableSeats}
                           </div>
                           <div className="text-xs text-muted-foreground">Enrolled</div>
                         </div>
                         <div>
-                          <div className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent">
+                          <div className="text-2xl font-bold">
                             {branch.availableSeats}
                           </div>
                           <div className="text-xs text-muted-foreground">Available</div>
@@ -1755,7 +1751,7 @@ const Admin = () => {
                         </div>
                         <Badge
                           variant={branch.isActive ? "default" : "secondary"}
-                          className={branch.isActive ? "mt-2 bg-gradient-to-r from-emerald-500 to-teal-500" : "mt-2"}
+                          className={branch.isActive ? "mt-2 " : "mt-2"}
                         >
                           {branch.isActive ? "Active" : "Inactive"}
                         </Badge>
@@ -1779,12 +1775,12 @@ const Admin = () => {
             <Card className="glass-card border-0">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle className="text-2xl bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Outstanding Students</CardTitle>
+                  <CardTitle className="text-2xl">Outstanding Students</CardTitle>
                   <CardDescription>Manage outstanding student profiles for the homepage</CardDescription>
                 </div>
                 <Button
                   onClick={() => navigate('/admin/outstanding-students/add')}
-                  className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700"
+                  className="text-white"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Add Student
@@ -1800,11 +1796,11 @@ const Admin = () => {
                     {outstandingStudentsData.data.map((student) => (
                       <Card key={student._id} className="glass-card border-0 hover:shadow-2xl transition-all duration-300 overflow-hidden group">
                         {/* Header with Gradient */}
-                        <div className="relative h-24 bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 overflow-hidden">
+                        <div className="relative h-24 overflow-hidden">
                           <div className="absolute inset-0 bg-black/20" />
-                          <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
-                            <Trophy className="h-3 w-3 text-violet-600" />
-                            <span className="text-xs font-bold text-violet-600">#{student.rank}</span>
+                          <div className="absolute top-4 right-4 bg-card/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
+                            <Trophy className="h-3 w-3 text-primary" />
+                            <span className="text-xs font-bold text-primary">#{student.rank}</span>
                           </div>
                         </div>
 
@@ -1823,7 +1819,7 @@ const Admin = () => {
 
                           {/* Student Info */}
                           <div className="text-center mb-4">
-                            <h3 className="font-bold text-xl mb-1 bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                            <h3 className="font-bold text-xl mb-1">
                               {student.name}
                             </h3>
                             <p className="text-sm text-muted-foreground flex items-center justify-center gap-1 mb-2">
@@ -1833,7 +1829,7 @@ const Admin = () => {
                           </div>
 
                           {/* Company Card */}
-                          <div className="p-4 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 rounded-xl mb-4 border border-violet-100 dark:border-violet-900">
+                          <div className="p-4 dark:dark:rounded-xl mb-4 border border-primary dark:border-primary">
                             <div className="flex items-center justify-between mb-2">
                               <span className="text-xs text-muted-foreground">Current Position</span>
                               <Badge className="bg-green-500/10 text-green-600 border-green-500/20 text-xs">
@@ -1864,7 +1860,7 @@ const Admin = () => {
                           {/* Achievement */}
                           <div className="p-3 glass-card rounded-lg mb-4">
                             <div className="flex items-start gap-2">
-                              <Award className="h-4 w-4 text-violet-600 mt-0.5 flex-shrink-0" />
+                              <Award className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
                               <div>
                                 <p className="text-xs font-semibold text-muted-foreground mb-1">ACHIEVEMENT</p>
                                 <p className="text-sm line-clamp-2">{student.achievement}</p>
@@ -1878,7 +1874,7 @@ const Admin = () => {
                               size="sm"
                               variant="outline"
                               onClick={() => navigate('/admin/outstanding-students')}
-                              className="flex-1 glass-card text-blue-500 hover:bg-blue-50"
+                              className="flex-1 glass-card text-primary hover:bg-primary hover:text-primary-foreground"
                             >
                               <Edit className="h-4 w-4 mr-1" />
                               Edit
@@ -1887,7 +1883,7 @@ const Admin = () => {
                               size="sm"
                               variant="outline"
                               onClick={() => handleToggleStudentStatus(student._id)}
-                              className={`glass-card ${student.isActive ? 'text-green-600 hover:bg-green-50' : 'text-gray-400'}`}
+                              className={`glass-card ${student.isActive ? 'text-green-600 hover:bg-green-50' : 'text-muted-foreground'}`}
                             >
                               {student.isActive ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
                             </Button>
@@ -1917,10 +1913,10 @@ const Admin = () => {
 
           <TabsContent value="testimonials" className="space-y-6">
             <div className="flex justify-between items-center">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">Testimonials Management</h2>
+              <h2 className="text-3xl font-bold font-display">Testimonials Management</h2>
               <Button
                 onClick={() => setShowAddTestimonial(true)}
-                className="bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700 hover:scale-105 transition-all"
+                className="text-white hover:scale-105 transition-all"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Testimonial
@@ -1930,7 +1926,7 @@ const Admin = () => {
             {/* Testimonials Grid */}
             {testimonialsLoading ? (
               <div className="flex items-center justify-center h-64">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
               </div>
             ) : testimonialsData?.data && testimonialsData.data.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1945,7 +1941,7 @@ const Admin = () => {
                       <div className="absolute top-2 right-2 flex gap-1">
                         <Button
                           size="sm"
-                          className="bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600"
+                          className="text-white"
                           onClick={() => handleEditTestimonialStart(testimonial)}
                         >
                           <Edit2 className="h-4 w-4" />
@@ -1953,8 +1949,8 @@ const Admin = () => {
                         <Button
                           size="sm"
                           className={testimonial.isActive
-                            ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
-                            : "bg-gradient-to-r from-gray-400 to-gray-500 text-white"}
+                            ? "text-white"
+                            : "text-white"}
                           onClick={() => handleToggleTestimonialStatus(testimonial._id)}
                           title={testimonial.isActive ? "Hide" : "Show"}
                         >
@@ -1962,7 +1958,7 @@ const Admin = () => {
                         </Button>
                         <Button
                           size="sm"
-                          className="bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700"
+                          className="text-white"
                           onClick={() => handleDeleteTestimonial(testimonial._id)}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -1984,10 +1980,10 @@ const Admin = () => {
                         ))}
                       </div>
                       <h3 className="font-semibold text-lg">{testimonial.name}</h3>
-                      {testimonial.title && <p className="text-sm text-pink-600 font-medium">{testimonial.title}</p>}
+                      {testimonial.title && <p className="text-sm text-primary font-medium">{testimonial.title}</p>}
                       {testimonial.role && <p className="text-xs text-muted-foreground">{testimonial.role}</p>}
                       <p className="text-sm text-muted-foreground mt-2 line-clamp-3">
-                        <Quote className="inline h-3 w-3 mr-1 text-pink-400" />
+                        <Quote className="inline h-3 w-3 mr-1 text-primary" />
                         {testimonial.description}
                       </p>
                     </CardContent>
@@ -1997,14 +1993,14 @@ const Admin = () => {
             ) : (
               <Card className="glass-card border-0">
                 <CardContent className="py-12 text-center">
-                  <MessageSquare className="h-16 w-16 text-pink-500 mx-auto mb-4" />
+                  <MessageSquare className="h-16 w-16 text-primary mx-auto mb-4" />
                   <p className="text-lg font-medium text-muted-foreground mb-2">No Testimonials Yet</p>
                   <p className="text-sm text-muted-foreground mb-6">
                     Add your first testimonial to showcase student success stories
                   </p>
                   <Button
                     onClick={() => setShowAddTestimonial(true)}
-                    className="bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700"
+                    className="text-white"
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Add Testimonial
@@ -2017,7 +2013,7 @@ const Admin = () => {
             <Dialog open={showAddTestimonial || !!editingTestimonial} onOpenChange={() => resetTestimonialForm()}>
               <DialogContent className="max-w-lg">
                 <DialogHeader>
-                  <DialogTitle className="text-2xl bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                  <DialogTitle className="text-2xl">
                     {editingTestimonial ? 'Edit Testimonial' : 'Add New Testimonial'}
                   </DialogTitle>
                 </DialogHeader>
@@ -2072,11 +2068,7 @@ const Admin = () => {
                           className="focus:outline-none"
                         >
                           <Star
-                            className={`h-6 w-6 transition-colors ${
-                              star <= testimonialForm.rating
-                                ? 'text-yellow-500 fill-yellow-500'
-                                : 'text-gray-300 hover:text-yellow-400'
-                            }`}
+                            className={`h-6 w-6 transition-colors ${ star <= testimonialForm.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300 hover:text-yellow-400' }`}
                           />
                         </button>
                       ))}
@@ -2090,7 +2082,7 @@ const Admin = () => {
                         <img
                           src={testimonialImagePreview}
                           alt="Preview"
-                          className="w-20 h-20 rounded-full object-cover border-2 border-pink-200"
+                          className="w-20 h-20 rounded-full object-cover border-2 border-primary"
                         />
                       )}
                       <div className="flex-1">
@@ -2108,7 +2100,7 @@ const Admin = () => {
                   </div>
                   <div className="flex gap-3 pt-4">
                     <Button
-                      className="flex-1 bg-gradient-to-r from-pink-600 to-rose-600 text-white hover:from-pink-700 hover:to-rose-700"
+                      className="flex-1 text-white"
                       onClick={editingTestimonial ? handleUpdateTestimonial : handleCreateTestimonial}
                       disabled={isCreatingTestimonial}
                     >

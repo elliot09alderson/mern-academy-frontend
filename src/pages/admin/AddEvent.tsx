@@ -121,7 +121,7 @@ const AddEvent = () => {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Admin
           </Button>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold">
             Create New Event
           </h1>
           <p className="text-muted-foreground mt-2">Add event details and upload images</p>
@@ -131,7 +131,7 @@ const AddEvent = () => {
         <form onSubmit={handleSubmit}>
           <Card className="glass-card border-0 shadow-xl">
             <CardHeader>
-              <CardTitle className="text-2xl bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+              <CardTitle className="text-2xl">
                 Event Information
               </CardTitle>
             </CardHeader>
@@ -348,7 +348,7 @@ const AddEvent = () => {
               <div className="flex gap-4 pt-6">
                 <Button
                   type="submit"
-                  className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white flex-1 hover:from-emerald-600 hover:to-teal-600 text-base py-6"
+                  className="text-white flex-1 text-base py-6"
                   disabled={isCreating}
                 >
                   <Save className="mr-2 h-5 w-5" />
