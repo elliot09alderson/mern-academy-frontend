@@ -70,11 +70,11 @@ export const NewsletterSection = () => {
               className="font-display font-bold text-[#F0EBE1] leading-[1.05] tracking-[-0.03em] mb-8"
               style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)" }}
             >
-              Get Course<br />Information
+              Let's Get<br />You Started
             </h2>
             <p className="text-[#6B6660] text-sm leading-relaxed">
               Share your details and we'll get back to you with everything you
-              need to know about our placement-oriented programs.
+              need to know — courses, placements, or anything else.
             </p>
           </motion.div>
 
@@ -152,7 +152,7 @@ export const NewsletterSection = () => {
                 disabled={isLoading}
                 className="w-full group flex items-center justify-between bg-[#C4622D] hover:bg-[#D4723D] disabled:opacity-50 text-[#F0EBE1] px-8 py-4 font-display font-semibold text-sm tracking-[0.06em] transition-all duration-200"
               >
-                {isLoading ? "Submitting…" : "Get Course Information"}
+                {isLoading ? "Submitting…" : "Send Inquiry"}
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
               </button>
 
