@@ -6,8 +6,8 @@ import { CurriculumBubbleMenu } from "./CurriculumBubbleMenu";
 const ease = [0.16, 1, 0.3, 1] as const;
 
 const stats = [
-  { value: "16+",    label: "Placed"      },
-  { value: "18+",    label: "Companies"   },
+  { value: "19+",    label: "Placed"      },
+  { value: "13+",    label: "Companies"   },
   { value: "6mo",    label: "Program"     },
   { value: "12 LPA", label: "Avg Package" },
 ];
