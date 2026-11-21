@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { ArrowRight, Clock, Users, Loader2 } from "lucide-react";
 import { useGetActiveCoursesQuery, type Course } from "@/store/api/courseApi";
 
@@ -77,13 +77,36 @@ const WhatWeTeach = () => {
   const [active, setActive] = useState(curriculum[0].id);
   const selected = curriculum.find((c) => c.id === active)!;
 
+  // Pin this block while scrolling through a taller wrapper, and let actual
+  // scroll progress through that wrapper (not clicks alone) drive which
+  // category is active — the menu advances as you scroll, then releases
+  // and the page continues normally once the wrapper is exhausted.
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: wrapperRef,
+    offset: ["start start", "end end"],
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (progress) => {
+    const index = Math.min(
+      curriculum.length - 1,
+      Math.max(0, Math.floor(progress * curriculum.length))
+    );
+    setActive(curriculum[index].id);
+  });
+
   return (
+    <div
+      ref={wrapperRef}
+      className="relative mt-24"
+      style={{ height: `${curriculum.length * 100}vh` }}
+    >
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.8, ease }}
-      className="mt-24 border border-[#2A2522]"
+      className="sticky top-24 border border-[#2A2522]"
     >
       {/* Header */}
       <div className="border-b border-[#2A2522] px-10 py-5 flex items-center justify-between">
@@ -185,6 +208,7 @@ const WhatWeTeach = () => {
         </div>
       </div>
     </motion.div>
+    </div>
   );
 };
 
