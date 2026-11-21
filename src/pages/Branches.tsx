@@ -298,7 +298,10 @@ export const Branches = () => {
                 >
                   Book Campus Tour
                 </button>
-                <button className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#C4622D] border border-[#C4622D]/40 hover:border-[#C4622D] px-8 py-4 transition-colors duration-200">
+                <button
+                  onClick={() => document.getElementById('course-info')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#C4622D] border border-[#C4622D]/40 hover:border-[#C4622D] px-8 py-4 transition-colors duration-200"
+                >
                   Attend Demo Class
                 </button>
               </div>
