@@ -15,8 +15,8 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <SEO
-        title="MERN Academy - Best Software Training Institute in Bhilai & Durg | MERN Stack with AI"
-        description="MERN Academy is Bhilai & Durg's leading placement-oriented software training institute — master MERN stack development, AI tools, DSA, and System Design in our 6-month program. 19+ successful placements at top tech companies."
+        title="MERN Academy - Best Software Training Institute in India | MERN Stack with AI"
+        description="MERN Academy is India's leading placement-oriented software training institute — master MERN stack development, AI tools, DSA, and System Design in our 6-month program. 19+ successful placements at top tech companies."
         path="/"
       />
       <Navigation />
